@@ -1,0 +1,25 @@
+### get template
+GET http://localhost:8080/api/template/1
+
+### create member
+POST http://localhost:8080/api/
+Content-Type: application/json
+
+{
+  "templateColumn1": "email5",
+  "password": "password3",
+  "nickName": "nickname3"
+}
+
+### update member
+PUT http://localhost:8080/api/members/1
+Content-Type: application/json
+
+{
+  "templateColumn1": "email10",
+  "password": "password3",
+  "nickName": "nickname3"
+}
+
+### delete member
+DELETE http://localhost:8080/api/members/1
