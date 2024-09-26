@@ -13,6 +13,12 @@ public enum ErrorCode {
     DUPLICATE_EMAIL_ERROR(HttpStatus.BAD_REQUEST, "EM002", "Duplicate Email Error"),
     DUPLICATE_NICKNAME_ERROR(HttpStatus.BAD_REQUEST, "EM003", "Duplicate Nickname Error"),
 
+    //멤버 관련
+    MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EM004","There is no member for that email address."),
+
+    //게시물 관련
+    BOARD_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EM004","There is no board for the id."),
+
     ;
     private final HttpStatus status;
     private final String code;
