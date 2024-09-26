@@ -8,4 +8,6 @@ public interface LikeRepository extends MyCrudRepository<LikeDomain, Long> {
     boolean existsById(Long id);
 
     List<LikeDomain> findByBoardId(Long boardId);
+
+    boolean existsByMemberIdAndBoardId(Long memberId, Long boardId);
 }

@@ -7,6 +7,7 @@ import boomerang.like.domain.LikeDomain;
 import boomerang.like.dto.LikeListResponseDto;
 import boomerang.like.dto.LikeRequestDto;
 import boomerang.like.service.LikeService;
+import java.security.Principal;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/template")
+@RequestMapping("/api/like")
 public class LikeController {
+
     private final LikeService likeService;
 
     public LikeController(LikeService likeService) {
@@ -33,42 +34,37 @@ public class LikeController {
     public ResponseEntity<LikeListResponseDto> getAllLikes() {
         List<LikeDomain> likeDomainList = likeService.getAllLikeDomains();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(LikeListResponseDto.of(likeDomainList));
+            .body(LikeListResponseDto.of(likeDomainList));
     }
 
     @GetMapping("/{board_id}")
-    public ResponseEntity<LikeListResponseDto> getLikeById(@PathVariable(name = "board_id") Long boardId) {
+    public ResponseEntity<LikeListResponseDto> getLikesByBoardId(
+        @PathVariable(name = "board_id") Long boardId) {
         List<LikeDomain> likeDomainList = likeService.getLikeDomainsByBoardId(boardId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(LikeListResponseDto.of(likeDomainList));
+            .body(LikeListResponseDto.of(likeDomainList));
     }
 
-    @PostMapping()
-    public ResponseEntity<Void> createTemplate(@RequestBody LikeRequestDto likeRequestDto) {
-        likeService.createLikeDomain(likeRequestDto.toLikeDomain());
+    @PostMapping("/{board_id}")
+    public ResponseEntity<Void> createLike(Principal principal, @PathVariable(name = "board_id") Long boardId) {
+        likeService.createLikeDomain(principal.getName(), boardId);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+            .build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateTemplate(@PathVariable(name = "id") Long id, @RequestBody LikeRequestDto likeRequestDto) {
-        likeService.updateLikeDomain(likeRequestDto.toLikeDomain(id));
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable(name = "id") Long id) {
+    @DeleteMapping("/{board_id}")
+    public ResponseEntity<Void> deleteLike(Principal principal, @PathVariable(name = "board_id") Long id) {
         likeService.deleteLikeDomain(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .build();
+            .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,
     // RequestBody에서 발생한 에러가 HttpMessageNotReadableException 로 Wrapping 이 되는 문제가 발생한다
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
-    public ResponseEntity<ErrorResponseDto> handleOptionValidException(DomainValidationException e) {
+    public ResponseEntity<ErrorResponseDto> handleOptionValidException(
+        DomainValidationException e) {
         System.out.println(e);
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }

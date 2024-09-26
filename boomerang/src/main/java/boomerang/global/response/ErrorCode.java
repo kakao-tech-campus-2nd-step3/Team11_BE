@@ -13,6 +13,9 @@ public enum ErrorCode {
     DUPLICATE_EMAIL_ERROR(HttpStatus.BAD_REQUEST, "EM002", "Duplicate Email Error"),
     DUPLICATE_NICKNAME_ERROR(HttpStatus.BAD_REQUEST, "EM003", "Duplicate Nickname Error"),
 
+    // Like
+    DUPLICATE_LIKE_ERROR(HttpStatus.BAD_REQUEST, "EL001", "Duplicate Like Error"),
+
     ;
     private final HttpStatus status;
     private final String code;

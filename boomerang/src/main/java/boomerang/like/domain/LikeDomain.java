@@ -39,6 +39,8 @@ public class LikeDomain {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @Builder.Default
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isDeleted;
 
     @CreationTimestamp
