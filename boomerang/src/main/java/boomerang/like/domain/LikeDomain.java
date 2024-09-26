@@ -1,41 +1,53 @@
 package boomerang.like.domain;
 
-import jakarta.persistence.Embedded;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "like")
 public class LikeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private LikeColumn1 likeColumn1;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Embedded
-    private LikeColumn2 likeColumn2;
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
 
-    public LikeDomain() {
-    }
+    private Boolean isDeleted;
 
-    public LikeDomain(Long id, LikeColumn1 likeColumn1, LikeColumn2 likeColumn2) {
-        this.id = id;
-        this.likeColumn1 = likeColumn1;
-        this.likeColumn2 = likeColumn2;
-    }
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Override
     public boolean equals(Object o) {

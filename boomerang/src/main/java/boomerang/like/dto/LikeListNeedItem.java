@@ -1,7 +1,5 @@
 package boomerang.like.dto;
 
-import boomerang.like.domain.LikeColumn1;
-import boomerang.like.domain.LikeColumn2;
 import boomerang.like.domain.LikeDomain;
 import java.util.List;
 import lombok.Builder;
@@ -61,13 +59,13 @@ public class LikeListNeedItem {
     @Getter
     @Builder
     public static class Item {
-        private LikeColumn1 likeColumn1;
-        private LikeColumn2 likeColumn2;
+        private Member member;
+        private Board board;
 
         // 생성자
-        public Item(LikeColumn1 likeColumn1, LikeColumn2 likeColumn2) {
-            this.likeColumn1 = likeColumn1;
-            this.likeColumn2 = likeColumn2;
+        public Item(Member member, Board board) {
+            this.member = member;
+            this.board = board;
         }
 
         /*
@@ -75,8 +73,8 @@ public class LikeListNeedItem {
         */
         public static Item of(LikeDomain likeDomain) {
             return Item.builder()
-                    .likeColumn1(likeDomain.getLikeColumn1())
-                    .likeColumn2(likeDomain.getLikeColumn2())
+                    .member(likeDomain.getMember())
+                    .board(likeDomain.getBoard())
                     .build();
         }
     }

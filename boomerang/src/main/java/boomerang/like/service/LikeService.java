@@ -14,25 +14,25 @@ public class LikeService {
         this.likeRepository = likeRepository;
     }
 
-    public List<LikeDomain> getAllTemplateDomains() {
+    public List<LikeDomain> getAllLikeDomains() {
         return likeRepository.findAll();
     }
 
-    public LikeDomain getTemplateDomainById(Long id) {
+    public LikeDomain getLikeDomainById(Long id) {
         return likeRepository.findById(id)
                 .orElseThrow(LikeNotFoundException::new);
     }
 
-    public LikeDomain createTemplateDomain(LikeDomain likeDomain) {
+    public LikeDomain createLikeDomain(LikeDomain likeDomain) {
         return likeRepository.save(likeDomain);
     }
 
-    public LikeDomain updateTemplateDomain(LikeDomain likeDomain) {
+    public LikeDomain updateLikeDomain(LikeDomain likeDomain) {
         validateTemplateDomainExists(likeDomain.getId());
         return likeRepository.save(likeDomain);
     }
 
-    public void deleteTemplateDomain(Long id) {
+    public void deleteLikeDomain(Long id) {
         validateTemplateDomainExists(id);
         likeRepository.deleteById(id);
     }

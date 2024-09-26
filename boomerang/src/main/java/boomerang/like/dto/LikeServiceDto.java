@@ -1,7 +1,5 @@
 package boomerang.like.dto;
 
-import boomerang.like.domain.LikeColumn1;
-import boomerang.like.domain.LikeColumn2;
 import boomerang.like.domain.LikeDomain;
 import lombok.Getter;
 
@@ -10,18 +8,18 @@ import lombok.Getter;
 @Getter
 public class LikeServiceDto {
     private Long id;
-    private LikeColumn1 likeColumn1;
-    private LikeColumn2 likeColumn2;
+    private Member member;
+    private Board board;
 
     // 생성자
-    public LikeServiceDto(Long id, LikeColumn1 likeColumn1, LikeColumn2 likeColumn2) {
+    public LikeServiceDto(Long id, Member member, Board board) {
         this.id = id;
-        this.likeColumn1 = likeColumn1;
-        this.likeColumn2 = likeColumn2;
+        this.member = member;
+        this.board = board;
     }
 
     // TemplateCreateServiceDto로 변환하는 메서드
     public LikeDomain toTemplateDomain() {
-        return new LikeDomain(id, likeColumn1, likeColumn2);
+        return new LikeDomain(id, member, board);
     }
 }

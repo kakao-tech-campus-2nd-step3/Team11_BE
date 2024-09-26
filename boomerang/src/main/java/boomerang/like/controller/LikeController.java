@@ -31,36 +31,36 @@ public class LikeController {
     }
 
     @GetMapping()
-    public ResponseEntity<LikeListResponseDto> getAllTemplates() {
-        List<LikeDomain> likeDomainList = likeService.getAllTemplateDomains();
+    public ResponseEntity<LikeListResponseDto> getAllLikes() {
+        List<LikeDomain> likeDomainList = likeService.getAllLikeDomains();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(LikeListResponseDto.of(likeDomainList));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LikeResponseDto> getTemplateById(@PathVariable(name = "id") Long id) {
-        LikeDomain likeDomain = likeService.getTemplateDomainById(id);
+    public ResponseEntity<LikeResponseDto> getLikeById(@PathVariable(name = "id") Long id) {
+        LikeDomain likeDomain = likeService.getLikeDomainById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(LikeResponseDto.of(likeDomain));
     }
 
     @PostMapping()
     public ResponseEntity<Void> createTemplate(@RequestBody LikeRequestDto likeRequestDto) {
-        likeService.createTemplateDomain(likeRequestDto.toTemplateDomain());
+        likeService.createLikeDomain(likeRequestDto.toLikeDomain());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(@PathVariable(name = "id") Long id, @RequestBody LikeRequestDto likeRequestDto) {
-        likeService.updateTemplateDomain(likeRequestDto.toTemplateDomain(id));
+        likeService.updateLikeDomain(likeRequestDto.toLikeDomain(id));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTemplate(@PathVariable(name = "id") Long id) {
-        likeService.deleteTemplateDomain(id);
+        likeService.deleteLikeDomain(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
