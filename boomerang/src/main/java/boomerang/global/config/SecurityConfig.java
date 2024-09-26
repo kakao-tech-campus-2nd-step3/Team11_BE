@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+//createdAt과 updatedAt 필드를 자동으로 관리하기 위해 추가하는 코드
+@EnableJpaAuditing
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -87,8 +90,9 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
+//                        .requestMatchers("/").permitAll()
+//                        .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
         http
