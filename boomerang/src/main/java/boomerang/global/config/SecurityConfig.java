@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,7 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -73,6 +73,10 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
+        // H2 콘솔을 사용하기 위해 프레임 옵션 비활성화
+        http
+                .headers((headersConfigurer) -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
 
         //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
 //        http
@@ -98,6 +102,7 @@ public class SecurityConfig {
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
 
         return http.build();
     }
