@@ -6,7 +6,6 @@ import boomerang.global.utils.ResponseHelper;
 import boomerang.like.domain.LikeDomain;
 import boomerang.like.dto.LikeListResponseDto;
 import boomerang.like.dto.LikeRequestDto;
-import boomerang.like.dto.LikeResponseDto;
 import boomerang.like.service.LikeService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -37,11 +36,11 @@ public class LikeController {
                 .body(LikeListResponseDto.of(likeDomainList));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LikeResponseDto> getLikeById(@PathVariable(name = "id") Long id) {
-        LikeDomain likeDomain = likeService.getLikeDomainById(id);
+    @GetMapping("/{board_id}")
+    public ResponseEntity<LikeListResponseDto> getLikeById(@PathVariable(name = "board_id") Long boardId) {
+        List<LikeDomain> likeDomainList = likeService.getLikeDomainsByBoardId(boardId);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(LikeResponseDto.of(likeDomain));
+                .body(LikeListResponseDto.of(likeDomainList));
     }
 
     @PostMapping()

@@ -18,9 +18,12 @@ public class LikeService {
         return likeRepository.findAll();
     }
 
-    public LikeDomain getLikeDomainById(Long id) {
-        return likeRepository.findById(id)
-                .orElseThrow(LikeNotFoundException::new);
+    public List<LikeDomain> getLikeDomainsByBoardId(Long boardId) {
+        List<LikeDomain> likes = likeRepository.findByBoardId(boardId);
+        if (likes.isEmpty()) {
+            throw new LikeNotFoundException();
+        }
+        return likes;
     }
 
     public LikeDomain createLikeDomain(LikeDomain likeDomain) {
