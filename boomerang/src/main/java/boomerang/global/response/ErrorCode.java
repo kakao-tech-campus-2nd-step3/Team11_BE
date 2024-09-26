@@ -19,6 +19,10 @@ public enum ErrorCode {
     //게시물 관련
     BOARD_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EM004","There is no board for the id."),
 
+    //댓글 관련
+    COMMENT_VALUE_IS_EMPTY(HttpStatus.BAD_REQUEST, "EC001", "The comment value is empty. Blank comments are not possible."),
+    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"EC002","There is no comment value in the comment request object.")
+
     ;
     private final HttpStatus status;
     private final String code;
