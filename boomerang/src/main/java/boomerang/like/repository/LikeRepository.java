@@ -10,4 +10,8 @@ public interface LikeRepository extends MyCrudRepository<LikeDomain, Long> {
     List<LikeDomain> findByBoardId(Long boardId);
 
     boolean existsByMemberIdAndBoardId(Long memberId, Long boardId);
+
+    LikeDomain findByMemberIdAndBoardId(Long memberId, Long boardId);
+
+    void delete(LikeDomain like);
 }

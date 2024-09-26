@@ -15,6 +15,7 @@ public enum ErrorCode {
 
     // Like
     DUPLICATE_LIKE_ERROR(HttpStatus.BAD_REQUEST, "EL001", "Duplicate Like Error"),
+    NOT_MEMBERS_LIKE_ERROR(HttpStatus.FORBIDDEN, "EL002", "Not Members Like Error"),
 
     ;
     private final HttpStatus status;

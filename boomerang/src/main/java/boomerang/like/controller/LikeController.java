@@ -53,8 +53,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/{board_id}")
-    public ResponseEntity<Void> deleteLike(Principal principal, @PathVariable(name = "board_id") Long id) {
-        likeService.deleteLikeDomain(id);
+    public ResponseEntity<Void> deleteLike(Principal principal, @PathVariable(name = "board_id") Long boardId) {
+        likeService.deleteLikeDomain(principal.getName(), boardId);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
