@@ -9,17 +9,26 @@ POST http://localhost:8080/api/board
 Content-Type: application/json
 
 {
-  "boardColumn1": "col1",
-  "boardColumn2": "col2"
+  "title": "Example Title",
+  "subtitle": "Example Subtitle",
+  "content": "This is an example content for the board.",
+  "boardType":  "GENERAL",
+  "location": "BUSAN",
+  "anonymousStatus": "true"
 }
+
 
 ### update board
 PUT http://localhost:8080/api/board/1
 Content-Type: application/json
 
 {
-  "boardColumn1": "update_col1",
-  "boardColumn2": "update_col2"
+  "title": "Update Title",
+  "subtitle": "Update Subtitle",
+  "content": "This is an Update content for the board.",
+  "boardType":  "Update GENERAL",
+  "location": "Update BUSAN",
+  "anonymousStatus": "Update true"
 }
 
 ### delete board

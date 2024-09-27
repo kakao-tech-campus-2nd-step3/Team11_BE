@@ -19,18 +19,34 @@ public class Board {
     private Long id;
 
     @Embedded
-    private TemplateColumn1 templateColumn1;
+    private Title title;
 
     @Embedded
-    private TemplateColumn2 templateColumn2;
+    private Subtitle subtitle;
+
+    @Embedded
+    private Content content;
+
+    @Embedded
+    private BoardType boardType;
+
+    @Embedded
+    private Location location;
+
+    @Embedded
+    private AnonymousStatus anonymousStatus;
 
     public Board() {
     }
 
-    public Board(Long id, TemplateColumn1 templateColumn1, TemplateColumn2 templateColumn2) {
+    public Board(Long id, Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
         this.id = id;
-        this.templateColumn1 = templateColumn1;
-        this.templateColumn2 = templateColumn2;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.content = content;
+        this.boardType = boardType;
+        this.location = location;
+        this.anonymousStatus = anonymousStatus;
     }
 
     @Override

@@ -1,36 +1,51 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.TemplateColumn1;
-import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.Board;
+import boomerang.board.domain.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
 public class BoardRequestDto {
-    private TemplateColumn1 templateColumn1;
-    private TemplateColumn2 templateColumn2;
+    private Title title;
+    private Subtitle subtitle;
+    private Content content;
+    private BoardType boardType;
+    private Location location;
+    private AnonymousStatus anonymousStatus;
 
     // 생성자
-    public BoardRequestDto(TemplateColumn1 templateColumn1, TemplateColumn2 templateColumn2) {
-        this.templateColumn1 = templateColumn1;
-        this.templateColumn2 = templateColumn2;
+    public BoardRequestDto(Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.content = content;
+        this.boardType = boardType;
+        this.location = location;
+        this.anonymousStatus = anonymousStatus;
     }
 
-    // TemplateCreateServiceDto로 변환하는 메서드
+    // Board 도메인 객체로 변환하는 메서드
     public Board toBoard() {
         return Board.builder()
-                .templateColumn1(templateColumn1)
-                .templateColumn2(templateColumn2)
+                .title(title)
+                .subtitle(subtitle)
+                .content(content)
+                .boardType(boardType)
+                .location(location)
+                .anonymousStatus(anonymousStatus)
                 .build();
     }
 
+    // 기존 ID를 사용하여 Board 객체를 생성하는 메서드
     public Board toBoard(Long id) {
         return Board.builder()
                 .id(id)
-                .templateColumn1(templateColumn1)
-                .templateColumn2(templateColumn2)
+                .title(title)
+                .subtitle(subtitle)
+                .content(content)
+                .boardType(boardType)
+                .location(location)
+                .anonymousStatus(anonymousStatus)
                 .build();
     }
 }

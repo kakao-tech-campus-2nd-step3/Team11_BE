@@ -1,83 +1,65 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.TemplateColumn1;
-import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.Board;
+import boomerang.board.domain.*;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
 
-    /*
-        상황에 따라서는 List 로 담고 싶은 ResponseDto 와 기존의 ResponseDto의 형태가 조금 달라지는 경우가 있다
-
-        ResponseDto
-        { name, email, nickname }
-
-        ResponseListDto
-        {
-            page:
-            {
-                { name, email, nickname, userStatus},
-                { name, email, nickname, userStatus},
-                { name, email, nickname, userStatus},
-                ...
-            }
-        }
-
-        이런 특수한 경우, 내부 클래스 Item 을 활용하여 List를 만들 수 있다
-
-     */
-
 @Getter
 @Builder
 @EqualsAndHashCode
 public class BoardListNeedItem {
-    // page와 같은 추가적인 정보를 담는 필드
-    private String val;
-    private List<Item> ItemList;
+    private String val; // 페이지와 같은 추가 정보를 담는 필드
+    private List<Item> itemList; // 아이템 리스트
 
     // 생성자
-    public BoardListNeedItem(String val, List<Item> ItemList) {
+    public BoardListNeedItem(String val, List<Item> itemList) {
         this.val = val;
-        this.ItemList = ItemList;
+        this.itemList = itemList;
     }
 
-    /*
-        Domain 리스트를 받아서 각 요소를 ItemList로 변환하여 List에 담는다
-    */
+    // Board 객체 리스트를 받아서 각 요소를 Item으로 변환하여 List에 담는다
     public static BoardListNeedItem of(List<Board> boardList) {
-        List<Item> templateResponseDtoList = boardList.stream()
+        List<Item> items = boardList.stream()
                 .map(Item::of)
                 .toList();
-
         return BoardListNeedItem.builder()
-                .val("some_value")  // 필요에 따라 값 설정
-                .ItemList(templateResponseDtoList)
+                .val("some_value") // 필요에 따라 값 설정
+                .itemList(items)
                 .build();
     }
-
 
     @Getter
     @Builder
     public static class Item {
-        private TemplateColumn1 templateColumn1;
-        private TemplateColumn2 templateColumn2;
+        private Title title;
+        private Subtitle subtitle;
+        private Content content;
+        private BoardType boardType;
+        private Location location;
+        private AnonymousStatus anonymousStatus;
 
         // 생성자
-        public Item(TemplateColumn1 templateColumn1, TemplateColumn2 templateColumn2) {
-            this.templateColumn1 = templateColumn1;
-            this.templateColumn2 = templateColumn2;
+        public Item(Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+            this.title = title;
+            this.subtitle = subtitle;
+            this.content = content;
+            this.boardType = boardType;
+            this.location = location;
+            this.anonymousStatus = anonymousStatus;
         }
 
-        /*
-            Domain 객체를 받아 필요한 필드만 추출
-        */
+        // Board 객체를 받아 필요한 필드만 추출
         public static Item of(Board board) {
             return Item.builder()
-                    .templateColumn1(board.getTemplateColumn1())
-                    .templateColumn2(board.getTemplateColumn2())
+                    .title(board.getTitle())
+                    .subtitle(board.getSubtitle())
+                    .content(board.getContent())
+                    .boardType(board.getBoardType())
+                    .location(board.getLocation())
+                    .anonymousStatus(board.getAnonymousStatus())
                     .build();
         }
     }

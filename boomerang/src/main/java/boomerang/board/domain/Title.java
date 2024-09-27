@@ -9,19 +9,19 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class TemplateColumn1 {
-    @Column(name = "template_column1")
+public class Title {
+    @Column(name = "title")
     private String value;
 
-    public TemplateColumn1() {
+    public Title() {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
-            throw new BoardValidException(ErrorCode.DUPLICATE_EMAIL_ERROR);
+            throw new BoardValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
         }
         this.value = value;
     }
 
-    public TemplateColumn1(String value) {
+    public Title(String value) {
         this.value = value;
     }
 
@@ -39,7 +39,7 @@ public class TemplateColumn1 {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TemplateColumn1 that = (TemplateColumn1) o;
+        Title that = (Title) o;
         return Objects.equals(value, that.value);
     }
 
