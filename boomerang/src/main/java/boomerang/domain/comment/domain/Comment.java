@@ -38,6 +38,9 @@ public class Comment {
     @Builder.Default //빌더 패턴시에도 "NOT_DELETED"로 만들어질 수 있도록 기본값 설정
     private IsDeleted isDeleted = IsDeleted.NOT_DELETED;
 
+    public String getAuthorName() {
+        return "가상닉네임";
+    }
 
     @CreatedDate
     private LocalDateTime createdAt; //기본 업데이트 됨
