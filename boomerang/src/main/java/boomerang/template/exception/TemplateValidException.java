@@ -1,6 +1,5 @@
 package boomerang.template.exception;
 
-import boomerang.global.exception.BusinessException;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorCode;
 
