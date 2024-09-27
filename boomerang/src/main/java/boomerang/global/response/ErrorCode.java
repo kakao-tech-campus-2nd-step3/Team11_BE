@@ -21,7 +21,11 @@ public enum ErrorCode {
 
     //댓글 관련
     COMMENT_VALUE_IS_EMPTY(HttpStatus.BAD_REQUEST, "EC001", "The comment value is empty. Blank comments are not possible."),
-    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"EC002","There is no comment value in the comment request object.")
+    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"EC002","There is no comment value in the comment request object."),
+    COMMENT_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EC003","There is no comment for the id."),
+    COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "EC004", "You do not have permission to modify this comment."),
+
+
 
     ;
     private final HttpStatus status;
