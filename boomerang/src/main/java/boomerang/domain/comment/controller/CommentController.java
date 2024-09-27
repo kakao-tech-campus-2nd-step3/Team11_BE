@@ -1,12 +1,15 @@
 package boomerang.domain.comment.controller;
 
 import boomerang.domain.comment.dto.CommentRequestDto;
+import boomerang.domain.comment.dto.CommentResponseDto;
 import boomerang.domain.comment.service.CommentService;
 import boomerang.domain.member.domain.Member;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,14 @@ public class CommentController {
     private final CommentService commentService;
 
     //댓글 조회
-
+    @GetMapping("comment/{board_id}")
+    public ResponseEntity<?> getAllComment(//@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("board_id") Long boardId,
+                                           Pageable pageable) {
+        Member tempMember = Member.builder().email("test123@bomerang.com").build();
+        Page<CommentResponseDto> commentResponsePage = commentService.getAllComment(tempMember.getEmail(), boardId,pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(commentResponsePage);
+    }
 
     //댓글 생성
     @PostMapping("/comment/{board_id}")
