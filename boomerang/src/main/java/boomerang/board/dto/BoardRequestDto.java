@@ -2,7 +2,7 @@ package boomerang.board.dto;
 
 import boomerang.board.domain.TemplateColumn1;
 import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -19,15 +19,15 @@ public class BoardRequestDto {
     }
 
     // TemplateCreateServiceDto로 변환하는 메서드
-    public BoardDomain toTemplateDomain() {
-        return BoardDomain.builder()
+    public Board toBoard() {
+        return Board.builder()
                 .templateColumn1(templateColumn1)
                 .templateColumn2(templateColumn2)
                 .build();
     }
 
-    public BoardDomain toTemplateDomain(Long id) {
-        return BoardDomain.builder()
+    public Board toBoard(Long id) {
+        return Board.builder()
                 .id(id)
                 .templateColumn1(templateColumn1)
                 .templateColumn2(templateColumn2)

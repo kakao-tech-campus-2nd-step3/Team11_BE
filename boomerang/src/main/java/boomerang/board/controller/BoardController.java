@@ -1,6 +1,6 @@
 package boomerang.board.controller;
 
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import boomerang.board.dto.BoardListResponseDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.dto.BoardResponseDto;
@@ -24,36 +24,36 @@ public class BoardController {
     }
 
     @GetMapping()
-    public ResponseEntity<BoardListResponseDto> getAllTemplates() {
-        List<BoardDomain> boardDomainList = boardService.getAllTemplateDomains();
+    public ResponseEntity<BoardListResponseDto> getAllBoards() {
+        List<Board> boardList = boardService.getAllBoards();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(BoardListResponseDto.of(boardDomainList));
+                .body(BoardListResponseDto.of(boardList));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardResponseDto> getTemplateById(@PathVariable(name = "id") Long id) {
-        BoardDomain boardDomain = boardService.getTemplateDomainById(id);
+    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "id") Long id) {
+        Board board = boardService.getBoardById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(BoardResponseDto.of(boardDomain));
+                .body(BoardResponseDto.of(board));
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createTemplate(@RequestBody BoardRequestDto boardRequestDto) {
-        boardService.createTemplateDomain(boardRequestDto.toTemplateDomain());
+    public ResponseEntity<Void> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
+        boardService.createBoard(boardRequestDto.toBoard());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateTemplate(@PathVariable(name = "id") Long id, @RequestBody BoardRequestDto boardRequestDto) {
-        boardService.updateTemplateDomain(boardRequestDto.toTemplateDomain(id));
+    public ResponseEntity<Void> updateBoard(@PathVariable(name = "id") Long id, @RequestBody BoardRequestDto boardRequestDto) {
+        boardService.updateBoard(boardRequestDto.toBoard(id));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable(name = "id") Long id) {
-        boardService.deleteTemplateDomain(id);
+    public ResponseEntity<Void> deleteBoard(@PathVariable(name = "id") Long id) {
+        boardService.deleteBoard(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }

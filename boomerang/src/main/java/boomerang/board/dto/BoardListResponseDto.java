@@ -1,6 +1,6 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,8 +24,8 @@ public class BoardListResponseDto {
     /*
         Domain 리스트를 받아서 각 요소를 TemplateResponseDto로 변환하여 List에 담는다
     */
-    public static BoardListResponseDto of(List<BoardDomain> boardDomainList) {
-        List<BoardResponseDto> boardResponseDtoList = boardDomainList.stream()
+    public static BoardListResponseDto of(List<Board> boardList) {
+        List<BoardResponseDto> boardResponseDtoList = boardList.stream()
                 .map(BoardResponseDto::of)
                 .toList();
 

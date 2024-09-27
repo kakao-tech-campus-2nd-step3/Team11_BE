@@ -1,7 +1,7 @@
 package boomerang.board.repository;
 
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BoardRepository extends JpaRepository<BoardDomain, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long> {
 }

@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @Builder
 @Table(name = "board")
-public class BoardDomain {
+public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,10 +24,10 @@ public class BoardDomain {
     @Embedded
     private TemplateColumn2 templateColumn2;
 
-    public BoardDomain() {
+    public Board() {
     }
 
-    public BoardDomain(Long id, TemplateColumn1 templateColumn1, TemplateColumn2 templateColumn2) {
+    public Board(Long id, TemplateColumn1 templateColumn1, TemplateColumn2 templateColumn2) {
         this.id = id;
         this.templateColumn1 = templateColumn1;
         this.templateColumn2 = templateColumn2;
@@ -38,7 +38,7 @@ public class BoardDomain {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        BoardDomain item = (BoardDomain) o;
+        Board item = (Board) o;
         return Objects.equals(id, item.id);
     }
 

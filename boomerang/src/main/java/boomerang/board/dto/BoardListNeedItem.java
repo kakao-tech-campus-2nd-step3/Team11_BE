@@ -2,7 +2,7 @@ package boomerang.board.dto;
 
 import boomerang.board.domain.TemplateColumn1;
 import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -47,8 +47,8 @@ public class BoardListNeedItem {
     /*
         Domain 리스트를 받아서 각 요소를 ItemList로 변환하여 List에 담는다
     */
-    public static BoardListNeedItem of(List<BoardDomain> boardDomainList) {
-        List<Item> templateResponseDtoList = boardDomainList.stream()
+    public static BoardListNeedItem of(List<Board> boardList) {
+        List<Item> templateResponseDtoList = boardList.stream()
                 .map(Item::of)
                 .toList();
 
@@ -74,10 +74,10 @@ public class BoardListNeedItem {
         /*
             Domain 객체를 받아 필요한 필드만 추출
         */
-        public static Item of(BoardDomain boardDomain) {
+        public static Item of(Board board) {
             return Item.builder()
-                    .templateColumn1(boardDomain.getTemplateColumn1())
-                    .templateColumn2(boardDomain.getTemplateColumn2())
+                    .templateColumn1(board.getTemplateColumn1())
+                    .templateColumn2(board.getTemplateColumn2())
                     .build();
         }
     }

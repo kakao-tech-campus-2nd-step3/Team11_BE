@@ -2,7 +2,7 @@ package boomerang.board.dto;
 
 import boomerang.board.domain.TemplateColumn1;
 import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,10 +25,10 @@ public class BoardResponseDto {
         Response (col1, col2) 와 같이 불필요한 부분을 제거 또는
         Response (col1 + "원", col2 + "개") 와 같이 값 형태를 변경하는 데 사용된다
      */
-    public static BoardResponseDto of(BoardDomain boardDomain) {
+    public static BoardResponseDto of(Board board) {
         return BoardResponseDto.builder()
-                .templateColumn1(boardDomain.getTemplateColumn1())
-                .templateColumn2(boardDomain.getTemplateColumn2())
+                .templateColumn1(board.getTemplateColumn1())
+                .templateColumn2(board.getTemplateColumn2())
                 .build();
     }
 }

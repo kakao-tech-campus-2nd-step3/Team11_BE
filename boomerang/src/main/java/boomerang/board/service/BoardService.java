@@ -1,6 +1,6 @@
 package boomerang.board.service;
 
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import boomerang.board.exception.BoardNotFoundException;
 import boomerang.board.repository.BoardRepository;
 import org.springframework.stereotype.Service;
@@ -15,30 +15,30 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
-    public List<BoardDomain> getAllTemplateDomains() {
+    public List<Board> getAllBoards() {
         return boardRepository.findAll();
     }
 
-    public BoardDomain getTemplateDomainById(Long id) {
+    public Board getBoardById(Long id) {
         return boardRepository.findById(id)
                 .orElseThrow(BoardNotFoundException::new);
     }
 
-    public BoardDomain createTemplateDomain(BoardDomain boardDomain) {
-        return boardRepository.save(boardDomain);
+    public Board createBoard(Board board) {
+        return boardRepository.save(board);
     }
 
-    public BoardDomain updateTemplateDomain(BoardDomain boardDomain) {
-        validateTemplateDomainExists(boardDomain.getId());
-        return boardRepository.save(boardDomain);
+    public Board updateBoard(Board board) {
+        validateBoardExists(board.getId());
+        return boardRepository.save(board);
     }
 
-    public void deleteTemplateDomain(Long id) {
-        validateTemplateDomainExists(id);
+    public void deleteBoard(Long id) {
+        validateBoardExists(id);
         boardRepository.deleteById(id);
     }
 
-    private void validateTemplateDomainExists(Long id) {
+    private void validateBoardExists(Long id) {
         if (!boardRepository.existsById(id)) {
             throw new BoardNotFoundException();
         }

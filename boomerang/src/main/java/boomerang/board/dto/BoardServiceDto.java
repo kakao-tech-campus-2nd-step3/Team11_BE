@@ -2,7 +2,7 @@ package boomerang.board.dto;
 
 import boomerang.board.domain.TemplateColumn1;
 import boomerang.board.domain.TemplateColumn2;
-import boomerang.board.domain.BoardDomain;
+import boomerang.board.domain.Board;
 import lombok.Getter;
 
 // 중간 Dto 변환이 필요한 경우 사용
@@ -21,7 +21,7 @@ public class BoardServiceDto {
     }
 
     // TemplateCreateServiceDto로 변환하는 메서드
-    public BoardDomain toTemplateDomain() {
-        return new BoardDomain(id, templateColumn1, templateColumn2);
+    public Board toTemplateDomain() {
+        return new Board(id, templateColumn1, templateColumn2);
     }
 }
