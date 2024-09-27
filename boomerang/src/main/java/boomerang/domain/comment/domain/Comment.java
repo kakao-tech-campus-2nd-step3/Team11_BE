@@ -51,4 +51,8 @@ public class Comment {
     public void softDelete() {
         this.isDeleted = IsDeleted.DELETED;
     }
+
+    public void updateCommentText(CommentText commentText) {
+        this.commentText = commentText;
+    }
 }
