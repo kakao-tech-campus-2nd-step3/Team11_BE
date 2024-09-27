@@ -46,7 +46,7 @@ public class CommentService {
         //댓글응답객체페이지 본문 만들기
         List<CommentResponseDto> commentResponseContent = comments.getContent()
                 .stream()
-                .map(comment -> CommentResponseDto.of(comment,loginUser))
+                .map(comment -> CommentResponseDto.of(comment,isUserCommentAuthor(loginUser,comment)))
                 .toList();
 
         //페이지 만들어서 제공
@@ -54,15 +54,37 @@ public class CommentService {
 
     }
 
+
+    public void deleteComment(String email, Long commentId) {
+        Member loginUser = getMemberOrThrow(email);
+        Comment comment = getCommentOrThrow(commentId);
+
+        if (isUserCommentAuthor(loginUser, comment)) {
+            throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
+        }
+
+        //논리삭제
+        comment.softDelete();
+
+        commentRepository.save(comment);
+    }
+
     private Member getMemberOrThrow(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
-
 
     private Board getBoardOrThrow(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NON_EXISTENT));
     }
 
+    private Comment getCommentOrThrow(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
+    }
+
+    public boolean isUserCommentAuthor(Member loginUser, Comment comment) {
+        return !comment.getAuthor().equals(loginUser);
+    }
 }
