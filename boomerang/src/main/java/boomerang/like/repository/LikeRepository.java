@@ -3,8 +3,9 @@ package boomerang.like.repository;
 import boomerang.global.MyCrudRepository;
 import boomerang.like.domain.LikeDomain;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LikeRepository extends MyCrudRepository<LikeDomain, Long> {
+public interface LikeRepository extends JpaRepository<LikeDomain, Long> {
     boolean existsById(Long id);
 
     List<LikeDomain> findByBoardId(Long boardId);

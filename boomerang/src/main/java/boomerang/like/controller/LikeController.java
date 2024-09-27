@@ -5,7 +5,6 @@ import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.like.domain.LikeDomain;
 import boomerang.like.dto.LikeListResponseDto;
-import boomerang.like.dto.LikeRequestDto;
 import boomerang.like.service.LikeService;
 import java.security.Principal;
 import java.util.List;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
