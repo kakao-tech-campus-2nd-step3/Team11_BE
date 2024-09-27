@@ -64,7 +64,8 @@ public class LikeService {
         LikeDomain like = likeRepository.findByMemberIdAndBoardId(member.getId(), boardId)
             .orElseThrow(() -> new LikeNotFoundException());
 
-        likeRepository.delete(like);
+        like.delete();
+        likeRepository.save(like);
     }
 
     private void validateTemplateDomainExists(Long id) {

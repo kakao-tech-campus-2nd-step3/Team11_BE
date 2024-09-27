@@ -64,4 +64,8 @@ public class LikeDomain {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }
