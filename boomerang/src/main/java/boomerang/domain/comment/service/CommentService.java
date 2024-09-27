@@ -26,6 +26,7 @@ public class CommentService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
+    //댓글 생성
     public void createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
         Member author = getMemberOrThrow(email);
         Board board = getBoardOrThrow(boardId);
@@ -37,6 +38,7 @@ public class CommentService {
                 .build());
     }
 
+    //댓글 조회
     public Page<CommentResponseDto> getAllComment(String email, Long boardId, Pageable pageable) {
         Member loginUser = getMemberOrThrow(email);
         Board board = getBoardOrThrow(boardId);
@@ -55,11 +57,11 @@ public class CommentService {
     }
 
 
+    //댓글 삭제 (논리)
     public void deleteComment(String email, Long commentId) {
-        Member loginUser = getMemberOrThrow(email);
         Comment comment = getCommentOrThrow(commentId);
 
-        if (isUserCommentAuthor(loginUser, comment)) {
+        if (isUserCommentAuthor(getMemberOrThrow(email), comment)) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -67,6 +69,24 @@ public class CommentService {
         comment.softDelete();
 
         commentRepository.save(comment);
+    }
+
+
+    //댓글 수정
+    public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
+        Comment comment = getCommentOrThrow(commentId);
+
+        if (isUserCommentAuthor(getMemberOrThrow(email), comment)) {
+            throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
+        }
+
+        comment.updateCommentText(commentRequestDto.getCommentText());
+
+        commentRepository.save(comment);
+    }
+
+    public boolean isUserCommentAuthor(Member loginUser, Comment comment) {
+        return !comment.getAuthor().equals(loginUser);
     }
 
     private Member getMemberOrThrow(String email) {
@@ -84,7 +104,6 @@ public class CommentService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
     }
 
-    public boolean isUserCommentAuthor(Member loginUser, Comment comment) {
-        return !comment.getAuthor().equals(loginUser);
-    }
+
+
 }
