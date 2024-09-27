@@ -1,0 +1,26 @@
+### get boards
+GET http://localhost:8080/api/board
+
+### get board
+GET http://localhost:8080/api/board/1
+
+### create board
+POST http://localhost:8080/api/board
+Content-Type: application/json
+
+{
+  "boardColumn1": "col1",
+  "boardColumn2": "col2"
+}
+
+### update board
+PUT http://localhost:8080/api/board/1
+Content-Type: application/json
+
+{
+  "boardColumn1": "update_col1",
+  "boardColumn2": "update_col2"
+}
+
+### delete board
+DELETE http://localhost:8080/api/board/1
