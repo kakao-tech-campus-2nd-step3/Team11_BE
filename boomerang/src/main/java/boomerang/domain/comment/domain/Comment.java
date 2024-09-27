@@ -48,4 +48,7 @@ public class Comment {
     @LastModifiedDate
     private LocalDateTime updatedAt; //기본 업데이트 됨
 
+    public void softDelete() {
+        this.isDeleted = IsDeleted.DELETED;
+    }
 }
