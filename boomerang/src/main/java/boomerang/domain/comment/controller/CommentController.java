@@ -44,7 +44,16 @@ public class CommentController {
     }
 
     //댓글 수정
-
+    @PutMapping("/comment/{board_id}/{comment_id}")
+    public ResponseEntity<?> updateComment(//@AuthenticationPrincipal PrincipalDetails principalDetails
+                                           @PathVariable("board_id") Long boardId,
+                                           @PathVariable("comment_id") Long commentId,
+                                           @RequestBody CommentRequestDto commentRequestDto) {
+        //현재 로그인 기능 미 구현으로 테스트 유저를 집어넣음 (이후 삭제 필요)
+        Member tempMember = Member.builder().email("test123@bomerang.com").build();
+        commentService.updateComment(tempMember.getEmail(), commentId, commentRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     //댓글 삭제
     @DeleteMapping("/comment/{board_id}/{comment_id}")
