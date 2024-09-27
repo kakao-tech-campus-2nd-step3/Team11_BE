@@ -27,12 +27,12 @@ public class CommentResponseDto {
     private boolean isEdited;               //수정여부
 
     //도메인을 기준으로 응답 객체를 만드는 부분
-    public static CommentResponseDto of(Comment comment, Member loginUser) {
+    public static CommentResponseDto of(Comment comment, Boolean isAuthor ) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
                 .authorName(comment.getAuthorName())
                 .text(comment.getCommentText().getValue())
-                .isAuthor(loginUser.equals(comment.getAuthor()))            //작성 여부 계산
+                .isAuthor(isAuthor)
                 .isEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt())) // 수정 여부 계산
                 .lastModifiedAt(comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt()) //마지막으로 수정된 시간 제공
                 .build();
