@@ -26,6 +26,7 @@ public class CommentController {
     public ResponseEntity<?> getAllComment(//@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @PathVariable("board_id") Long boardId,
                                            Pageable pageable) {
+        //현재 로그인 기능 미 구현으로 테스트 유저를 집어넣음 (이후 삭제 필요)
         Member tempMember = Member.builder().email("test123@bomerang.com").build();
         Page<CommentResponseDto> commentResponsePage = commentService.getAllComment(tempMember.getEmail(), boardId,pageable);
         return ResponseEntity.status(HttpStatus.OK).body(commentResponsePage);
@@ -46,6 +47,15 @@ public class CommentController {
 
 
     //댓글 삭제
+    @DeleteMapping("/comment/{board_id}/{comment_id}")
+    public ResponseEntity<?> deleteComment(//@AuthenticationPrincipal PrincipalDetails principalDetails
+                                           @PathVariable("board_id") Long boardId,
+                                           @PathVariable("comment_id") Long commentId) {
+        //현재 로그인 기능 미 구현으로 테스트 유저를 집어넣음 (이후 삭제 필요)
+        Member tempMember = Member.builder().email("test123@bomerang.com").build();
+        commentService.deleteComment(tempMember.getEmail(), commentId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 
     @ExceptionHandler(BusinessException.class)
