@@ -4,13 +4,19 @@ import boomerang.domain.board.domain.Board;
 import boomerang.domain.board.repository.BoardRepository;
 import boomerang.domain.comment.domain.Comment;
 import boomerang.domain.comment.dto.CommentRequestDto;
+import boomerang.domain.comment.dto.CommentResponseDto;
 import boomerang.domain.comment.repository.CommentRepository;
 import boomerang.domain.member.domain.Member;
 import boomerang.domain.member.repository.MemberRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +35,23 @@ public class CommentService {
                 .author(author)
                 .board(board)
                 .build());
+    }
+
+    public Page<CommentResponseDto> getAllComment(String email, Long boardId, Pageable pageable) {
+        Member loginUser = getMemberOrThrow(email);
+        Board board = getBoardOrThrow(boardId);
+        Page<Comment> comments = commentRepository.findAllByBoardIdOrderByCreatedAtDesc(pageable, board.getId());
+
+
+        //댓글응답객체페이지 본문 만들기
+        List<CommentResponseDto> commentResponseContent = comments.getContent()
+                .stream()
+                .map(comment -> CommentResponseDto.of(comment,loginUser))
+                .toList();
+
+        //페이지 만들어서 제공
+        return new PageImpl<>(commentResponseContent, pageable, comments.getTotalElements());
+
     }
 
     private Member getMemberOrThrow(String email) {
