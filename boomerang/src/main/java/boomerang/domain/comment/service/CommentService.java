@@ -40,7 +40,7 @@ public class CommentService {
     public Page<CommentResponseDto> getAllComment(String email, Long boardId, Pageable pageable) {
         Member loginUser = getMemberOrThrow(email);
         Board board = getBoardOrThrow(boardId);
-        Page<Comment> comments = commentRepository.findAllByBoardIdOrderByCreatedAtDesc(pageable, board.getId());
+        Page<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedNot(pageable, board.getId());
 
 
         //댓글응답객체페이지 본문 만들기
