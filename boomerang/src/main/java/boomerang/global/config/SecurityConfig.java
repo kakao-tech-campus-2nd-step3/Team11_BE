@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -87,13 +88,16 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/").permitAll()
-                .anyRequest().authenticated());
+                .anyRequest().permitAll());
 
         //세션 설정 : STATELESS
         http
             .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // H2 콘솔을 사용하기 위해 프레임 옵션 비활성화
+        http
+            .headers((headersConfigurer) -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
         return http.build();
     }
