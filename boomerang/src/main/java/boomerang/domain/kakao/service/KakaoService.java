@@ -6,8 +6,8 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 
 import boomerang.domain.kakao.domain.KakaoDomain;
 //import boomerang.domain.kakao.dto.KakaoServiceDto;
-import boomerang.domain.kakao.domain.KakaoMember;
-import boomerang.domain.kakao.domain.KakaoProfile;
+import boomerang.domain.kakao.domain.Kakao_member;
+import boomerang.domain.kakao.domain.Kakao_profile;
 import boomerang.domain.kakao.dto.KakaoTokenResponseDto;
 import boomerang.domain.kakao.exception.KakaoNotFoundException;
 import boomerang.domain.kakao.repository.KakaoRepository;
@@ -45,21 +45,21 @@ public class KakaoService {
 
     }
 
-    public KakaoMember getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
-        KakaoProfile kakaoProfile = restClient.post()
+    public Kakao_member getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
+        Kakao_profile kakao_profile = restClient.post()
             .uri("https://kapi.kakao.com/v2/user/me")
             .contentType(CONTENT_TYPE)
             .header(AUTHORIZATION, BEARER + tokenResponse.accessToken)
             .retrieve()
-            .toEntity(KakaoProfile.class)
+            .toEntity(Kakao_profile.class)
             .getBody();
 
-        System.out.println("kakaoProfile = " + kakaoProfile);
-        KakaoMember kakaoMember = new KakaoMember(kakaoProfile, "password");
+        System.out.println("kakaoProfile = " + kakao_profile);
+        Kakao_member kakao_member = new Kakao_member(kakao_profile, "password");
 
 
 
-        return kakaoMember;
+        return kakao_member;
 
     }
 
