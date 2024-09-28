@@ -2,15 +2,17 @@ package boomerang.template.controller;
 
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
-import boomerang.global.response.ResultCode;
-import boomerang.global.response.SimpleResultResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.template.domain.TemplateDomain;
-import boomerang.template.dto.TemplateCreateRequestDto;
-import boomerang.template.dto.TemplateCreateResponseDto;
+import boomerang.template.dto.TemplateListResponseDto;
+import boomerang.template.dto.TemplateRequestDto;
+import boomerang.template.dto.TemplateResponseDto;
 import boomerang.template.service.TemplateService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/template")
@@ -21,33 +23,39 @@ public class TemplateController {
         this.templateService = templateService;
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<TemplateCreateResponseDto> getAllMembers() {
-//        templateService.getAllTemplateDomains();
-//        return ;
-//    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TemplateDomain> getTemplateById(@PathVariable(name = "id") Long id) {
-        return ResponseHelper.createResponse(templateService.getTemplateDomainById(id));
+    @GetMapping()
+    public ResponseEntity<TemplateListResponseDto> getAllTemplates() {
+        List<TemplateDomain> templateDomainList = templateService.getAllTemplateDomains();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(TemplateListResponseDto.of(templateDomainList));
     }
 
-    @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createTemplate(@RequestBody TemplateCreateRequestDto templateCreateRequestDTO) {
-        templateService.createTemplateDomain(templateCreateRequestDTO.toTemplateCreateServiceDto());
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_MEMBER_SUCCESS);
+    @GetMapping("/{id}")
+    public ResponseEntity<TemplateResponseDto> getTemplateById(@PathVariable(name = "id") Long id) {
+        TemplateDomain templateDomain = templateService.getTemplateDomainById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(TemplateResponseDto.of(templateDomain));
+    }
+
+    @PostMapping()
+    public ResponseEntity<Void> createTemplate(@RequestBody TemplateRequestDto templateRequestDto) {
+        templateService.createTemplateDomain(templateRequestDto.toTemplateDomain());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> updateTemplate(@PathVariable(name = "id") Long id, @RequestBody TemplateCreateRequestDto templateCreateRequestDTO) {
-        templateService.updateTemplateDomain(templateCreateRequestDTO.toTemplateCreateServiceDto(id));
-        return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_MEMBER_SUCCESS);
+    public ResponseEntity<Void> updateTemplate(@PathVariable(name = "id") Long id, @RequestBody TemplateRequestDto templateRequestDto) {
+        templateService.updateTemplateDomain(templateRequestDto.toTemplateDomain(id));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteTemplate(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteTemplate(@PathVariable(name = "id") Long id) {
         templateService.deleteTemplateDomain(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,

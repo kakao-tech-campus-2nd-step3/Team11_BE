@@ -1,25 +1,26 @@
+### get templates
+GET http://localhost:8080/api/template
+
 ### get template
 GET http://localhost:8080/api/template/1
 
-### create member
-POST http://localhost:8080/api/
+### create template
+POST http://localhost:8080/api/template
 Content-Type: application/json
 
 {
-  "templateColumn1": "email5",
-  "password": "password3",
-  "nickName": "nickname3"
+  "templateColumn1": "col1",
+  "templateColumn2": "col2"
 }
 
-### update member
-PUT http://localhost:8080/api/members/1
+### update template
+PUT http://localhost:8080/api/template/1
 Content-Type: application/json
 
 {
-  "templateColumn1": "email10",
-  "password": "password3",
-  "nickName": "nickname3"
+  "templateColumn1": "update_col1",
+  "templateColumn2": "update_col2"
 }
 
-### delete member
-DELETE http://localhost:8080/api/members/1
+### delete template
+DELETE http://localhost:8080/api/template/1
