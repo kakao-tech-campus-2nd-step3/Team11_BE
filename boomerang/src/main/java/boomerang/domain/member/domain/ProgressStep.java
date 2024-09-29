@@ -8,15 +8,15 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class Progress_step {
+public class ProgressStep {
     @Column(name = "progress_step")
     private String value;
 
-    public Progress_step() {
+    public ProgressStep() {
 
     }
 
-    public Progress_step(String value) {
+    public ProgressStep(String value) {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
             throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
@@ -38,7 +38,7 @@ public class Progress_step {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Progress_step that = (Progress_step) o;
+        ProgressStep that = (ProgressStep) o;
         return Objects.equals(value, that.value);
     }
 

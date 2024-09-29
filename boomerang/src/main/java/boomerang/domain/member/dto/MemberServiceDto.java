@@ -5,15 +5,12 @@ import boomerang.domain.member.domain.Email;
 import boomerang.domain.member.domain.Insurance_status;
 import boomerang.domain.member.domain.Is_deleted;
 import boomerang.domain.member.domain.MemberDomain;
-import boomerang.domain.member.domain.Member_type;
+import boomerang.domain.member.domain.MemberType;
 import boomerang.domain.member.domain.Password;
-import boomerang.domain.member.domain.Profile_image;
-import boomerang.domain.member.domain.Progress_step;
-import boomerang.domain.member.domain.Return_deposit;
-import boomerang.domain.member.domain.Safety_score;
-import boomerang.domain.member.domain.Updated_at;
-import boomerang.global.exception.BusinessException;
-import boomerang.global.response.ErrorCode;
+import boomerang.domain.member.domain.ProfileImage;
+import boomerang.domain.member.domain.ProgressStep;
+import boomerang.domain.member.domain.ReturnDeposit;
+import boomerang.domain.member.domain.SafetyScore;
 import lombok.Getter;
 
 @Getter
@@ -21,15 +18,11 @@ public class MemberServiceDto {
     private Long id;
     private Password password;
     private Email email;
-    private Member_type member_type;
-    private Insurance_status insurance_status;
-    private Return_deposit return_deposit;
-    private Safety_score safety_score;
-    private Profile_image profile_image;
-    private Progress_step progress_step;
-    private Created_at created_at;
-    private Updated_at updated_at;
-    private Is_deleted is_deleted;
+    private MemberType memberType;
+    private ReturnDeposit returnDeposit;
+    private SafetyScore safetyScore;
+    private ProfileImage profileImage;
+    private ProgressStep progressStep;
 
     protected MemberServiceDto() {}
 

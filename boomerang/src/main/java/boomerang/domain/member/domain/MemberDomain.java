@@ -27,22 +27,23 @@ public class MemberDomain {
     private Email email;
 
     @Embedded
-    private Member_type member_type;
+    private MemberType memberType;
 
     @Embedded
     private Insurance_status insurance_status;
 
+    //돌려받을 수 있는 보증금
     @Embedded
-    private Return_deposit return_deposit;
+    private ReturnDeposit returnDeposit;
 
     @Embedded
-    private Safety_score safety_score;
+    private SafetyScore safetyScore;
 
     @Embedded
-    private Profile_image profile_image;
+    private ProfileImage profileImage;
 
     @Embedded
-    private Progress_step progress_step;
+    private ProgressStep progressStep;
 
     @Embedded
     private Created_at created_at;

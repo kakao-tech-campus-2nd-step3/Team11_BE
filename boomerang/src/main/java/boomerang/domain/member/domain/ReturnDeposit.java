@@ -8,15 +8,15 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class Updated_at {
-    @Column(name = "updated_at")
+public class ReturnDeposit {
+    @Column(name = "return_deposit")
     private String value;
 
-    public Updated_at() {
+    public ReturnDeposit() {
 
     }
 
-    public Updated_at(String value) {
+    public Return_deposit(String value) {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
             throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
@@ -38,7 +38,7 @@ public class Updated_at {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Updated_at that = (Updated_at) o;
+        ReturnDeposit that = (ReturnDeposit) o;
         return Objects.equals(value, that.value);
     }
 

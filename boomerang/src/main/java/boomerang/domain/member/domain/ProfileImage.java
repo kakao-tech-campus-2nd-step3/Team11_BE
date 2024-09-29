@@ -8,15 +8,15 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class Member_type {
-    @Column(name = "member_type")
+public class ProfileImage {
+    @Column(name = "profile_image")
     private String value;
 
-    public Member_type() {
+    public ProfileImage() {
 
     }
 
-    public Member_type(String value) {
+    public ProfileImage(String value) {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
             throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
@@ -38,7 +38,7 @@ public class Member_type {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Member_type that = (Member_type) o;
+        ProfileImage that = (ProfileImage) o;
         return Objects.equals(value, that.value);
     }
 

@@ -2,7 +2,7 @@ package boomerang.domain.kakao.controller;
 
 import boomerang.domain.kakao.domain.KakaoDomain;
 //import boomerang.domain.kakao.dto.KakaoCreateRequestDto;
-import boomerang.domain.kakao.domain.Kakao_member;
+import boomerang.domain.kakao.domain.KakaoMember;
 import boomerang.domain.kakao.dto.KakaoTokenResponseDto;
 import boomerang.domain.kakao.service.KakaoService;
 import boomerang.global.exception.DomainValidationException;
