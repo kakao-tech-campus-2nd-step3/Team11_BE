@@ -38,3 +38,20 @@ out/
 
 # Ignore application properties
 application.properties
+
+# Gradle 파일 무시
+.gradle/
+build/
+
+# IntelliJ IDEA 관련 파일 무시
+*.iml
+.idea/
+out/
+
+# VSCode 관련 파일 무시
+.vscode/
+
+# Gradle Wrapper 파일만 예외 처리 (필요한 경우에만)
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
