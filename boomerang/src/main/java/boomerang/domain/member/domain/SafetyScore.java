@@ -8,15 +8,15 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class Safety_score {
+public class SafetyScore {
     @Column(name = "safety_score")
-    private String value;
+    private int value;
 
-    public Safety_score() {
+    public SafetyScore() {
 
     }
 
-    public Safety_score(String value) {
+    public SafetyScore(int value) {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
             throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
@@ -25,20 +25,20 @@ public class Safety_score {
     }
 
     @JsonValue
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
+//    @Override
+//    public String toString() {
+//        return value;
+//    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Safety_score that = (Safety_score) o;
+        SafetyScore that = (SafetyScore) o;
         return Objects.equals(value, that.value);
     }
 

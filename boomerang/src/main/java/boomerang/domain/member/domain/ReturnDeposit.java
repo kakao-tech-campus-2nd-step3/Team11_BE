@@ -10,13 +10,13 @@ import java.util.Objects;
 @Embeddable
 public class ReturnDeposit {
     @Column(name = "return_deposit")
-    private String value;
+    private int value;
 
     public ReturnDeposit() {
 
     }
 
-    public Return_deposit(String value) {
+    public ReturnDeposit(int value) {
         // 조건을 통해 valid한 값인지를 체크한다
         if (false) {
             throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
@@ -25,14 +25,14 @@ public class ReturnDeposit {
     }
 
     @JsonValue
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    @Override
-    public String toString() {
-        return value;
-    }
+//    @Override
+//    public String toString() {
+//        return value;
+//    }
 
     @Override
     public boolean equals(Object o) {

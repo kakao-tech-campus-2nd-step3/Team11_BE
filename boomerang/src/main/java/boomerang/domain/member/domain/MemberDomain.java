@@ -1,21 +1,26 @@
 package boomerang.domain.member.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "member")
 @Getter
 @Setter
 public class MemberDomain {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,8 +34,9 @@ public class MemberDomain {
     @Embedded
     private MemberType memberType;
 
-    @Embedded
-    private Insurance_status insurance_status;
+    //보험가입여부
+    @Column(name = "insurance_status")
+    private boolean insuranceStatus;
 
     //돌려받을 수 있는 보증금
     @Embedded
@@ -45,47 +51,39 @@ public class MemberDomain {
     @Embedded
     private ProgressStep progressStep;
 
-    @Embedded
-    private Created_at created_at;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @Embedded
-    private Updated_at updated_at;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @Embedded
-    private Is_deleted is_deleted;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
     protected MemberDomain() {
     }
 
-    public MemberDomain(Long id, Password password, Email email, Member_type member_type,
-        Insurance_status insurance_status, Return_deposit return_deposit, Safety_score safety_score, Profile_image profile_image,
-        Progress_step progress_step, Created_at created_at, Updated_at updated_at, Is_deleted is_deleted) {
-        this.id = id;
+    public MemberDomain(Password password, Email email) {
         this.password = password;
         this.email = email;
-        this.member_type = member_type;
-        this.insurance_status = insurance_status;
-        this.return_deposit = return_deposit;
-        this.safety_score = safety_score;
-        this.profile_image = profile_image;
-        this.progress_step = progress_step;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.is_deleted = is_deleted;
-
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        MemberDomain item = (MemberDomain) o;
-        return Objects.equals(id, item.id);
+        }
+        MemberDomain that = (MemberDomain) o;
+        return Objects.equals(id, that.id) && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, email);
     }
 }
