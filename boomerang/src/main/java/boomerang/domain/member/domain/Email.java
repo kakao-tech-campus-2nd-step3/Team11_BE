@@ -2,6 +2,7 @@ package boomerang.domain.member.domain;
 
 import boomerang.domain.member.exception.MemberValidException;
 import boomerang.global.response.ErrorCode;
+import boomerang.template.exception.TemplateValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -18,8 +19,8 @@ public class Email {
 
     public Email(String value) {
         // 조건을 통해 valid한 값인지를 체크한다
-        if (!value.contains("@")) { //이메일에 '@'가 포함되지 않으면 유효하지 않다.
-            throw new MemberValidException(ErrorCode.TEMPLATE_NOT_FOUND_ERROR);
+        if (false) {
+            throw new TemplateValidException(ErrorCode.DUPLICATE_EMAIL_ERROR);
         }
         this.value = value;
     }
