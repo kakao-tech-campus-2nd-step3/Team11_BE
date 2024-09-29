@@ -10,6 +10,7 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.response.ResultCode;
 import boomerang.global.response.SimpleResultResponseDto;
+import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
 import io.jsonwebtoken.Claims;
@@ -56,20 +57,21 @@ public class KakaoController {
     public void authorize(HttpServletResponse response) throws IOException {
         response.sendRedirect(
             "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=5c13fd3c6832cef54c183d9295eecacb&redirect_uri=http://localhost:8080/api/auth/login/callback");
-
     }
 
     @GetMapping("/login/callback")
     @ResponseBody
-    public ResponseEntity<?> token(@RequestParam("code") String code) {
+    public ResponseEntity<?> token(@RequestParam("code") String code, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoService.getAccessTokenFromKakao(code);
         KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
         String token = memberService.loginKakaoMember(kakaoMember);
-        Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
+
+        response.addCookie(CookieUtil.createCookies(token));
+        System.out.println("token = " + token);
 //        Long memberId = Long.parseLong(claims.getSubject());
 //        Member member = memberService.getMemberById(memberId);
-//        member.setAccessToken(token);// jwt 토큰 멤버 DB에 저장
+//        member.setAccessToken(token);// jwt 토큰 멤버 DB에Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", "")); 저장
 //        member.setKakaoToken(kakaoTokenResponseDto.getAccessToken());// 카카오에서 발급받은 엑세스 토큰도 멤버 DB에 저장
 //        memberService.updateMember(member);
         return ResponseEntity.status(HttpStatus.OK)
