@@ -43,6 +43,11 @@ public class JwtUtil {
         return claims;
     }
 
+    public String getEmail(String token) {
+
+        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("email", String.class);
+    }
+
     public boolean isTokenValid(String token, Long memberId) {
         Claims claims = extractClaims(token);
         return claims.getSubject().equals(memberId.toString()) && !isTokenExpired(token);

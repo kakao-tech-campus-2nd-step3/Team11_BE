@@ -52,11 +52,8 @@ public class SecurityConfig {
                     configuration.setMaxAge(3600L);                                                             //프리플라이트 요청 결과 한시간동안 유효
 
                     //클라이언트가 응답에서 Set-Cookie, Authorization의 헤더에 접근할 수 있도록 허용
-//                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
                     configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
                     configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-
-
 
                     return configuration;
                 }
