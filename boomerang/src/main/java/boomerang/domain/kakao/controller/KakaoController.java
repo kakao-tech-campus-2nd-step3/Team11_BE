@@ -9,6 +9,7 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.response.ResultCode;
 import boomerang.global.response.SimpleResultResponseDto;
+import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,10 +35,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class KakaoController {
     private final KakaoService kakaoService;
-//    private final JwtUtil jwtUtil;
+    private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
-    public KakaoController(KakaoService kakaoService) {
+    public KakaoController(KakaoService kakaoService, MemberService memberService,
+        JwtUtil jwtUtil) {
         this.kakaoService = kakaoService;
+        this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
 //    @GetMapping("")
