@@ -3,6 +3,7 @@ package boomerang.domain.member.service;
 import boomerang.domain.kakao.domain.KakaoMember;
 import boomerang.domain.member.domain.Email;
 import boomerang.domain.member.domain.MemberDomain;
+import boomerang.domain.member.domain.Password;
 import boomerang.domain.member.dto.MemberServiceDto;
 import boomerang.domain.member.exception.MemberNotFoundException;
 import boomerang.domain.member.repository.MemberRepository;
