@@ -26,8 +26,6 @@ public class MemberDomain {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private Password password;
 
     @Embedded
     private Email email;
@@ -66,8 +64,7 @@ public class MemberDomain {
     protected MemberDomain() {
     }
 
-    public MemberDomain(Password password, Email email) {
-        this.password = password;
+    public MemberDomain(Email email) {
         this.email = email;
     }
 
