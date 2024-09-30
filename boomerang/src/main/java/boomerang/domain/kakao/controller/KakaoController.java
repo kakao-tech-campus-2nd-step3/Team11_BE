@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,16 +38,18 @@ public class KakaoController {
     }
 
 
+    @Value("${client_id}")
+    private String clientId;
+
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
         response.sendRedirect(
-            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=5c13fd3c6832cef54c183d9295eecacb&redirect_uri=http://localhost:8080/api/v1/auth/login/callback");
+            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+clientId+"&redirect_uri=http://localhost:8080/api/v1/auth/login/callback");
     }
 
     @GetMapping("/login/callback")
     @ResponseBody
     public ResponseEntity<?> token(@RequestParam("code") String code, HttpServletResponse response) {
-        Map<String, Object> responseBody = new HashMap<>();
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoService.getAccessTokenFromKakao(code);
         KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
         String token = memberService.loginKakaoMember(kakaoMember);
