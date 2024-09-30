@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<MemberDomain, Long> {
     boolean existsById(Long id);
+    boolean existsByEmail(Email email);
     Optional<MemberDomain> findByEmail(Email email);
 }

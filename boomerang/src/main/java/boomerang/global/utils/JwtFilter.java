@@ -70,6 +70,12 @@ public class JwtFilter extends OncePerRequestFilter {
         //토큰에서 email 획득
         String email = jwtUtil.getEmail(token);
 
+        //정상적인 jwt토큰이지만 DB에 없는 경우
+        if (!principalService.existUserByUsername(email)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
 

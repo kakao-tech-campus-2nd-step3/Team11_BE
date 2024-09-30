@@ -44,8 +44,12 @@ public class JwtUtil {
     }
 
     public String getEmail(String token) {
-
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("email", String.class);
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+        return claims.get("email", String.class);
     }
 
     public boolean isTokenValid(String token, Long memberId) {

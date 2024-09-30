@@ -77,9 +77,9 @@ public class SecurityConfig {
             .httpBasic((auth) -> auth.disable());
 
 
-//        //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
-//        http
-//                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class);
+        //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
+        http
+                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class);
 
 
         //oauth2 (이후
@@ -93,6 +93,7 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
             .authorizeHttpRequests((auth) -> auth
+                .requestMatchers("/api/member").authenticated()
                 .anyRequest().permitAll());
 
         //세션 설정 : STATELESS

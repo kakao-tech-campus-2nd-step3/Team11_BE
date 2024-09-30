@@ -28,7 +28,11 @@ public class PrincipalService implements UserDetailsService {
         MemberDomain memberDomain = memberRepository.findByEmail(new Email(email))
             .orElseThrow(MemberNotFoundException::new);
         return new PrincipalDetails(memberDomain);
-    }
+    }    // 필수 메서드 구현 (UserDetailsService 인터페이스의 메서드)
 
+    public Boolean existUserByUsername(String email) {
+        // username을 email로 간주하여 이메일 기반으로 유저 로드
+        return memberRepository.existsByEmail(new Email(email));
+    }
 
 }

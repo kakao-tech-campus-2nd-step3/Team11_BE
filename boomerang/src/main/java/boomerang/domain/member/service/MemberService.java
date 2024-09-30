@@ -30,6 +30,12 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
+
+    public MemberDomain getMemberDomainByEmail(Email memberEmail) {
+        return memberRepository.findByEmail(memberEmail)
+            .orElseThrow(MemberNotFoundException::new);
+    }
+
     public MemberDomain createMemberDomain(MemberServiceDto memberCreateServiceDto) {
         return memberRepository.save(memberCreateServiceDto.toMemberDomain());
     }
@@ -43,7 +49,7 @@ public class MemberService {
 
         MemberDomain memberDomain = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));
-        return jwtUtil.generateToken(memberDomain.getId(),kakaoMember.password());
+        return jwtUtil.generateToken(memberDomain.getId(),emailString);
     }
 
     public MemberDomain updateMemberDomain(MemberServiceDto memberCreateServiceDto) {
@@ -61,4 +67,5 @@ public class MemberService {
             throw new MemberNotFoundException();
         }
     }
+
 }
