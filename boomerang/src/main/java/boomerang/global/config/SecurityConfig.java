@@ -1,5 +1,8 @@
 package boomerang.global.config;
 
+import boomerang.global.oauth.service.PrincipalService;
+import boomerang.global.utils.JwtFilter;
+import boomerang.global.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -30,7 +34,8 @@ public class SecurityConfig {
 //        SimpleUrlAuthenticationSuccessHandler 구현체
 //        - 인증이 성공적으로 완료된 후 수행되는 onAuthenticationSuccess메서드를 가짐
 
-//    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+    private final PrincipalService principalService;
 
 
     @Bean
@@ -72,9 +77,9 @@ public class SecurityConfig {
             .httpBasic((auth) -> auth.disable());
 
 
-        //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
+//        //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
 //        http
-//                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class);
 
 
         //oauth2 (이후
