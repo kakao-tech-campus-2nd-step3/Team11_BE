@@ -38,6 +38,7 @@ out/
 
 # Ignore application properties
 application.properties
+application-test.properties
 
 # Gradle 파일 무시
 .gradle/
