@@ -28,11 +28,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<MemberCreateResponseDto> getAllMembers() {
-//        memberService.getAllMemberDomains();
-//        return ;
-//    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<MemberDomain> getMemberById(@PathVariable(name = "id") Long id) {

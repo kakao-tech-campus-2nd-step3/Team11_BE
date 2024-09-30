@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.Hibernate;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -19,6 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "member")
 @Getter
 @Setter
+@ToString
 public class MemberDomain {
 
     @Id

@@ -25,14 +25,9 @@ public class KakaoDomain {
     @Column(unique = true, nullable = false)
     private String client_id = "5c13fd3c6832cef54c183d9295eecacb";
 
-//    @Embedded
-//    private Client_id client_id;
 
     @Column(unique = true, nullable = false)
     private String redirect_url = "http://localhost:8080";
-
-//    @Embedded
-//    private Redirect_url redirect_url;
 
 
     // 카카오에서 고정 값을 "authorization_code"로 정해준다.
@@ -45,12 +40,6 @@ public class KakaoDomain {
     public KakaoDomain() {
     }
 
-    public KakaoDomain(Long id, String client_id, String redirect_url, String code) {
-        this.id = id;
-        this.client_id = client_id;
-        this.redirect_url = redirect_url;
-        this.code = code;
-    }
 
     @Override
     public boolean equals(Object o) {
