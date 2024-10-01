@@ -6,9 +6,8 @@ import boomerang.domain.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
-import boomerang.global.response.ResultCode;
-import boomerang.global.response.SimpleResultResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,36 +29,41 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable(name = "id") Long id) {
-        return ResponseHelper.createResponse(memberService.getMemberDomainById(id));
+        Member member = memberService.getMemberDomainById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(member);
     }
 
     // 시큐리티 필터 테스트 컨트롤러
     @GetMapping("")
     public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return ResponseHelper.createResponse(memberService.getMemberDomainByEmail(principalDetails.getMemberEmail()));
+        Member member = memberService.getMemberDomainByEmail(principalDetails.getMemberEmail());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(member);
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
+    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
         memberService.createMemberDomain(memberCreateRequestDTO.toMemberCreateServiceDto());
-        return ResponseHelper.createSimpleResponse(ResultCode.CREATE_MEMBER_SUCCESS);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
+    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
         memberService.updateMemberDomain(memberCreateRequestDTO.toMemberCreateServiceDto(id));
-        return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_MEMBER_SUCCESS);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteMember(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
         memberService.deleteMemberDomain(id);
-        return ResponseHelper.createSimpleResponse(ResultCode.DELETE_PRODUCT_SUCCESS);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,
