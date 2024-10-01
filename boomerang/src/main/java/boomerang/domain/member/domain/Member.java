@@ -20,7 +20,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Getter
 @Setter
 @ToString
-public class MemberDomain {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,10 +61,10 @@ public class MemberDomain {
     @Column(name = "is_deleted")
     private boolean isDeleted;
 
-    protected MemberDomain() {
+    protected Member() {
     }
 
-    public MemberDomain(Email email) {
+    public Member(Email email) {
         this.email = email;
     }
 
@@ -76,7 +76,7 @@ public class MemberDomain {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MemberDomain that = (MemberDomain) o;
+        Member that = (Member) o;
         return Objects.equals(id, that.id) && Objects.equals(email, that.email);
     }
 

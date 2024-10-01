@@ -1,6 +1,6 @@
 package boomerang.domain.member.controller;
 
-import boomerang.domain.member.domain.MemberDomain;
+import boomerang.domain.member.domain.Member;
 import boomerang.domain.member.dto.MemberCreateRequestDto;
 import boomerang.domain.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
@@ -33,13 +33,13 @@ public class MemberController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberDomain> getMemberById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Member> getMemberById(@PathVariable(name = "id") Long id) {
         return ResponseHelper.createResponse(memberService.getMemberDomainById(id));
     }
 
     // 시큐리티 필터 테스트 컨트롤러
     @GetMapping("")
-    public ResponseEntity<MemberDomain> getMember(
+    public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return ResponseHelper.createResponse(memberService.getMemberDomainByEmail(principalDetails.getMemberEmail()));
     }

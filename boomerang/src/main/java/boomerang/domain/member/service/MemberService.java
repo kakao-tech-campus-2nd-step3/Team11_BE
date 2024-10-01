@@ -2,7 +2,7 @@ package boomerang.domain.member.service;
 
 import boomerang.domain.kakao.domain.KakaoMember;
 import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.MemberDomain;
+import boomerang.domain.member.domain.Member;
 import boomerang.domain.member.dto.MemberServiceDto;
 import boomerang.domain.member.exception.MemberNotFoundException;
 import boomerang.domain.member.repository.MemberRepository;
@@ -20,22 +20,22 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public List<MemberDomain> getAllMemberDomains() {
+    public List<Member> getAllMemberDomains() {
         return memberRepository.findAll();
     }
 
-    public MemberDomain getMemberDomainById(Long id) {
+    public Member getMemberDomainById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
 
-    public MemberDomain getMemberDomainByEmail(Email memberEmail) {
+    public Member getMemberDomainByEmail(Email memberEmail) {
         return memberRepository.findByEmail(memberEmail)
             .orElseThrow(MemberNotFoundException::new);
     }
 
-    public MemberDomain createMemberDomain(MemberServiceDto memberCreateServiceDto) {
+    public Member createMemberDomain(MemberServiceDto memberCreateServiceDto) {
         return memberRepository.save(memberCreateServiceDto.toMemberDomain());
     }
 
@@ -45,12 +45,12 @@ public class MemberService {
         System.out.println("email = " + email);
         MemberServiceDto memberCreateServiceDto = new MemberServiceDto(email);
 
-        MemberDomain memberDomain = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));
-        return jwtUtil.generateToken(memberDomain.getId(),emailString);
+        return jwtUtil.generateToken(member.getId(),emailString);
     }
 
-    public MemberDomain updateMemberDomain(MemberServiceDto memberCreateServiceDto) {
+    public Member updateMemberDomain(MemberServiceDto memberCreateServiceDto) {
         validateMemberDomainExists(memberCreateServiceDto.getId());
         return memberRepository.save(memberCreateServiceDto.toMemberDomain());
     }

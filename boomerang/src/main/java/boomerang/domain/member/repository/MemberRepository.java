@@ -1,12 +1,12 @@
 package boomerang.domain.member.repository;
 
 import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.MemberDomain;
+import boomerang.domain.member.domain.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends JpaRepository<MemberDomain, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsById(Long id);
     boolean existsByEmail(Email email);
-    Optional<MemberDomain> findByEmail(Email email);
+    Optional<Member> findByEmail(Email email);
 }

@@ -1,7 +1,7 @@
 package boomerang.domain.member.dto;
 
 import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.MemberDomain;
+import boomerang.domain.member.domain.Member;
 import boomerang.domain.member.domain.MemberType;
 import boomerang.domain.member.domain.ProfileImage;
 import boomerang.domain.member.domain.ProgressStep;
@@ -28,7 +28,7 @@ public class MemberServiceDto {
     }
 
     // MemberCreateServiceDto로 변환하는 메서드
-    public MemberDomain toMemberDomain() {
-        return new MemberDomain(email);
+    public Member toMemberDomain() {
+        return new Member(email);
     }
 }
