@@ -31,7 +31,7 @@ public class MemberController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable(name = "id") Long id) {
-        Member member = memberService.getMemberDomainById(id);
+        Member member = memberService.getMemberById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(member);
     }
@@ -40,28 +40,28 @@ public class MemberController {
     @GetMapping("")
     public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        Member member = memberService.getMemberDomainByEmail(principalDetails.getMemberEmail());
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(member);
     }
 
     @PostMapping("")
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-        memberService.createMemberDomain(memberCreateRequestDTO.toMemberCreateServiceDto());
+        memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-        memberService.updateMemberDomain(memberCreateRequestDTO.toMemberCreateServiceDto(id));
+        memberService.updateMember(memberCreateRequestDTO.toMemberCreateServiceDto(id));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
-        memberService.deleteMemberDomain(id);
+        memberService.deleteMember(id);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }

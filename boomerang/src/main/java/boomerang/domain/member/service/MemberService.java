@@ -20,22 +20,22 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public List<Member> getAllMemberDomains() {
+    public List<Member> getAllMembers() {
         return memberRepository.findAll();
     }
 
-    public Member getMemberDomainById(Long id) {
+    public Member getMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
 
-    public Member getMemberDomainByEmail(Email memberEmail) {
+    public Member getMemberByEmail(Email memberEmail) {
         return memberRepository.findByEmail(memberEmail)
             .orElseThrow(MemberNotFoundException::new);
     }
 
-    public Member createMemberDomain(MemberServiceDto memberCreateServiceDto) {
+    public Member createMember(MemberServiceDto memberCreateServiceDto) {
         return memberRepository.save(memberCreateServiceDto.toMemberDomain());
     }
 
@@ -50,17 +50,17 @@ public class MemberService {
         return jwtUtil.generateToken(member.getId(),emailString);
     }
 
-    public Member updateMemberDomain(MemberServiceDto memberCreateServiceDto) {
-        validateMemberDomainExists(memberCreateServiceDto.getId());
+    public Member updateMember(MemberServiceDto memberCreateServiceDto) {
+        validateMemberExists(memberCreateServiceDto.getId());
         return memberRepository.save(memberCreateServiceDto.toMemberDomain());
     }
 
-    public void deleteMemberDomain(Long id) {
-        validateMemberDomainExists(id);
+    public void deleteMember(Long id) {
+        validateMemberExists(id);
         memberRepository.deleteById(id);
     }
 
-    private void validateMemberDomainExists(Long id) {
+    private void validateMemberExists(Long id) {
         if (!memberRepository.existsById(id)) {
             throw new MemberNotFoundException();
         }
