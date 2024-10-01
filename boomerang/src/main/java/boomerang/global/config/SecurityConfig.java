@@ -25,15 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//        DefaultOAuth2UserService 구현체
-//        -  OAuth2 로그인 성공 후 실행되는 loadUser메서드를 가짐
-
-//    private final CustomSuccessHandler customSuccessHandler;
-//        SimpleUrlAuthenticationSuccessHandler 구현체
-//        - 인증이 성공적으로 완료된 후 수행되는 onAuthenticationSuccess메서드를 가짐
-
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
 
@@ -80,15 +71,6 @@ public class SecurityConfig {
         //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
         http
                 .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class);
-
-
-        //oauth2 (이후
-//        http
-//                .oauth2Login((oauth2) -> oauth2
-//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-//                                .userService(customOAuth2UserService))
-//                        .successHandler(customSuccessHandler)
-//                );
 
         //경로별 인가 작업
         http
