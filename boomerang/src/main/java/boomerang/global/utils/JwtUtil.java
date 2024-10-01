@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
     // application.properties에서 시크릿 키를 가져옵니다.
     @Value("${jwt.secret-key}")
-    private String secretKey;;
+    private String secretKey;
 
     // Key 객체는 나중에 초기화하기 위해 final이 아닌 필드로 선언합니다.
     private Key key;
