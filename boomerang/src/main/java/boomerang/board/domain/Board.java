@@ -1,5 +1,6 @@
 package boomerang.board.domain;
 
+import boomerang.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,10 @@ public class Board {
 
     @Embedded
     private AnonymousStatus anonymousStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     public Board() {
     }

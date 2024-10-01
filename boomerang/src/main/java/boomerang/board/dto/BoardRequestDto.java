@@ -1,6 +1,7 @@
 package boomerang.board.dto;
 
 import boomerang.board.domain.*;
+import boomerang.domain.member.domain.Member;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -24,8 +25,7 @@ public class BoardRequestDto {
         this.anonymousStatus = anonymousStatus;
     }
 
-    // Board 도메인 객체로 변환하는 메서드
-    public Board toBoard() {
+    public Board toBoard(Member member) {
         return Board.builder()
                 .title(title)
                 .subtitle(subtitle)
@@ -33,11 +33,12 @@ public class BoardRequestDto {
                 .boardType(boardType)
                 .location(location)
                 .anonymousStatus(anonymousStatus)
+                .member(member)
                 .build();
     }
 
     // 기존 ID를 사용하여 Board 객체를 생성하는 메서드
-    public Board toBoard(Long id) {
+    public Board toBoard(Member member, Long id) {
         return Board.builder()
                 .id(id)
                 .title(title)
@@ -46,6 +47,9 @@ public class BoardRequestDto {
                 .boardType(boardType)
                 .location(location)
                 .anonymousStatus(anonymousStatus)
+                .member(member)
                 .build();
     }
+
+
 }

@@ -36,28 +36,40 @@ public class BoardController {
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         List<Board> boardList = boardService.getAllBoards(boardListRequestDto);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BoardListResponseDto.of(boardList));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BoardResponseDto> getBoardById(
-            @PathVariable(name = "id") Long id) {
+    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "id") Long id) {
         Board board = boardService.getBoardById(id);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(BoardResponseDto.of(board));
     }
 
     @PostMapping()
-    public ResponseEntity<Void> createBoard(@RequestBody BoardRequestDto boardRequestDto) {
-        boardService.createBoard(boardRequestDto.toBoard());
+    public ResponseEntity<Void> createBoard(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody BoardRequestDto boardRequestDto) {
+
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        boardService.createBoard(boardRequestDto.toBoard(member));
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateBoard(@PathVariable(name = "id") Long id, @RequestBody BoardRequestDto boardRequestDto) {
-        boardService.updateBoard(boardRequestDto.toBoard(id));
+    public ResponseEntity<Void> updateBoard(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "id") Long id,
+            @RequestBody BoardRequestDto boardRequestDto) {
+
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        boardService.updateBoard(boardRequestDto.toBoard(member, id));
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
