@@ -37,7 +37,10 @@ public class Board {
     @Embedded
     private AnonymousStatus anonymousStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Board 데이터를 들고 올 때마다 작성자가 누구인지 가져오는 것은 필수이다
+    // 그렇다면, Member 를 Lazy 로 하고 작성자를 따로 저장하는 것이 좋을까
+    // 아니면, 매번 EAGER 로 가져오는 것이 좋을까?
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
