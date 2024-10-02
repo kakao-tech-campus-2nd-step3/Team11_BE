@@ -47,7 +47,7 @@ public class Board {
     public Board() {
     }
 
-    public Board(Long id, Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+    public Board(Long id, Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Member member) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -55,6 +55,7 @@ public class Board {
         this.boardType = boardType;
         this.location = location;
         this.anonymousStatus = anonymousStatus;
+        this.member = member;
     }
 
     @Override
