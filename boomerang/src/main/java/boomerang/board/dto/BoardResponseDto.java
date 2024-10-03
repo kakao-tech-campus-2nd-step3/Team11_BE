@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BoardResponseDto {
+    private Long id;
     private String title;
     private String subtitle;
     private String content;
@@ -16,7 +17,8 @@ public class BoardResponseDto {
     private AnonymousStatus anonymousStatus;
     private Email writerEmail;
 
-    public BoardResponseDto(String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Email writerEmail) {
+    public BoardResponseDto(Long id, String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Email writerEmail) {
+        this.id = id;
         this.title = title;
         this.subtitle = subtitle;
         this.content = content;
@@ -26,16 +28,15 @@ public class BoardResponseDto {
         this.writerEmail = writerEmail;
     }
 
-    // Board 도메인 객체를 BoardResponseDto 객체로 변환하는 팩토리 메서드
-    public static BoardResponseDto of(Board board) {
-        return BoardResponseDto.builder()
-                .title(board.getTitle())
-                .subtitle(board.getSubtitle())
-                .content(board.getContent())
-                .boardType(board.getBoardType())
-                .location(board.getLocation())
-                .anonymousStatus(board.getAnonymousStatus())
-                .writerEmail(board.getMember().getEmail())
-                .build();
+    // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
+    public BoardResponseDto(Board board) {
+        this.id = board.getId();
+        this.title = board.getTitle();
+        this.subtitle = board.getSubtitle();
+        this.content = board.getContent();
+        this.boardType = board.getBoardType();
+        this.location = board.getLocation();
+        this.anonymousStatus = board.getAnonymousStatus();
+        this.writerEmail = board.getMember().getEmail();
     }
 }

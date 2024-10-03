@@ -24,30 +24,4 @@ public class BoardRequestDto {
         this.location = location;
         this.anonymousStatus = anonymousStatus;
     }
-
-    public Board toBoard(Member member) {
-        return Board.builder()
-                .title(title)
-                .subtitle(subtitle)
-                .content(content)
-                .boardType(boardType)
-                .location(location)
-                .anonymousStatus(anonymousStatus)
-                .member(member)
-                .build();
-    }
-
-    // 기존 ID를 사용하여 Board 객체를 생성하는 메서드
-    public Board toBoard(Member member, Long id) {
-        return Board.builder()
-                .id(id)
-                .title(title)
-                .subtitle(subtitle)
-                .content(content)
-                .boardType(boardType)
-                .location(location)
-                .anonymousStatus(anonymousStatus)
-                .member(member)
-                .build();
-    }
 }

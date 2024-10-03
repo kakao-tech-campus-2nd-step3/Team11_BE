@@ -1,5 +1,6 @@
 package boomerang.board.domain;
 
+import boomerang.board.dto.BoardRequestDto;
 import boomerang.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -52,6 +53,29 @@ public class Board {
         this.boardType = boardType;
         this.location = location;
         this.anonymousStatus = anonymousStatus;
+        this.member = member;
+    }
+
+    // DTO를 사용하는 생성자
+    public Board(BoardRequestDto boardRequestDto, Member member) {
+        this.title = boardRequestDto.getTitle();
+        this.subtitle = boardRequestDto.getSubtitle();
+        this.content = boardRequestDto.getContent();
+        this.boardType = boardRequestDto.getBoardType();
+        this.location = boardRequestDto.getLocation();
+        this.anonymousStatus = boardRequestDto.getAnonymousStatus();
+        this.member = member;
+    }
+
+    // ID가 있는 경우의 생성자
+    public Board(Long id, BoardRequestDto boardRequestDto, Member member) {
+        this.id = id;
+        this.title = boardRequestDto.getTitle();
+        this.subtitle = boardRequestDto.getSubtitle();
+        this.content = boardRequestDto.getContent();
+        this.boardType = boardRequestDto.getBoardType();
+        this.location = boardRequestDto.getLocation();
+        this.anonymousStatus = boardRequestDto.getAnonymousStatus();
         this.member = member;
     }
 

@@ -38,7 +38,7 @@ public class BoardController {
         List<Board> boardList = boardService.getAllBoards(boardListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(BoardListResponseDto.of(boardList));
+                .body(new BoardListResponseDto("10", boardList));
     }
 
     @GetMapping("/{id}")
@@ -46,7 +46,7 @@ public class BoardController {
         Board board = boardService.getBoardById(id);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(BoardResponseDto.of(board));
+                .body(new BoardResponseDto(board));
     }
 
     @PostMapping()
@@ -55,7 +55,7 @@ public class BoardController {
             @RequestBody BoardRequestDto boardRequestDto) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.createBoard(boardRequestDto.toBoard(member));
+        boardService.createBoard(boardRequestDto, member);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
@@ -68,7 +68,7 @@ public class BoardController {
             @RequestBody BoardRequestDto boardRequestDto) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.updateBoard(boardRequestDto.toBoard(member, id));
+        boardService.updateBoard(id, boardRequestDto, member);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();

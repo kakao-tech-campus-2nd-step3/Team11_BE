@@ -1,6 +1,6 @@
 ### get boards
 GET http://localhost:8080/api/board?page=0&size=10&sortDirection=DESC&sortBy=id
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NjE2NjUsImV4cCI6MTcyNzg2NDA2NX0.Lc3gVOdsj_D3Zn_y6bvMRipYMCr_IenbLm1XVPi8Rr4
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
 
 ### get board
 GET http://localhost:8080/api/board/1
@@ -8,7 +8,7 @@ GET http://localhost:8080/api/board/1
 ### create board
 POST http://localhost:8080/api/board
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NzA3NTUsImV4cCI6MTcyNzg3MzE1NX0.0wnVx0OrXrpZs3K14I2CXkRPe7Ucqo7xspZ_JHEgN5E
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
 
 {
   "title": "Example Title",
@@ -24,7 +24,7 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3M
 ### update board
 PUT http://localhost:8080/api/board/1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NjE2NjUsImV4cCI6MTcyNzg2NDA2NX0.Lc3gVOdsj_D3Zn_y6bvMRipYMCr_IenbLm1XVPi8Rr4
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
 
 {
   "title": "Update Title",

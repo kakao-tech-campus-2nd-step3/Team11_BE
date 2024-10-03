@@ -2,6 +2,7 @@ package boomerang.board.service;
 
 import boomerang.board.domain.Board;
 import boomerang.board.dto.BoardListRequestDto;
+import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.repository.BoardRepository;
 import boomerang.domain.member.domain.Member;
 import boomerang.global.exception.BusinessException;
@@ -23,11 +24,7 @@ public class BoardService {
 
     // 모든 게시물 가져오기
     public List<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
-        PageRequest pageRequest = PageRequest.of(
-                boardListRequestDto.getPage(),
-                boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSortDirection(), boardListRequestDto.getSortBy())
-        );
+        PageRequest pageRequest = getPageRequest(boardListRequestDto);
         Page<Board> boardPage = boardRepository.findAll(pageRequest);
         return boardPage.getContent();
     }
@@ -38,12 +35,14 @@ public class BoardService {
     }
 
     // 게시물 생성
-    public Board createBoard(Board board) {
+    public Board createBoard(BoardRequestDto boardRequestDto, Member member) {
+        Board board = new Board(boardRequestDto, member);
         return boardRepository.save(board);
     }
 
     // 게시물 업데이트
-    public Board updateBoard(Board board) {
+    public Board updateBoard(Long id, BoardRequestDto boardRequestDto, Member member) {
+        Board board = new Board(id, boardRequestDto, member);
         validateBoardOwnership(board.getMember(), board.getId());
         return boardRepository.save(board);
     }
@@ -66,6 +65,14 @@ public class BoardService {
         if (!board.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.BOARD_DONT_HAS_OWNERSHIP_ERROR);
         }
+    }
+
+    private PageRequest getPageRequest(BoardListRequestDto boardListRequestDto) {
+        return PageRequest.of(
+                boardListRequestDto.getPage(),
+                boardListRequestDto.getSize(),
+                Sort.by(boardListRequestDto.getSortDirection(), boardListRequestDto.getSortBy())
+        );
     }
 }
 
