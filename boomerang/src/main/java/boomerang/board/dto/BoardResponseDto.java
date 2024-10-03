@@ -8,15 +8,15 @@ import lombok.Getter;
 @Getter
 @Builder
 public class BoardResponseDto {
-    private Title title;
-    private Subtitle subtitle;
-    private Content content;
+    private String title;
+    private String subtitle;
+    private String content;
     private BoardType boardType;
     private Location location;
     private AnonymousStatus anonymousStatus;
     private Email writerEmail;
 
-    public BoardResponseDto(Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Email writerEmail) {
+    public BoardResponseDto(String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Email writerEmail) {
         this.title = title;
         this.subtitle = subtitle;
         this.content = content;

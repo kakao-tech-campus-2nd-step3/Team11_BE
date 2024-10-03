@@ -19,14 +19,11 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private Title title;
+    private String title;
 
-    @Embedded
-    private Subtitle subtitle;
+    private String subtitle;
 
-    @Embedded
-    private Content content;
+    private String content;
 
     @Embedded
     private BoardType boardType;
@@ -47,7 +44,7 @@ public class Board {
     public Board() {
     }
 
-    public Board(Long id, Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Member member) {
+    public Board(Long id, String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Member member) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -57,6 +54,7 @@ public class Board {
         this.anonymousStatus = anonymousStatus;
         this.member = member;
     }
+
 
     @Override
     public boolean equals(Object o) {

@@ -34,15 +34,15 @@ public class BoardListNeedItem {
     @Getter
     @Builder
     public static class Item {
-        private Title title;
-        private Subtitle subtitle;
-        private Content content;
+        private String title;
+        private String subtitle;
+        private String content;
         private BoardType boardType;
         private Location location;
         private AnonymousStatus anonymousStatus;
 
         // 생성자
-        public Item(Title title, Subtitle subtitle, Content content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+        public Item(String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
             this.title = title;
             this.subtitle = subtitle;
             this.content = content;
