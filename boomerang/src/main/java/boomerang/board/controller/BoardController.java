@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/v1/board")
 public class BoardController {
     private final BoardService boardService;
     private final MemberService memberService;
