@@ -4,15 +4,13 @@ import boomerang.board.domain.Board;
 import boomerang.board.dto.BoardListRequestDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.repository.BoardRepository;
-import boomerang.domain.member.domain.Member;
+import boomerang.member.domain.Member;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BoardService {

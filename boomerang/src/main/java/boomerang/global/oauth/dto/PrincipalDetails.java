@@ -1,7 +1,7 @@
 package boomerang.global.oauth.dto;
 
-import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.Member;
+import boomerang.member.domain.Email;
+import boomerang.member.domain.Member;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;

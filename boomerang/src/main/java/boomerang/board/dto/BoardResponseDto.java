@@ -1,7 +1,7 @@
 package boomerang.board.dto;
 
 import boomerang.board.domain.*;
-import boomerang.domain.member.domain.Email;
+import boomerang.member.domain.Email;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;

@@ -1,11 +1,10 @@
 package boomerang.board.domain;
 
 import boomerang.board.dto.BoardRequestDto;
-import boomerang.domain.member.domain.Member;
+import boomerang.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;

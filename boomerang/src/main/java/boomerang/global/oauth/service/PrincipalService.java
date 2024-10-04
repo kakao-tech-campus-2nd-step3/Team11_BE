@@ -1,9 +1,9 @@
 package boomerang.global.oauth.service;
 
-import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.Member;
-import boomerang.domain.member.exception.MemberNotFoundException;
-import boomerang.domain.member.repository.MemberRepository;
+import boomerang.member.domain.Email;
+import boomerang.member.domain.Member;
+import boomerang.member.exception.MemberNotFoundException;
+import boomerang.member.repository.MemberRepository;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
