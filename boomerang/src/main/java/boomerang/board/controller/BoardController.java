@@ -12,6 +12,7 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,10 +36,10 @@ public class BoardController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        List<Board> boardList = boardService.getAllBoards(boardListRequestDto);
+        Page<Board> boradPage = boardService.getAllBoards(boardListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardListResponseDto("10", boardList));
+                .body(new BoardListResponseDto(boradPage));
     }
 
     @GetMapping("/{id}")

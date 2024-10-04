@@ -23,10 +23,10 @@ public class BoardService {
     }
 
     // 모든 게시물 가져오기
-    public List<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
+    public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
         Page<Board> boardPage = boardRepository.findAll(pageRequest);
-        return boardPage.getContent();
+        return boardPage;
     }
 
     // ID로 게시물 가져오기
