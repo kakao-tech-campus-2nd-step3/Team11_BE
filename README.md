@@ -40,7 +40,38 @@
 >    public Board getBoardById(Long id) {
 >        return boardRepository.findById(id)
 >        .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
->        }
-> 
+>    }
 >```
+
+
+### 질문 2. 연관관계에서 즉시로딩과 지연로딩 선택 기준
+Board 테이블을 조회할때마다, 항상 작성자의 정보가 필요한 상황이라면,
+어떻게 연관관계 조회 전략을 선택하는 것이 좋을지 궁금합니다. 
+
+#### 방법 1.`FetchType.LAZY` 선택하고 `get메서드`로 조회   
+
+#### 방법 2. `FetchType.EAGER`를 설정, 지연로딩을 선택하지 않음   
+
+#### 방법 3. 작성자의 이메일을 필드로 저장 후
+- 작성자의 이메일만 필요한 상황, 따라서 이메일을 필드로 저장 후, 유저의 이메일이 변경될 떄, 게시글의 작성자 이메일 필드를 바꿔주는 기능을 추가함.
+- 이때 작성자의 이메일은 자주 변경되지 않을 것으로 가정했습니다. 
+
+
+>[엔티티 코드]
+> ```java
+> 
+>   @Table(name = "board")
+>   public class Board {
+>   
+>       @Id
+>       @GeneratedValue(strategy = GenerationType.IDENTITY)
+>        private Long id;
+>
+>       @ManyToOne(fetch = FetchType.EAGER)
+>        @JoinColumn(name = "member_id", nullable = false)
+>       private Member member;
+> }
+>```
+
+
 
