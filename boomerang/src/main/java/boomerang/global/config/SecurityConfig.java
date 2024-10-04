@@ -78,6 +78,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/member").authenticated()
                 .anyRequest().permitAll());
 
+
         //세션 설정 : STATELESS
         http
             .sessionManagement((session) -> session

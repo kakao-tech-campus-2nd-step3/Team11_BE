@@ -1,7 +1,7 @@
 package boomerang.global.oauth.dto;
 
-import boomerang.domain.member.domain.Email;
-import boomerang.domain.member.domain.MemberDomain;
+import boomerang.member.domain.Email;
+import boomerang.member.domain.Member;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;
@@ -10,14 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 public class PrincipalDetails implements UserDetails {
-    private MemberDomain memberDomain;
+    private Member member;
 
-    public void setMemberDomain(MemberDomain memberDomain) {
-        this.memberDomain = memberDomain;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public PrincipalDetails(MemberDomain memberDomain) {
-        this.memberDomain = memberDomain;
+    public PrincipalDetails(Member member) {
+        this.member = member;
     }
     @Override
     public String getPassword() {
@@ -31,7 +31,7 @@ public class PrincipalDetails implements UserDetails {
 
 //    @Override
     public Email getMemberEmail() {
-        return memberDomain.getEmail();
+        return member.getEmail();
     }
 
     //계정이 살아있는지 리턴 : ture -> 만료 X / false -> 만료됨
@@ -62,7 +62,7 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { //타입이 특이하군용..?!
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(()-> "ROLE_"+memberDomain.getMemberType());
+        collection.add(()-> "ROLE_"+ member.getMemberType());
         return collection;
     }
 }
