@@ -11,7 +11,6 @@ import org.hibernate.Hibernate;
 import java.util.Objects;
 
 @Getter
-@Setter
 @Entity
 @Builder
 @Table(name = "board")
