@@ -25,13 +25,13 @@ public class Board {
 
     private String content;
 
-    @Embedded
+    @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
     @Embedded
     private Location location;
 
-    @Embedded
+    @Enumerated(EnumType.STRING)
     private AnonymousStatus anonymousStatus;
 
     // Board 데이터를 들고 올 때마다 작성자가 누구인지 가져오는 것은 필수이다

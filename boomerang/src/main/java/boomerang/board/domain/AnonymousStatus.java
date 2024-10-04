@@ -1,45 +1,15 @@
 package boomerang.board.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+public enum AnonymousStatus {
+    PRIVATE("PRIVATE"), PUBLIC("PUBLIC");
 
-import java.util.Objects;
+    private final String name;
 
-@Embeddable
-public class AnonymousStatus {
-    @Column(name = "anonymous_status")
-    private String value;
-
-    public AnonymousStatus() {
-        // 조건을 통해 valid한 값인지를 체크한다
-        this.value = value;
+    AnonymousStatus(String name) {
+        this.name = name;
     }
 
-    public AnonymousStatus(String value) {
-        this.value = value;
-    }
-
-    @JsonValue
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AnonymousStatus that = (AnonymousStatus) o;
-        return Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
+    public String getName() {
+        return name;
     }
 }
