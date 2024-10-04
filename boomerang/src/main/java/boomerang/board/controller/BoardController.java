@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/board")
@@ -31,7 +30,7 @@ public class BoardController {
         this.memberService = memberService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<BoardListResponseDto> getAllBoards(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
@@ -42,15 +41,15 @@ public class BoardController {
                 .body(new BoardListResponseDto(boradPage));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "id") Long id) {
-        Board board = boardService.getBoardById(id);
+    @GetMapping("/{board_id}")
+    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
+        Board board = boardService.getBoardById(boardId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BoardResponseDto(board));
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody BoardRequestDto boardRequestDto) {
@@ -62,26 +61,26 @@ public class BoardController {
                 .build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{board_id}")
     public ResponseEntity<Void> updateBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable(name = "id") Long id,
+            @PathVariable(name = "board_id") Long boardId,
             @RequestBody BoardRequestDto boardRequestDto) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.updateBoard(id, boardRequestDto, member);
+        boardService.updateBoard(boardId, boardRequestDto, member);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{board_id}")
     public ResponseEntity<Void> deleteBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable(name = "id") Long id) {
+            @PathVariable(name = "board_id") Long boardId) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.deleteBoard(member, id);
+        boardService.deleteBoard(member, boardId);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
