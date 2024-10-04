@@ -2,11 +2,14 @@ package boomerang.board.dto;
 
 import boomerang.board.domain.*;
 import boomerang.domain.member.domain.Member;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardRequestDto {
     private String title;
     private String subtitle;

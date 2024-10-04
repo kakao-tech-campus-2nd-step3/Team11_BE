@@ -1,6 +1,8 @@
 package boomerang.board.dto;
 
 import boomerang.board.domain.Board;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Getter
 @EqualsAndHashCode
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardListResponseDto {
     // page와 같은 추가적인 정보를 담는 필드
     private int page;

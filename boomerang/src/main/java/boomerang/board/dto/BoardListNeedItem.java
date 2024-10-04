@@ -1,15 +1,20 @@
 package boomerang.board.dto;
 
 import boomerang.board.domain.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
 
+// 이후에 사용될 수도 있는 클래스
+
 @Getter
 @Builder
 @EqualsAndHashCode
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardListNeedItem {
     private String val; // 페이지와 같은 추가 정보를 담는 필드
     private List<Item> itemList; // 아이템 리스트
