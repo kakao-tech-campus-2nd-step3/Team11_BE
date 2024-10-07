@@ -42,11 +42,11 @@ public class KakaoService {
     }
 
     public KakaoMember getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
-        KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me")
+        KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
             .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + tokenResponse.accessToken)
             .retrieve().toEntity(KakaoProfile.class).getBody();
 
-        KakaoMember kakaoMember = new KakaoMember(kakaoProfile, "password");
+        KakaoMember kakaoMember = new KakaoMember(kakaoProfile);
         return kakaoMember;
 
     }

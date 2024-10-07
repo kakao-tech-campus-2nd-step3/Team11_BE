@@ -6,13 +6,14 @@ import lombok.Getter;
 @Getter
 public class MemberCreateResponseDto {
     private Email email;
+    private String nickname;
 
 
     public MemberCreateResponseDto() {}
 
     // 생성자
-    public MemberCreateResponseDto(Email email) {
+    public MemberCreateResponseDto(Email email, String nickname) {
         this.email = email;
-
+        this.nickname = nickname;
     }
 }

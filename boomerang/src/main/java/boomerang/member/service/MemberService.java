@@ -41,10 +41,11 @@ public class MemberService {
     }
 
     public String loginKakaoMember(KakaoMember kakaoMember) {
-        String emailString = "kakao" + kakaoMember.id().toString(); //kakao 문자열 뒤에 id값을 붙여 kakao384747484와 같은 형식의 이메일 생성
+        String emailString = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         Email email = new Email(emailString); // String 타입의 이메일을 Email 클래스로 생성
+        String nickname = kakaoMember.nickname();
         System.out.println("email = " + email);
-        MemberServiceDto memberCreateServiceDto = new MemberServiceDto(email);
+        MemberServiceDto memberCreateServiceDto = new MemberServiceDto(email, nickname);
 
         Member member = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));

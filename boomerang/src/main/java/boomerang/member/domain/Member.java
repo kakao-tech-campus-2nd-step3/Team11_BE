@@ -36,6 +36,9 @@ public class Member {
     @Column(name = "insurance_status")
     private boolean insuranceStatus;
 
+    @Column(name = "nickname")
+    private String nickname;
+
     //돌려받을 수 있는 보증금
     @Embedded
     private ReturnDeposit returnDeposit;
@@ -63,8 +66,9 @@ public class Member {
     protected Member() {
     }
 
-    public Member(Email email) {
+    public Member(Email email, String nickname) {
         this.email = email;
+        this.nickname = nickname;
     }
 
     @Override
