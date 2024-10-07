@@ -8,12 +8,10 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@AllArgsConstructor
 public class CommentResponseDto {
     private Long id;                        //댓글아이디
     private String authorName;              //작성자이름
@@ -26,15 +24,24 @@ public class CommentResponseDto {
     private boolean isEdited;               //수정여부
 
     //도메인을 기준으로 응답 객체를 만드는 부분
-    public static CommentResponseDto of(Comment comment, Boolean isAuthor ) {
-        return CommentResponseDto.builder()
-                .id(comment.getId())
-                .authorName(comment.getAuthorName())
-                .text(comment.getText())
-                .isAuthor(isAuthor)
-                .isEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt())) // 수정 여부 계산
-                .lastModifiedAt(comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt()) //마지막으로 수정된 시간 제공
-                .build();
+    public CommentResponseDto (Comment comment, Boolean isAuthor) {
+        this.id = comment.getId();
+        this.authorName = comment.getAuthorName();
+        this.text = comment.getText();
+        this.isAuthor = isAuthor;
+        this.isEdited = !comment.getCreatedAt().equals(comment.getUpdatedAt()); // 수정 여부 계산
+        this.lastModifiedAt = comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt(); //마지막으로 수정된 시간 제공
+    }
+
+
+    //도메인을 기준으로 응답 객체를 만드는 부분
+    public CommentResponseDto (Comment comment) {
+        this.id = comment.getId();
+        this.authorName = comment.getAuthorName();
+        this.text = comment.getText();
+        this.isAuthor = false;
+        this.isEdited = !comment.getCreatedAt().equals(comment.getUpdatedAt()); // 수정 여부 계산
+        this.lastModifiedAt = comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt(); //마지막으로 수정된 시간 제공
     }
 
 }
