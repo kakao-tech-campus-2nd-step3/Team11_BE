@@ -1,16 +1,18 @@
 package boomerang.template.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
 
-@Entity
-@Table(name = "template")
 @Getter
 @Setter
+@Entity
+@Builder
+@Table(name = "template")
 public class TemplateDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

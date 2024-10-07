@@ -5,6 +5,8 @@ import boomerang.template.domain.TemplateColumn2;
 import boomerang.template.domain.TemplateDomain;
 import lombok.Getter;
 
+// 중간 Dto 변환이 필요한 경우 사용
+// 일반적인 경우 Request 에서 바로 Domain으로 변환
 @Getter
 public class TemplateServiceDto {
     private Long id;
