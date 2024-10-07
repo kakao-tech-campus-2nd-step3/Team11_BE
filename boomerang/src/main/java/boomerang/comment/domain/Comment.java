@@ -1,5 +1,6 @@
-package boomerang.domain.comment.domain;
+package boomerang.comment.domain;
 
+import boomerang.comment.dto.CommentRequestDto;
 import boomerang.domain.board.domain.Board;
 import boomerang.domain.member.domain.Member;
 import jakarta.persistence.*;
@@ -10,11 +11,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Builder
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)  //도메인에서 날짜필드가 자동 관리되도록 설정
 public class Comment {
 
@@ -30,8 +29,7 @@ public class Comment {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @Embedded
-    private CommentText commentText;
+    private String text;
 
 
     @Enumerated(EnumType.STRING)
@@ -52,7 +50,13 @@ public class Comment {
         this.isDeleted = IsDeleted.DELETED;
     }
 
-    public void updateCommentText(CommentText commentText) {
-        this.commentText = commentText;
+    public void updateCommentText(String text) {
+        this.text = text;
+    }
+
+    public Comment(Member author, Board board, CommentRequestDto commentRequestDto) {
+        this.author = author;
+        this.board = board;
+        this.text = commentRequestDto.getText();
     }
 }

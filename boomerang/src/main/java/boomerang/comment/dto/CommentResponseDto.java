@@ -1,7 +1,6 @@
-package boomerang.domain.comment.dto;
+package boomerang.comment.dto;
 
-import boomerang.domain.comment.domain.Comment;
-import boomerang.domain.member.domain.Member;
+import boomerang.comment.domain.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -31,7 +30,7 @@ public class CommentResponseDto {
         return CommentResponseDto.builder()
                 .id(comment.getId())
                 .authorName(comment.getAuthorName())
-                .text(comment.getCommentText().getValue())
+                .text(comment.getText())
                 .isAuthor(isAuthor)
                 .isEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt())) // 수정 여부 계산
                 .lastModifiedAt(comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt()) //마지막으로 수정된 시간 제공
