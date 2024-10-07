@@ -1,7 +1,6 @@
 package boomerang.kakao.domain;
 
 
-import boomerang.member.domain.Email;
 import boomerang.member.dto.MemberCreateRequestDto;
 
 
@@ -18,8 +17,7 @@ public record KakaoMember(KakaoProfile kakaoProfile) {
     public Long id() { return kakaoProfile.id(); }
 
     public MemberCreateRequestDto toMember() {
-
-        return new MemberCreateRequestDto(new Email(email()), nickname());
+        return new MemberCreateRequestDto(this.email(),this.nickname());
     }
 
 }
