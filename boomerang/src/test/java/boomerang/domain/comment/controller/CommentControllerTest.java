@@ -1,7 +1,8 @@
 package boomerang.domain.comment.controller;
 
-import boomerang.domain.comment.dto.CommentRequestDto;
-import boomerang.domain.comment.service.CommentService;
+import boomerang.comment.controller.CommentController;
+import boomerang.comment.dto.CommentRequestDto;
+import boomerang.comment.service.CommentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

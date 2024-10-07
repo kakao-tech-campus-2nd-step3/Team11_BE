@@ -1,4 +1,4 @@
-package boomerang.domain.comment.domain;
+package boomerang.comment.domain;
 
 public enum IsDeleted {
     DELETED,

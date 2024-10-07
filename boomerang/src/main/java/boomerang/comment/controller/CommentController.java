@@ -1,8 +1,8 @@
-package boomerang.domain.comment.controller;
+package boomerang.comment.controller;
 
-import boomerang.domain.comment.dto.CommentRequestDto;
-import boomerang.domain.comment.dto.CommentResponseDto;
-import boomerang.domain.comment.service.CommentService;
+import boomerang.comment.service.CommentService;
+import boomerang.comment.dto.CommentRequestDto;
+import boomerang.comment.dto.CommentResponseDto;
 import boomerang.domain.member.domain.Member;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorResponseDto;

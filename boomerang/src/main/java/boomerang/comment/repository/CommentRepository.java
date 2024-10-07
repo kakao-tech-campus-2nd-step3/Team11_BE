@@ -1,6 +1,6 @@
-package boomerang.domain.comment.repository;
+package boomerang.comment.repository;
 
-import boomerang.domain.comment.domain.Comment;
+import boomerang.comment.domain.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
