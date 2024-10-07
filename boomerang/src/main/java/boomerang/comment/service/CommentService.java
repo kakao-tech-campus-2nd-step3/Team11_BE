@@ -1,11 +1,11 @@
-package boomerang.domain.comment.service;
+package boomerang.comment.service;
 
+import boomerang.comment.repository.CommentRepository;
 import boomerang.domain.board.domain.Board;
 import boomerang.domain.board.repository.BoardRepository;
-import boomerang.domain.comment.domain.Comment;
-import boomerang.domain.comment.dto.CommentRequestDto;
-import boomerang.domain.comment.dto.CommentResponseDto;
-import boomerang.domain.comment.repository.CommentRepository;
+import boomerang.comment.domain.Comment;
+import boomerang.comment.dto.CommentRequestDto;
+import boomerang.comment.dto.CommentResponseDto;
 import boomerang.domain.member.domain.Member;
 import boomerang.domain.member.repository.MemberRepository;
 import boomerang.global.exception.BusinessException;
@@ -31,11 +31,7 @@ public class CommentService {
         Member author = getMemberOrThrow(email);
         Board board = getBoardOrThrow(boardId);
 
-        commentRepository.save(Comment.builder().
-                commentText(commentRequestDto.getCommentText())
-                .author(author)
-                .board(board)
-                .build());
+        commentRepository.save(new Comment(author,board,commentRequestDto));
     }
 
     //댓글 조회
@@ -80,7 +76,7 @@ public class CommentService {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
-        comment.updateCommentText(commentRequestDto.getCommentText());
+        comment.updateCommentText(commentRequestDto.getText());
 
         commentRepository.save(comment);
     }
@@ -96,7 +92,7 @@ public class CommentService {
 
     private Board getBoardOrThrow(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NON_EXISTENT));
+                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
     }
 
     private Comment getCommentOrThrow(Long commentId) {
