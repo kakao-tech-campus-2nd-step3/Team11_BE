@@ -27,7 +27,6 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
     private String email;
 
     @Embedded
@@ -47,7 +46,6 @@ public class Member {
     @Embedded
     private SafetyScore safetyScore;
 
-    @Embedded
     private String profileImage;
 
     @Embedded
