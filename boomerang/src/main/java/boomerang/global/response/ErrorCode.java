@@ -13,19 +13,9 @@ public enum ErrorCode {
     DUPLICATE_EMAIL_ERROR(HttpStatus.BAD_REQUEST, "EM002", "Duplicate Email Error"),
     DUPLICATE_NICKNAME_ERROR(HttpStatus.BAD_REQUEST, "EM003", "Duplicate Nickname Error"),
 
-    //멤버 관련
-    MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EM004","There is no member for that email address."),
-
-    //게시물 관련
-    BOARD_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EM004","There is no board for the id."),
-
-    //댓글 관련
-    COMMENT_VALUE_IS_EMPTY(HttpStatus.BAD_REQUEST, "EC001", "The comment value is empty. Blank comments are not possible."),
-    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"EC002","There is no comment value in the comment request object."),
-    COMMENT_NON_EXISTENT(HttpStatus.BAD_REQUEST,"EC003","There is no comment for the id."),
-    COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "EC004", "You do not have permission to modify this comment."),
-
-
+    // Board
+    BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
+    BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
 
     ;
     private final HttpStatus status;

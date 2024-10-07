@@ -1,67 +1,77 @@
-## 멘토님께 리뷰 받고 싶은 부분
-
-## 질문1. 컨트롤러용, 서비스용 Dto을 두는 것에 대해서
-
-내용 : 컨트롤러용 DTO와 서비스용 DTO를 각각 두어서 서비스 단에서는 추가적인 객체 변환 로직을 두지않게 하는 것이 적절할지 고민입니다! 
-
-- 도입 시 장점:  
-1. ServiceDto 를 만들어, Request에서 사용하는 객체를 바로 Entity로 변환하지 않고 중간 단계를 거쳐, 데이터의 검사와 Request 변환 로직을 공통화
-2. Entity 나 Request의 데이터가 바뀌어도, Test 코드에 영향을 주지 않음 => 실질적인 로직을 담당하는 Controller, Service, Repository가 수정이 되지 않기 때문
-
-- 고민 하는 이유 :   
-1. 부가적인 DTO 변환이 한 차례 더 필요해서, 단순한 CRUD 만 사용하는 경우 불필요한 과정이 추가됨
-2. 남발하여 사용하는 경우, 오히려 코드 복잡도를 높일 수 있음
-
-때문에, 필요한 부분에서만 ServiceDto 를 두어 개발하면 좋을 것 같다고 생각하고 있습니다.
-하지만, 필요한 부분이라는 말이 모호하여 이 기준을 어떻게 해서 구체화 할 수 있을지가 궁금합니다
-
-- 예시 기준 :
-1. 단순 CRUD 가 아닌, Service 에서 로직이 많을 경우 사용
-2. Request와 Entity 사이 별도의 변환 과정이 한 번 더 필요한 경우 사용
-
-멘토링을 활용해 실제 현업 개발 스타일과 비슷하게 개발하고 싶습니다. 이에 대해 실제 현업 스타일과 멘토님 생각은 어떠신지 궁금합니다.
-
-## 질문2. API 요청에 대한 응답을 어떤 형식으로 하는 게 좋을 지
-
-1. status 와 데이터만으로 응답
-
-status : 201  
-
-{  
-  data : 1  
-}  
-
-장점 : Controller 코드 작성하기가 간단해진다
-단점 : 프론트에서 현재 어떤 api 요청을 하였는지 알기 어렵거나, 같은 api 라 해도, 사용자에 따른 다른 메시지가 필요할 때, 알아보기가 힘들 수 있다
- ex) 관리자 ~~~ 의 데이터, 사용자 ~~~ 의 데이터
+## 5주차 리뷰 받고 싶은 부분
 
 
-2. status를 200으로 고정하고, 메세지와 데이터로 응답
-
-status : 200
-
-{  
-  message : 정상 반환  
-  data : 1  
-}  
-
-장점 : Controller 코드 작성하기가 간단해지고, 메세지를 통해 여러 상황에 대처할 수 있다
-단점 : Error 가 발생했을 때의 응답 형태와 조금 달라진다
+### 5주차에 작업 내용
+- [x] 카카오 로그인
+- [x] 커뮤니티의 보드 CRUD 작업
+*** 
+### 6주차에 작업할 내용
+- 커뮤니티의 댓글 기능 합치기
+- 커뮤니티의 좋아요 기능 합치기
 
 
-3. stauts 와 에러코드, 메세지, 데이터로 응답
+- 보증금 돌려받기 가이드라인의 유저상황조사 기능 구현 (문성민)
+- 보증금 돌려받기 가이드라인의 유저별 진행도 기능 구현 (진서현)
+- 에러시 로그를 찍는 기능 (정재빈)
 
-status : 201
+*** 
+### 궁금한 점
+#### 질문 1. 도메인객체는 어디 계층에서까지 다룰 수 있을지 궁금합니다. 
 
-{  
-  code : M001  
-  message : 정상 반환  
-  data : 1  
-}  
-
-장점 : 일관성 있게 ResultCode 에서 Enum 형태로 반환 코드를 관리할 수 있다. 에러 반환과 동일한 응답 형태로 관리할 수 있다
-단점 : Controller 가 복잡해지고, 매번 Enum 처리를 위해 처리해야할 과정이 길다
+상황 1.`요청 객체 - 도메인 - 응답 객체` 만 사용하는 상황입니다.    
+현재는 컨트롤러에서 도메인을 응답객체로 만들고 있는데,도메인 객체를 컨트롤러에서 다뤄도 될지 궁금합니다. 이런 상황에서는 보통 응답객체를 어디서 만드나요? 
 
 
-현재 3가지 형태 중 어떤 방법을 선택하거나, 또는 다른 좋은 방법이 있을 지 궁금합니다.
-이에 대한 멘토님의 의견이 궁금합니다!
+>[컨트롤러 코드]
+>```java
+>    @GetMapping("/{board_id}")
+>    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
+>        Board board = boardService.getBoardById(boardId);
+>
+>        return ResponseEntity.status(HttpStatus.OK)
+>                .body(new BoardResponseDto(board));
+>    }
+>```
+>
+>
+>[서비스 코드]
+>```java
+>    // ID로 게시물 가져오기
+>    public Board getBoardById(Long id) {
+>        return boardRepository.findById(id)
+>        .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
+>    }
+>```
+
+
+### 질문 2. 연관관계에서 즉시로딩과 지연로딩 선택 기준
+Board 테이블을 조회할때마다, 항상 작성자의 정보가 필요한 상황이라면,
+어떻게 연관관계 조회 전략을 선택하는 것이 좋을지 궁금합니다. 
+
+#### 방법 1.`FetchType.LAZY` 선택하고 `get메서드`로 조회   
+
+#### 방법 2. `FetchType.EAGER`를 설정, 지연로딩을 선택하지 않음   
+
+#### 방법 3. 작성자의 이메일을 필드로 저장 후
+- 작성자의 이메일만 필요한 상황, 따라서 이메일을 필드로 저장 후, 유저의 이메일이 변경될 떄, 게시글의 작성자 이메일 필드를 바꿔주는 기능을 추가함.
+- 이때 작성자의 이메일은 자주 변경되지 않을 것으로 가정했습니다. 
+
+
+>[엔티티 코드]
+> ```java
+> 
+>   @Table(name = "board")
+>   public class Board {
+>   
+>       @Id
+>       @GeneratedValue(strategy = GenerationType.IDENTITY)
+>        private Long id;
+>
+>       @ManyToOne(fetch = FetchType.EAGER)
+>        @JoinColumn(name = "member_id", nullable = false)
+>       private Member member;
+> }
+>```
+
+
+
