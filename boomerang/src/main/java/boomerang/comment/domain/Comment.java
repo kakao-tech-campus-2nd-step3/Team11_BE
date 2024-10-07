@@ -1,8 +1,9 @@
 package boomerang.comment.domain;
 
+import boomerang.IsDeleted;
+import boomerang.board.domain.Board;
 import boomerang.comment.dto.CommentRequestDto;
-import boomerang.domain.board.domain.Board;
-import boomerang.domain.member.domain.Member;
+import boomerang.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -31,13 +32,11 @@ public class Comment {
 
     private String text;
 
-
     @Enumerated(EnumType.STRING)
-    @Builder.Default //빌더 패턴시에도 "NOT_DELETED"로 만들어질 수 있도록 기본값 설정
     private IsDeleted isDeleted = IsDeleted.NOT_DELETED;
 
     public String getAuthorName() {
-        return "가상닉네임";
+        return author.getNickname();
     }
 
     @CreatedDate
@@ -58,5 +57,6 @@ public class Comment {
         this.author = author;
         this.board = board;
         this.text = commentRequestDto.getText();
+        this.isDeleted = IsDeleted.NOT_DELETED;
     }
 }
