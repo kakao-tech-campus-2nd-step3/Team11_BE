@@ -1,21 +1,23 @@
 package boomerang.comment.service;
 
+import boomerang.board.domain.Board;
+import boomerang.board.repository.BoardRepository;
 import boomerang.comment.repository.CommentRepository;
-import boomerang.domain.board.domain.Board;
-import boomerang.domain.board.repository.BoardRepository;
 import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.comment.dto.CommentResponseDto;
-import boomerang.domain.member.domain.Member;
-import boomerang.domain.member.repository.MemberRepository;
 import boomerang.global.exception.BusinessException;
+import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
+import boomerang.member.domain.Member;
+import boomerang.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,24 +30,31 @@ public class CommentService {
 
     //댓글 생성
     public void createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
-        Member author = getMemberOrThrow(email);
         Board board = getBoardOrThrow(boardId);
+        Member author = getMemberOrThrow(email);
+
 
         commentRepository.save(new Comment(author,board,commentRequestDto));
     }
 
     //댓글 조회
-    public Page<CommentResponseDto> getAllComment(String email, Long boardId, Pageable pageable) {
-        Member loginUser = getMemberOrThrow(email);
+    public Page<CommentResponseDto> getAllComment(PrincipalDetails principalDetails, Long boardId, Pageable pageable) {
+
         Board board = getBoardOrThrow(boardId);
         Page<Comment> comments = commentRepository.findAllByBoardIdAndIsDeletedNot(pageable, board.getId());
+        List<CommentResponseDto> commentResponseContent = new ArrayList<>();
 
 
-        //댓글응답객체페이지 본문 만들기
-        List<CommentResponseDto> commentResponseContent = comments.getContent()
+        //로그인 여부
+        boolean isUserLoggedIn = principalDetails != null;
+        Member loginMember = isUserLoggedIn ? getMemberOrThrow(principalDetails.getMemberEmail()) : null;
+
+        //댓글 응답 객체페이지 본문 만들기
+        commentResponseContent = comments.getContent()
                 .stream()
-                .map(comment -> CommentResponseDto.of(comment,isUserCommentAuthor(loginUser,comment)))
+                .map(comment -> createCommentResponseDto(comment,isUserLoggedIn,loginMember))
                 .toList();
+
 
         //페이지 만들어서 제공
         return new PageImpl<>(commentResponseContent, pageable, comments.getTotalElements());
@@ -57,7 +66,7 @@ public class CommentService {
     public void deleteComment(String email, Long commentId) {
         Comment comment = getCommentOrThrow(commentId);
 
-        if (isUserCommentAuthor(getMemberOrThrow(email), comment)) {
+        if (isMemberCommentAuthor(getMemberOrThrow(email), comment)) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -72,7 +81,7 @@ public class CommentService {
     public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = getCommentOrThrow(commentId);
 
-        if (isUserCommentAuthor(getMemberOrThrow(email), comment)) {
+        if (isMemberCommentAuthor(getMemberOrThrow(email), comment)) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -81,7 +90,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public boolean isUserCommentAuthor(Member loginUser, Comment comment) {
+    public boolean isMemberCommentAuthor(Member loginUser, Comment comment) {
         return !comment.getAuthor().equals(loginUser);
     }
 
@@ -101,5 +110,11 @@ public class CommentService {
     }
 
 
+    private CommentResponseDto createCommentResponseDto(Comment comment, boolean isUserLoggedIn, Member loginMember) {
+        if (!isUserLoggedIn) {
+            return new CommentResponseDto(comment); // 로그인하지 않은 경우
+        }
+        return new CommentResponseDto(comment, isMemberCommentAuthor(loginMember, comment)); // 로그인한 경우
+    }
 
 }
