@@ -1,6 +1,5 @@
 package boomerang.global.oauth.service;
 
-import boomerang.member.domain.Email;
 import boomerang.member.domain.Member;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
@@ -25,14 +24,14 @@ public class PrincipalService implements UserDetailsService {
     }
 
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(new Email(email))
+        Member member = memberRepository.findByEmail(email)
             .orElseThrow(MemberNotFoundException::new);
         return new PrincipalDetails(member);
     }    // 필수 메서드 구현 (UserDetailsService 인터페이스의 메서드)
 
     public Boolean existUserByUsername(String email) {
         // username을 email로 간주하여 이메일 기반으로 유저 로드
-        return memberRepository.existsByEmail(new Email(email));
+        return memberRepository.existsByEmail(email);
     }
 
 }

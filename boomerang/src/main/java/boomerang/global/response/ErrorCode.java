@@ -19,7 +19,22 @@ public enum ErrorCode {
 
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
+
+    //COMMENT_IS_NULL
+    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"CM_001","댓글은 빈 내용일 수 없습니다."),
+    COMMENT_FORBIDDEN(HttpStatus.BAD_REQUEST,"CM_002" ,"댓글에 수정 권한이 없습니다." ),
+    COMMENT_NON_EXISTENT(HttpStatus.BAD_REQUEST,"CM_003" ,"댓글을 찾을 수 없습니다." ),
+
+
+
+    //Member
+    MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"MB_001" ,"해당 멤버를 찾을 수 없습니다." ),
+    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." )
+
+
+
     ;
+
     private final HttpStatus status;
     private final String code;
     private final String message;

@@ -1,5 +1,6 @@
 package boomerang.member.domain;
 
+import boomerang.IsDeleted;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -26,8 +27,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private Email email;
+    private String email;
 
     @Embedded
     private MemberType memberType;
@@ -36,6 +36,9 @@ public class Member {
     @Column(name = "insurance_status")
     private boolean insuranceStatus;
 
+    @Column(name = "nickname")
+    private String nickname;
+
     //돌려받을 수 있는 보증금
     @Embedded
     private ReturnDeposit returnDeposit;
@@ -43,8 +46,7 @@ public class Member {
     @Embedded
     private SafetyScore safetyScore;
 
-    @Embedded
-    private ProfileImage profileImage;
+    private String profileImage;
 
     @Embedded
     private ProgressStep progressStep;
@@ -58,13 +60,14 @@ public class Member {
     private LocalDateTime updatedAt;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private IsDeleted isDeleted;
 
     protected Member() {
     }
 
-    public Member(Email email) {
+    public Member(String email, String nickname) {
         this.email = email;
+        this.nickname = nickname;
     }
 
     @Override
