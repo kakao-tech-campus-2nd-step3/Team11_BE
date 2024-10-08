@@ -17,6 +17,8 @@ public enum ErrorCode {
     DUPLICATE_LIKE_ERROR(HttpStatus.BAD_REQUEST, "EL001", "Duplicate Like Error"),
     NOT_MEMBERS_LIKE_ERROR(HttpStatus.FORBIDDEN, "EL002", "Not Members Like Error"),
 
+    BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
+    BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
     ;
     private final HttpStatus status;
     private final String code;
