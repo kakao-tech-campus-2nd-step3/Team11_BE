@@ -1,7 +1,6 @@
 package boomerang.board.dto;
 
 import boomerang.board.domain.*;
-import boomerang.member.domain.Email;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
@@ -18,9 +17,9 @@ public class BoardResponseDto {
     private BoardType boardType;
     private Location location;
     private AnonymousStatus anonymousStatus;
-    private Email writerEmail;
+    private String writerEmail;
 
-    public BoardResponseDto(Long id, String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Email writerEmail) {
+    public BoardResponseDto(Long id, String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, String writerEmail) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;

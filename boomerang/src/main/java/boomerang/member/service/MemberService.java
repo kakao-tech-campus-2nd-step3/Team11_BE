@@ -1,7 +1,6 @@
 package boomerang.member.service;
 
 import boomerang.kakao.domain.KakaoMember;
-import boomerang.member.domain.Email;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
@@ -31,8 +30,8 @@ public class MemberService {
     }
 
 
-    public Member getMemberByEmail(Email memberEmail) {
-        return memberRepository.findByEmail(memberEmail)
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
             .orElseThrow(MemberNotFoundException::new);
     }
 
@@ -41,15 +40,14 @@ public class MemberService {
     }
 
     public String loginKakaoMember(KakaoMember kakaoMember) {
-        String emailString = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
-        Email email = new Email(emailString); // String 타입의 이메일을 Email 클래스로 생성
+        String email= kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         String nickname = kakaoMember.nickname();
         System.out.println("email = " + email);
         MemberServiceDto memberCreateServiceDto = new MemberServiceDto(email, nickname);
 
         Member member = memberRepository.findByEmail(email)
             .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));
-        return jwtUtil.generateToken(member.getId(),emailString);
+        return jwtUtil.generateToken(member.getId(),member.getEmail());
     }
 
     public Member updateMember(MemberServiceDto memberCreateServiceDto) {

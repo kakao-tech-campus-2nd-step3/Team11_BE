@@ -1,6 +1,5 @@
 package boomerang.global.oauth.dto;
 
-import boomerang.member.domain.Email;
 import boomerang.member.domain.Member;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,11 +25,11 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return member.getEmail();
     }
 
 //    @Override
-    public Email getMemberEmail() {
+    public String getMemberEmail() {
         return member.getEmail();
     }
 
