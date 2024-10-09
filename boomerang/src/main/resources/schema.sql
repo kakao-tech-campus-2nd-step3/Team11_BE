@@ -4,7 +4,7 @@ CREATE TABLE template (
     template_column2 VARCHAR(255) -- TemplateColumn2의 필드1
 );
 
-CREATE TABLE like (
+CREATE TABLE likes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT,
     board_id BIGINT,
