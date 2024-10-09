@@ -1,32 +1,33 @@
 package boomerang.like.dto;
 
-import boomerang.like.domain.LikeDomain;
-import lombok.Builder;
+import boomerang.like.domain.Like;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
-@Builder
+@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LikeResponseDto {
-    private Member member;
-    private Board board;
+    private Long id;                        // 좋아요 ID
+    private String memberName;              // 좋아요를 누른 사용자 이름
+    private Long boardId;                   // 게시글 ID
 
-    // 생성자
-    public LikeResponseDto(Member member, Board board) {
-        this.member = member;
-        this.board = board;
-    }
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdAt;        // 좋아요가 생성된 시간
+    private boolean isOwner;                // 현재 사용자가 좋아요의 소유자인지 여부
 
-    /*
-        Domain 값에서 Response 에 필요한 값들만 따로 추출하여 사용 가능
-
-        Domain (id, col1, col2, col3) 이라면
-        Response (col1, col2) 와 같이 불필요한 부분을 제거 또는
-        Response (col1 + "원", col2 + "개") 와 같이 값 형태를 변경하는 데 사용된다
-     */
-    public static LikeResponseDto of(LikeDomain likeDomain) {
-        return LikeResponseDto.builder()
-                .member(likeDomain.getMember())
-                .board(likeDomain.getBoard())
-                .build();
+    public LikeResponseDto(Like like, boolean isOwner) {
+        this.id = like.getId();
+        this.memberName = like.getMember().getNickname();
+        this.boardId = like.getBoard().getId();
+        this.createdAt = like.getCreatedAt();
+        this.isOwner = isOwner;
     }
 }

@@ -1,7 +1,8 @@
 package boomerang.like.domain;
 
+import boomerang.board.domain.Board;
+import boomerang.member.domain.Member;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +28,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "like")
-public class LikeDomain {
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -52,12 +53,17 @@ public class LikeDomain {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public Like(Member member, Board board){
+        this.member = member;
+        this.board = board;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        LikeDomain item = (LikeDomain) o;
+        Like item = (Like) o;
         return Objects.equals(id, item.id);
     }
 
