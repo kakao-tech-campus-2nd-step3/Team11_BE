@@ -1,10 +1,8 @@
 package boomerang.like.controller;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
-import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
 import boomerang.like.service.LikeService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
