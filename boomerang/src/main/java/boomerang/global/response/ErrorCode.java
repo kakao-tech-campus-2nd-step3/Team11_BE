@@ -29,7 +29,11 @@ public enum ErrorCode {
 
     //Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"MB_001" ,"해당 멤버를 찾을 수 없습니다." ),
-    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." )
+    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." ),
+
+
+    //Like
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT,"LK_001" ,"이미 좋아요한 게시물입니다." ),
 
 
 

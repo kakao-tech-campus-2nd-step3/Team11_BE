@@ -29,11 +29,8 @@ public class LikeService {
 
     @Transactional
     public Page<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId, Pageable pageable) {
+        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
         Board board = getBoardOrThrow(boardId);
-
-        //로그인 여부
-        boolean isUserLoggedIn = principalDetails != null;
-        Member loginMember = isUserLoggedIn ? getMemberOrThrow(principalDetails.getMemberEmail()) : null;
 
         Page<Like> likes = likeRepository.findAllByBoardIdAndIsDeletedFalse(board.getId(), pageable);
 
@@ -42,6 +39,22 @@ public class LikeService {
             .collect(Collectors.toList());
 
         return new PageImpl<>(likeResponseDtos, pageable, likes.getTotalElements());
+    }
+
+    @Transactional
+    public LikeResponseDto createLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
+        Board board = getBoardOrThrow(boardId);
+
+        // 이미 좋아요를 눌렀는지 확인
+        if (likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board)) {
+            throw new BusinessException(ErrorCode.LIKE_ALREADY_EXISTS);
+        }
+
+        Like like = new Like(loginMember, board);
+        Like savedLike = likeRepository.save(like);
+
+        return new LikeResponseDto(savedLike, true);
     }
 
     private Member getMemberOrThrow(String email) {
