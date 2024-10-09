@@ -57,6 +57,18 @@ public class LikeService {
         return new LikeResponseDto(savedLike, true);
     }
 
+    @Transactional
+    public void deleteLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
+        Board board = getBoardOrThrow(boardId);
+
+        Like like = likeRepository.findByMemberAndBoardAndIsDeletedFalse(loginMember, board)
+            .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
+
+        like.delete();
+        likeRepository.save(like);
+    }
+
     private Member getMemberOrThrow(String email) {
         return memberRepository.findByEmail(email)
             .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));

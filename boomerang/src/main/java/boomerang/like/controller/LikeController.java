@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,8 @@ public class LikeController {
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId,
         Pageable pageable) {
-        Page<LikeResponseDto> likeResponsePage = likeService.getLikesByBoardId(principalDetails, boardId, pageable);
+        Page<LikeResponseDto> likeResponsePage = likeService.getLikesByBoardId(principalDetails,
+            boardId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(likeResponsePage);
     }
 
@@ -39,5 +41,13 @@ public class LikeController {
         @PathVariable(name = "board_id") Long boardId) {
         LikeResponseDto likeResponseDto = likeService.createLike(principalDetails, boardId);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponseDto);
+    }
+
+    @DeleteMapping("/{board_id}/likes")
+    public ResponseEntity<Void> deleteLike(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable(name = "board_id") Long boardId) {
+        likeService.deleteLike(principalDetails, boardId);
+        return ResponseEntity.noContent().build();
     }
 }
