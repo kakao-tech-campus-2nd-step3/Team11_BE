@@ -14,9 +14,6 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,17 +25,17 @@ public class LikeService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Page<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId, Pageable pageable) {
-        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
+    public List<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId) {
         Board board = getBoardOrThrow(boardId);
 
-        Page<Like> likes = likeRepository.findAllByBoardIdAndIsDeletedFalse(board.getId(), pageable);
+        List<Like> likes = likeRepository.findAllByBoardIdAndIsDeletedFalse(board.getId());
 
-        List<LikeResponseDto> likeResponseDtos = likes.getContent().stream()
-            .map(like -> new LikeResponseDto(like, like.getMember().equals(loginMember)))
+        boolean isUserLoggedIn = principalDetails != null;
+        Member loginMember = isUserLoggedIn ? getMemberOrThrow(principalDetails.getMemberEmail()) : null;
+
+        return likes.stream()
+            .map(like -> createLikeResponseDto(like, isUserLoggedIn, loginMember))
             .collect(Collectors.toList());
-
-        return new PageImpl<>(likeResponseDtos, pageable, likes.getTotalElements());
     }
 
     @Transactional
@@ -77,5 +74,12 @@ public class LikeService {
     private Board getBoardOrThrow(Long boardId) {
         return boardRepository.findById(boardId)
             .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
+    }
+
+    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {
+        if (!isUserLoggedIn) {
+            return new LikeResponseDto(like, false);
+        }
+        return new LikeResponseDto(like, like.getMember().equals(loginMember));
     }
 }

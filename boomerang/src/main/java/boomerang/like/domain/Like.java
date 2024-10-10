@@ -56,6 +56,7 @@ public class Like {
     public Like(Member member, Board board){
         this.member = member;
         this.board = board;
+        this.isDeleted = false;
     }
 
     @Override
