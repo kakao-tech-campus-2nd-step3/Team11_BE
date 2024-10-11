@@ -3,11 +3,14 @@ package boomerang.template.dto;
 import boomerang.template.domain.TemplateColumn1;
 import boomerang.template.domain.TemplateColumn2;
 import boomerang.template.domain.TemplateDomain;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TemplateRequestDto {
     private TemplateColumn1 templateColumn1;
     private TemplateColumn2 templateColumn2;
