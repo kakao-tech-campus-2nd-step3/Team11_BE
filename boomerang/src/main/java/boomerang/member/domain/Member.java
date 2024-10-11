@@ -1,25 +1,19 @@
 package boomerang.member.domain;
 
 import boomerang.IsDeleted;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import boomerang.progress.domain.ProgressType;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
 @Table(name = "member")
 @Getter
-@Setter
 @ToString
 public class Member {
 
@@ -48,8 +42,8 @@ public class Member {
 
     private String profileImage;
 
-    @Embedded
-    private ProgressStep progressStep;
+    @Enumerated(value = EnumType.STRING)
+    private ProgressType progressType;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -70,6 +64,14 @@ public class Member {
         this.nickname = nickname;
     }
 
+    public void registerProgressType(ProgressType progressType) {
+        this.progressType = progressType;
+    }
+
+    public boolean hasProgressType() {
+        return this.progressType != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -86,4 +88,6 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
+
 }
