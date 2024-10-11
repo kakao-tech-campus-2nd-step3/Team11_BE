@@ -13,7 +13,10 @@ public enum ErrorCode {
     DUPLICATE_EMAIL_ERROR(HttpStatus.BAD_REQUEST, "EM002", "Duplicate Email Error"),
     DUPLICATE_NICKNAME_ERROR(HttpStatus.BAD_REQUEST, "EM003", "Duplicate Nickname Error"),
 
-    // Board
+    // Like
+    DUPLICATE_LIKE_ERROR(HttpStatus.BAD_REQUEST, "EL001", "Duplicate Like Error"),
+    NOT_MEMBERS_LIKE_ERROR(HttpStatus.FORBIDDEN, "EL002", "Not Members Like Error"),
+
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
 
@@ -26,7 +29,12 @@ public enum ErrorCode {
 
     //Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"MB_001" ,"해당 멤버를 찾을 수 없습니다." ),
-    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." )
+    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." ),
+
+
+    //Like
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT,"LK_001" ,"이미 좋아요한 게시물입니다." ),
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "LK_002", "해당 좋아요를 찾을 수 없습니다."),
 
 
 
