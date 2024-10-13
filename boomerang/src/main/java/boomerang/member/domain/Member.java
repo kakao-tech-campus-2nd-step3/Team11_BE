@@ -19,7 +19,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "member")
 @Getter
-@Setter
 @ToString
 public class Member {
 
@@ -27,6 +26,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String email;
 
     @Embedded
@@ -36,7 +36,7 @@ public class Member {
     @Column(name = "insurance_status")
     private boolean insuranceStatus;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
     //돌려받을 수 있는 보증금
