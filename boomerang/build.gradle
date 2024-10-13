@@ -41,6 +41,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	//테스트를 위한 시큐리티 설정
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	// AWS S3
+	implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.1.0'
 }
 
 tasks.named('test') {
