@@ -18,17 +18,19 @@ public enum ErrorCode {
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
 
     //COMMENT_IS_NULL
-    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST,"CM_001","댓글은 빈 내용일 수 없습니다."),
-    COMMENT_FORBIDDEN(HttpStatus.BAD_REQUEST,"CM_002" ,"댓글에 수정 권한이 없습니다." ),
-    COMMENT_NON_EXISTENT(HttpStatus.BAD_REQUEST,"CM_003" ,"댓글을 찾을 수 없습니다." ),
-
+    COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM_001", "댓글은 빈 내용일 수 없습니다."),
+    COMMENT_FORBIDDEN(HttpStatus.BAD_REQUEST, "CM_002", "댓글에 수정 권한이 없습니다."),
+    COMMENT_NON_EXISTENT(HttpStatus.BAD_REQUEST, "CM_003", "댓글을 찾을 수 없습니다."),
 
 
     //Member
-    MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST,"MB_001" ,"해당 멤버를 찾을 수 없습니다." ),
-    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST,"MB_002" ,"로그인이 필요합니다." )
+    MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB_001", "해당 멤버를 찾을 수 없습니다."),
+    LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "MB_002", "로그인이 필요합니다."),
 
 
+    //진행도
+    PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG_001", "진행도타입검사 요청 객체가 잘못되었습니다."),
+    PROGRESS_TYPE_EXISTS(HttpStatus.BAD_REQUEST, "PG_002", "이미 진행도 검사를 완료했습니다."),
 
     ;
 
