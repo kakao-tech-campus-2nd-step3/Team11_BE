@@ -10,6 +10,8 @@ import boomerang.progress.dto.ProgressTypeRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProgressService {
@@ -29,6 +31,12 @@ public class ProgressService {
 
         memberRepository.save(member);
         return progressType;
+    }
+
+    public ProgressType getUserType(PrincipalDetails principalDetails) {
+        Member member = getMemberOrThrow(principalDetails.getMemberEmail());
+        return Optional.ofNullable(member.getProgressType())
+                .orElseThrow(() -> new BusinessException(ErrorCode.PROGRESS_TYPE_NON_EXISTENT));
     }
 
     private Member getMemberOrThrow(String email) {
@@ -51,4 +59,6 @@ public class ProgressService {
         }
         throw new BusinessException(ErrorCode.PROGRESS_TYPE_REQUEST_ERROR);
     }
+
+
 }
