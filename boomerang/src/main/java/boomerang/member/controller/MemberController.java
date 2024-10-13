@@ -1,5 +1,6 @@
 package boomerang.member.controller;
 
+import boomerang.global.utils.CookieUtil;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
 import boomerang.member.service.MemberService;
@@ -7,6 +8,7 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,7 +39,7 @@ public class MemberController {
     }
 
     // 시큐리티 필터 테스트 컨트롤러
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
@@ -45,9 +47,10 @@ public class MemberController {
                 .body(member);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-        memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+    @PostMapping
+    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addCookie(CookieUtil.createCookies(token));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
