@@ -9,7 +9,7 @@ public class MemberCreateRequestDto {
     private String email;
     private String nickname;
 
-    public MemberCreateRequestDto() {}
+    protected MemberCreateRequestDto() {}
 
     // 생성자
     public MemberCreateRequestDto(String email, String nickname) {
