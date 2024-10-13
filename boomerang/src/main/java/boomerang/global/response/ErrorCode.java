@@ -31,6 +31,8 @@ public enum ErrorCode {
     //진행도
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG_001", "진행도타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.BAD_REQUEST, "PG_002", "이미 진행도 검사를 완료했습니다."),
+    PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG_003", "진행도 검사를 완료하지 않았습니다."),
+
 
     ;
 
