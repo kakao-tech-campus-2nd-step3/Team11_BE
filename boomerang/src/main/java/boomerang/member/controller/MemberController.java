@@ -1,5 +1,6 @@
 package boomerang.member.controller;
 
+import boomerang.global.utils.CookieUtil;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
 import boomerang.member.service.MemberService;
@@ -8,6 +9,7 @@ import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,9 +49,10 @@ public class MemberController {
                 .body(member);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-        memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+    @PostMapping
+    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addCookie(CookieUtil.createCookies(token));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
