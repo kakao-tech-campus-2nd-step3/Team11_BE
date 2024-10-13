@@ -22,8 +22,11 @@ public class Progress {
     private Member member;
 
     //계약 해지 내용 증명
-    @Embedded
-    private MainStep1 mainStep1;
+    @Column(name = "sub_step1")
+    private Boolean sub_step1;
+
+    @Column(name = "sub_step2")
+    private Boolean sub_step2;
 
     //임차권 등기 명령
 
