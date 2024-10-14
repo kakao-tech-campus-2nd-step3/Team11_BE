@@ -35,7 +35,7 @@ public class LikeService {
 
         return likes.stream()
             .map(like -> createLikeResponseDto(like, isUserLoggedIn, loginMember))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Transactional
