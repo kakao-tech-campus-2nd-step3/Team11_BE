@@ -39,6 +39,8 @@ dependencies {
 	//시큐리티 설정
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//테스트를 위한 시큐리티 설정
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

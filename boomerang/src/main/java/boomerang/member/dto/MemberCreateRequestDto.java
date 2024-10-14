@@ -1,19 +1,18 @@
 package boomerang.member.dto;
 
-import boomerang.member.domain.Email;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
 public class MemberCreateRequestDto {
-    private Email email;
+    private String email;
     private String nickname;
 
 
 
     // 생성자
-    public MemberCreateRequestDto(Email email, String nickname) {
+    public MemberCreateRequestDto(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
     }
