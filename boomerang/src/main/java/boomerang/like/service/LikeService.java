@@ -62,7 +62,6 @@ public class LikeService {
             .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
-        likeRepository.save(like);
     }
 
     private Member getMemberOrThrow(String email) {
