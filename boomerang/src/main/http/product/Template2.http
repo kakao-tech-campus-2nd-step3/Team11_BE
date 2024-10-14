@@ -26,12 +26,12 @@ Content-Type: application/json
 }
 
 ### create member
-POST http://localhost:8080/api/member
+POST http://localhost:8080/api/v1/member
 Content-Type: application/json
 
 {
-  "password": "password3",
-  "email": "email5@naver.com"
+  "email": "email5@naver.com",
+  "nickname": "카테캠"
 }
 
 
