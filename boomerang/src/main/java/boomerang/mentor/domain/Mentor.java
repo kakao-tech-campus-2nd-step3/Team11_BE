@@ -30,6 +30,8 @@ public class Mentor {
 
     private Boolean displayStatus;
 
+    private String contact;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -46,12 +48,13 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentoType, String career, String introduce, Boolean displayStatus, Member member) {
+    public Mentor(MentorType mentoType, String career, String introduce, Boolean displayStatus, Member member, String contact) {
         this.mentoType = mentoType;
         this.career = career;
         this.introduce = introduce;
         this.displayStatus = displayStatus;
         this.member = member;
+        this.contact = contact;
     }
 
     @Override
