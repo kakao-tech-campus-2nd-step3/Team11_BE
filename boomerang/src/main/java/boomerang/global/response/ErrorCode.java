@@ -36,7 +36,8 @@ public enum ErrorCode {
     LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT,"LK_001" ,"이미 좋아요한 게시물입니다." ),
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "LK_002", "해당 좋아요를 찾을 수 없습니다."),
 
-
+    // File
+    S3_UPLOAD_ERROR(HttpStatus.NOT_FOUND, "EF001", "S3와 정상적인 연결이 불가능합니다"),
 
     ;
 
