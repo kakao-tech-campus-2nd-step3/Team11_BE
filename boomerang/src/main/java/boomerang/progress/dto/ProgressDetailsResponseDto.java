@@ -16,7 +16,7 @@ public class ProgressDetailsResponseDto  {
 
     public ProgressDetailsResponseDto(Progress progress) {
         this.progressType = progress.getProgressType();
-        this.mainStepList = progress.getActivatedMainList()
+        this.mainStepList = progress.getActiveMainStepList()
                 .stream()
                 .map(MainStepResponseDto::new)
                 .toList();

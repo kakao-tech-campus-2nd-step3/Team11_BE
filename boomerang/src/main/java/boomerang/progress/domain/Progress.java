@@ -52,15 +52,15 @@ public class Progress {
         }
     }
 
-    public List<MainStep> getActivatedMainList() {
-        return ProgressStrategy.completeActiveMainStepList(this);
+    public List<MainStep> getActiveMainStepList() {
+        return ProgressStrategy.generateActiveMainStepsByType(this);
     }
 
-    public MainStep getMainStep(MainStepEnum mainStepEnum) {
-        return ProgressStrategy.getMainStep(this,mainStepEnum);
+    public MainStep findMainStepByEnum(MainStepEnum mainStepEnum) {
+        return ProgressStrategy.findMainStepByEnum(this,mainStepEnum);
     }
 
-    public SubStepResponseDto getSubStep(SubStepEnum subStepEnum) {
-        return ProgressStrategy.getSubStep(this,subStepEnum);
+    public SubStepResponseDto findSubStepByEnum(SubStepEnum subStepEnum) {
+        return ProgressStrategy.findSubStepByEnum(this,subStepEnum);
     }
 }

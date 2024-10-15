@@ -15,7 +15,7 @@ public class ProgressStrategy {
         return null;
     }
 
-    public static List<MainStep> completeActiveMainStepList(Progress progress) {
+    public static List<MainStep> generateActiveMainStepsByType(Progress progress) {
         ProgressType progressType = progress.getProgressType();
 
         if (progressType.equals(ProgressType.A)) {
@@ -56,14 +56,14 @@ public class ProgressStrategy {
     }
 
 
-    public static MainStep getMainStep(Progress progress, MainStepEnum mainStepEnum) {
+    public static MainStep findMainStepByEnum(Progress progress, MainStepEnum mainStepEnum) {
         if (mainStepEnum.equals(MainStepEnum.MAIN_STEP_1)) {
             return progress.getMainStepEx();
         }
         throw new BusinessException(ErrorCode.PROGRESS_MAIN_ERROR);
     }
 
-    public static SubStepResponseDto getSubStep(Progress progress, SubStepEnum subStepEnum) {
+    public static SubStepResponseDto findSubStepByEnum(Progress progress, SubStepEnum subStepEnum) {
         if (subStepEnum.equals(SubStepEnum.SUB_STEP_1)) {
             return new SubStepResponseDto(subStepEnum.getSubStepName(), progress.getMainStepEx().getSubStep1());
         }
