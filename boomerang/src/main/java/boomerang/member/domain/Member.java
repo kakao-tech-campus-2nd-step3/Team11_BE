@@ -1,6 +1,7 @@
 package boomerang.member.domain;
 
 import boomerang.IsDeleted;
+import boomerang.progress.domain.Progress;
 import boomerang.progress.domain.ProgressType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -56,6 +57,9 @@ public class Member {
     @Column(name = "is_deleted")
     private IsDeleted isDeleted;
 
+    @OneToOne(mappedBy = "progress")
+    private Progress progress;
+
     protected Member() {
     }
 
@@ -67,6 +71,11 @@ public class Member {
     public void registerProgressType(ProgressType progressType) {
         this.progressType = progressType;
     }
+
+    public void registerProgress(Progress progress) {
+        this.progress = progress;
+    }
+
 
     public boolean hasProgressType() {
         return this.progressType != null;
