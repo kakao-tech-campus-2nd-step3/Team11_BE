@@ -1,13 +1,16 @@
 package boomerang.progress.domain;
 
-import boomerang.global.exception.BusinessException;
-import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
+import boomerang.progress.dto.SubStepResponseDto;
+import boomerang.progress.util.ProgressStrategy;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,9 +26,12 @@ public class Progress {
     @JoinColumn(name = "author_id")
     private Member member;
 
+    @Enumerated(value = EnumType.STRING)
+    private ProgressType progressType;
+
     //이
     @Embedded
-    private MainStep1 mainStep1;
+    private MainStepEx mainStepEx;
 
     //임차권 등기 명령 - C,D
 
@@ -37,34 +43,24 @@ public class Progress {
 
     //전세 보증금 반환 소송
 
-    public Progress(Member member) {
+    public Progress(Member member, ProgressType progressType) {
         this.member = member;
+        this.progressType = progressType;
         //이후에 타입별로 구분해서 생성하는게 필요할 것 같음
-        this.mainStep1 = new MainStep1();
-
-    }
-
-
-    public void updateStep(SubStep subStep, boolean status) {
-        switch (subStep) {
-            case SUB_STEP_1:
-                this.mainStep1.updateSubStep1(status);
-                break;
-            case SUB_STEP_2:
-                this.mainStep1.updateSubStep2(status);
-                break;
+        if (progressType.equals(ProgressType.A)) {
+            this.mainStepEx = new MainStepEx();
         }
     }
 
-    public boolean getSubStepStatus(SubStep subStep) {
-        switch (subStep) {
-            case SUB_STEP_1:
-                return mainStep1.getSubStep1();
-            case SUB_STEP_2:
-                return mainStep1.getSubStep2();
-            default:
-                throw new BusinessException(ErrorCode.PROGRESS_REQUEST_ERROR);
-        }
+    public List<MainStep> getActivatedMainList() {
+        return ProgressStrategy.completeActiveMainStepList(this);
+    }
 
+    public MainStep getMainStep(MainStepEnum mainStepEnum) {
+        return ProgressStrategy.getMainStep(this,mainStepEnum);
+    }
+
+    public SubStepResponseDto getSubStep(SubStepEnum subStepEnum) {
+        return ProgressStrategy.getSubStep(this,subStepEnum);
     }
 }
