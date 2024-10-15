@@ -43,9 +43,6 @@ public class Member {
 
     private String profileImage;
 
-    @Enumerated(value = EnumType.STRING)
-    private ProgressType progressType;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -57,7 +54,7 @@ public class Member {
     @Column(name = "is_deleted")
     private IsDeleted isDeleted;
 
-    @OneToOne(mappedBy = "progress")
+    @OneToOne(mappedBy = "member")
     private Progress progress;
 
     protected Member() {
@@ -68,8 +65,11 @@ public class Member {
         this.nickname = nickname;
     }
 
-    public void registerProgressType(ProgressType progressType) {
-        this.progressType = progressType;
+    public ProgressType getProgressType() {
+        if (this.progress == null) {
+            return null;
+        }
+        return this.progress.getProgressType();
     }
 
     public void registerProgress(Progress progress) {
@@ -77,8 +77,8 @@ public class Member {
     }
 
 
-    public boolean hasProgressType() {
-        return this.progressType != null;
+    public boolean hasProgress() {
+        return this.progress != null;
     }
 
     @Override
@@ -97,6 +97,7 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
 
 
 }
