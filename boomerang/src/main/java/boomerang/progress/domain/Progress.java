@@ -1,5 +1,7 @@
 package boomerang.progress.domain;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,15 +19,15 @@ public class Progress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "author_id")
     private Member member;
 
-    //계약 해지 내용 증명
+    //이
     @Embedded
     private MainStep1 mainStep1;
 
-    //임차권 등기 명령
+    //임차권 등기 명령 - C,D
 
     //보증 이행 청구
 
@@ -35,4 +37,34 @@ public class Progress {
 
     //전세 보증금 반환 소송
 
+    public Progress(Member member) {
+        this.member = member;
+        //이후에 타입별로 구분해서 생성하는게 필요할 것 같음
+        this.mainStep1 = new MainStep1();
+
+    }
+
+
+    public void updateStep(SubStep subStep, boolean status) {
+        switch (subStep) {
+            case SUB_STEP_1:
+                this.mainStep1.updateSubStep1(status);
+                break;
+            case SUB_STEP_2:
+                this.mainStep1.updateSubStep2(status);
+                break;
+        }
+    }
+
+    public boolean getSubStepStatus(SubStep subStep) {
+        switch (subStep) {
+            case SUB_STEP_1:
+                return mainStep1.getSubStep1();
+            case SUB_STEP_2:
+                return mainStep1.getSubStep2();
+            default:
+                throw new BusinessException(ErrorCode.PROGRESS_REQUEST_ERROR);
+        }
+
+    }
 }
