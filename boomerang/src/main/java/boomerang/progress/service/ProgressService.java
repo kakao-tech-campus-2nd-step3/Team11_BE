@@ -92,13 +92,31 @@ public class ProgressService {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
-        Progress updatedProgress = ProgressStrategy.updateProgress(progress, mainStepEnum, subStepEnum);
-        progressRepository.save(updatedProgress);
+        ProgressStrategy.updateProgress(progress, mainStepEnum, subStepEnum, true);
 
-//        return new SubStepResponseDto(updatedProgress);
+        progressRepository.save(progress);
 
-        return null;
+        return progress.findSubStepByEnum(subStepEnum);
+
     }
+    //진행도 업데이트
+    public SubStepResponseDto revertProgressToIncomplete(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+        if (!subStepEnum.isMatchingMainStep(mainStepEnum)) {
+            throw new BusinessException(ErrorCode.PROGRESS_SUB_MAIN_DO_NOT_MATCH);
+        }
+
+        Member member = getMemberOrThrow(principalDetails.getMemberEmail());
+        Progress progress = getProgressByMember(member);
+
+        ProgressStrategy.updateProgress(progress, mainStepEnum, subStepEnum, false);
+
+        progressRepository.save(progress);
+
+        return progress.findSubStepByEnum(subStepEnum);
+
+    }
+
+
 
     private Progress getProgressByMember(Member member) {
         Progress progress = member.getProgress();
