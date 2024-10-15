@@ -63,10 +63,15 @@ public class ProgressController {
     public ResponseEntity<?> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
-
         SubStepResponseDto subStepResponseDto = progressService.completeProgress(principalDetails, mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
-
+    @DeleteMapping("/progress/{main}/{sub}")
+    public ResponseEntity<?> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                              @PathVariable("main") MainStepEnum mainStepEnum,
+                                              @PathVariable("sub") SubStepEnum subStepEnum) {
+        SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(principalDetails, mainStepEnum, subStepEnum);
+        return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
+    }
 }
