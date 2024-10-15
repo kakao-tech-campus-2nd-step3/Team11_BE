@@ -32,6 +32,11 @@ public enum ErrorCode {
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG_001", "진행도타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.BAD_REQUEST, "PG_002", "이미 진행도 검사를 완료했습니다."),
     PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG_003", "진행도 검사를 완료하지 않았습니다."),
+    PROGRESS_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG_004", "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
+    PROGRESS_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG_005", "해당 세부 단계를 찾을 수 없습니다."),
+    PROGRESS_SUB_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG_006", "세부 단계의 이름이 잘못되었습니다."),
+    PROGRESS_MAIN_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG_007", "메인 단계의 이름이 잘못되었습니다."),
+    PROGRESS_SUB_MAIN_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "PG_008", "서브단계와 메인 단계가 적절하게 매칭되지 않습니다."),
 
 
     ;
