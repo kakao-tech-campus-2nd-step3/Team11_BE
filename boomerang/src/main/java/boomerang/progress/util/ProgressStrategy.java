@@ -11,8 +11,13 @@ import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProgressStrategy {
-    public static Progress updateProgress(Progress progress, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
-        return null;
+    public static void updateProgress(Progress progress, MainStepEnum mainStepEnum, SubStepEnum subStepEnum, boolean status) {
+        if (subStepEnum.equals(SubStepEnum.SUB_STEP_1)) {
+            progress.getMainStepEx().updateSubStep1(status);
+        }
+        if (subStepEnum.equals(SubStepEnum.SUB_STEP_2)) {
+            progress.getMainStepEx().updateSubStep2(status);
+        }
     }
 
     public static List<MainStep> generateActiveMainStepsByType(Progress progress) {

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Embeddable
-public class MainStepEx implements MainStep{
+public class MainStepEx implements MainStep {
 
     private Boolean subStep1;
 
@@ -21,7 +21,16 @@ public class MainStepEx implements MainStep{
         this.subStep2 = false;
     }
 
+    public void updateSubStep1(boolean status) {
+        this.subStep1 = status;
+    }
+
+    public void updateSubStep2(boolean status) {
+        this.subStep2 = status;
+    }
+
     @Override
+
     public String getMainName() {
         return "진행도1번";
     }
