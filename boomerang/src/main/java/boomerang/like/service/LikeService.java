@@ -10,9 +10,8 @@ import boomerang.like.dto.LikeResponseDto;
 import boomerang.like.repository.LikeRepository;
 import boomerang.member.domain.Member;
 import boomerang.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class LikeService {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId) {
         Board board = getBoardOrThrow(boardId);
 
@@ -35,7 +34,7 @@ public class LikeService {
 
         return likes.stream()
             .map(like -> createLikeResponseDto(like, isUserLoggedIn, loginMember))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Transactional
@@ -63,7 +62,6 @@ public class LikeService {
             .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
-        likeRepository.save(like);
     }
 
     private Member getMemberOrThrow(String email) {
