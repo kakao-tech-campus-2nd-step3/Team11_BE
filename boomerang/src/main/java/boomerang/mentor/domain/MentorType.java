@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum MentorType {
-    ENTIRE("ENTIRE"), SECRETE("SECRETE"), LOCATION("LOCATION"), STEP("STEP");
+    LAWYER("lawyer"), REAL_ESTATE_AGENT("realEstateAgent"), PREVIOUS_DAMAGE_RESOLVER("previousDamageResolver");
 
     private final String name;
 
