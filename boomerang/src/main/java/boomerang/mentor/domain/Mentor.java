@@ -39,7 +39,7 @@ public class Mentor {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private IsDeleted isDeleted;
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -55,6 +55,7 @@ public class Mentor {
         this.displayStatus = displayStatus;
         this.member = member;
         this.contact = contact;
+        this.isDeleted = false;  // 기본값으로 false 설정
     }
 
     @Override
