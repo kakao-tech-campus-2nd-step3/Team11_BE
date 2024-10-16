@@ -25,7 +25,7 @@ public class CommentController {
 
     //댓글 조회
     @GetMapping("/board/{board_id}/comments")
-    public ResponseEntity<?> getAllComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<Page<CommentResponseDto>> getAllComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @PathVariable("board_id") Long boardId,
                                            Pageable pageable) {
         Page<CommentResponseDto> commentResponsePage = commentService.getAllComment(principalDetails, boardId, pageable);
@@ -34,7 +34,7 @@ public class CommentController {
 
     //댓글 생성
     @PostMapping("/board/{board_id}/comments")
-    public ResponseEntity<?> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<Void> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @PathVariable("board_id") Long boardId,
                                            @RequestBody CommentRequestDto commentRequestDto) {
         commentService.createComment(principalDetails.getMemberEmail(), boardId, commentRequestDto);
@@ -43,7 +43,7 @@ public class CommentController {
 
     //댓글 수정
     @PutMapping("/board/comments/{comment_id}")
-    public ResponseEntity<?> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @PathVariable("comment_id") Long commentId,
                                            @RequestBody CommentRequestDto commentRequestDto) {
         commentService.updateComment(principalDetails.getMemberEmail(), commentId, commentRequestDto);
@@ -52,7 +52,7 @@ public class CommentController {
 
     //댓글 삭제
     @DeleteMapping("/board/comments/{comment_id}")
-    public ResponseEntity<?> deleteComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @PathVariable("comment_id") Long commentId) {
         commentService.deleteComment(principalDetails.getMemberEmail(), commentId);
         return ResponseEntity.status(HttpStatus.OK).build();
