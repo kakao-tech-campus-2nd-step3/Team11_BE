@@ -28,7 +28,7 @@ public class Mentor {
 
     private String introduce;
 
-    private Boolean displayStatus;
+    private Boolean advertisementStatus;
 
     private String contact;
 
@@ -48,11 +48,11 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentoType, String career, String introduce, Boolean displayStatus, Member member, String contact) {
+    public Mentor(MentorType mentoType, String career, String introduce, Boolean advertisementStatus, Member member, String contact) {
         this.mentoType = mentoType;
         this.career = career;
         this.introduce = introduce;
-        this.displayStatus = displayStatus;
+        this.advertisementStatus = advertisementStatus;
         this.member = member;
         this.contact = contact;
         this.isDeleted = false;  // 기본값으로 false 설정
