@@ -66,7 +66,7 @@ public class CommentService {
     public void deleteComment(String email, Long commentId) {
         Comment comment = getCommentOrThrow(commentId);
 
-        if (isMemberCommentAuthor(getMemberOrThrow(email), comment)) {
+        if (comment.isMemberCommentAuthor(getMemberOrThrow(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -81,7 +81,7 @@ public class CommentService {
     public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = getCommentOrThrow(commentId);
 
-        if (isMemberCommentAuthor(getMemberOrThrow(email), comment)) {
+        if (comment.isMemberCommentAuthor(getMemberOrThrow(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -90,9 +90,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
-    public boolean isMemberCommentAuthor(Member loginUser, Comment comment) {
-        return !comment.getAuthor().equals(loginUser);
-    }
+
 
     private Member getMemberOrThrow(String email) {
         return memberRepository.findByEmail(email)
@@ -114,7 +112,7 @@ public class CommentService {
         if (!isUserLoggedIn) {
             return new CommentResponseDto(comment); // 로그인하지 않은 경우
         }
-        return new CommentResponseDto(comment, isMemberCommentAuthor(loginMember, comment)); // 로그인한 경우
+        return new CommentResponseDto(comment, comment.isMemberCommentAuthor(loginMember)); // 로그인한 경우
     }
 
 }
