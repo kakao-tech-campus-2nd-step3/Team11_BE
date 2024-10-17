@@ -22,7 +22,7 @@ public class Mentor {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private MentorType mentoType;
+    private MentorType mentorType;
 
     private String career;
 
@@ -46,8 +46,8 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentoType, String career, String introduce, Boolean displayStatus, Member member) {
-        this.mentoType = mentoType;
+    public Mentor(MentorType mentorType, String career, String introduce, Boolean displayStatus, Member member) {
+        this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
         this.displayStatus = displayStatus;
