@@ -14,4 +14,6 @@ public interface MentorRepository extends JpaRepository<Mentor, Long> {
     Page<Mentor> findAllByIsDeletedFalse(Pageable pageable);
 
     Optional<Mentor> findByIdAndIsDeletedFalse(Long id);
+
+    Optional<Mentor> findByMemberAndIsDeletedFalse(Member member);
 }

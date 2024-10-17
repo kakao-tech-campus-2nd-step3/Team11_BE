@@ -3,6 +3,7 @@ package boomerang.mentor.controller;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
+import boomerang.mentor.dto.MentorUpdateRequestDto;
 import boomerang.mentor.service.MentorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,5 +51,14 @@ public class MentorController {
         @Valid @RequestBody MentorCreateRequestDto mentorCreateRequestDto){
         MentorResponseDto mentorResponseDto = mentorService.createMentor(principalDetails.getMemberEmail(), mentorCreateRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(mentorResponseDto);
+    }
+
+    // 멘토 정보 수정
+    @PutMapping
+    public ResponseEntity<MentorResponseDto> updateMentor(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @Valid @RequestBody MentorUpdateRequestDto updateRequestDto) {
+        MentorResponseDto updatedMentor = mentorService.updateMentor(principalDetails.getMemberEmail(), updateRequestDto);
+        return ResponseEntity.ok(updatedMentor);
     }
 }

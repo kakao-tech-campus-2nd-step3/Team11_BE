@@ -7,6 +7,7 @@ import boomerang.member.service.MemberService;
 import boomerang.mentor.domain.Mentor;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
+import boomerang.mentor.dto.MentorUpdateRequestDto;
 import boomerang.mentor.repository.MentorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,4 +56,24 @@ public class MentorService {
         return new MentorResponseDto(savedMentor);
     }
 
+    @Transactional
+    public MentorResponseDto updateMentor(String email, MentorUpdateRequestDto updateRequestDto) {
+        Member member = memberService.getMemberByEmail(email);
+        Mentor mentor = mentorRepository.findByMemberAndIsDeletedFalse(member)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+
+        if (!mentor.getMember().equals(member)) {
+            throw new BusinessException(ErrorCode.MENTOR_UPDATE_NOT_AUTHORIZED);
+        }
+
+        mentor.updateMentor(
+            updateRequestDto.getMentorType(),
+            updateRequestDto.getCareer(),
+            updateRequestDto.getIntroduce(),
+            updateRequestDto.getAdvertisementStatus(),
+            updateRequestDto.getContact()
+        );
+
+        return new MentorResponseDto(mentor);
+    }
 }

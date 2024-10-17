@@ -77,4 +77,12 @@ public class Mentor {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void updateMentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, String contact) {
+        this.mentorType = mentorType;
+        this.career = career;
+        this.introduce = introduce;
+        this.advertisementStatus = advertisementStatus;
+        this.contact = contact;
+    }
 }
