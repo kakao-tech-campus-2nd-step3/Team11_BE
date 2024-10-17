@@ -27,6 +27,13 @@ public class MentorService {
         return mentorPage.map(MentorResponseDto::new);
     }
 
+    @Transactional(readOnly = true)
+    public MentorResponseDto getMentorById(Long id) {
+        Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+        return new MentorResponseDto(mentor);
+    }
+
     @Transactional
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(email);

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class MentorController {
 
     private final MentorService mentorService;
 
+    // 멘토 조회
     @GetMapping
     public ResponseEntity<Page<MentorResponseDto>> getAllMentors(
         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -33,6 +35,14 @@ public class MentorController {
         return ResponseEntity.ok(mentors);
     }
 
+    // 멘토 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<MentorResponseDto> getMentorById(@PathVariable Long id) {
+        MentorResponseDto mentorResponseDto = mentorService.getMentorById(id);
+        return ResponseEntity.ok(mentorResponseDto);
+    }
+
+    // 멘토 등록
     @PostMapping
     public ResponseEntity<MentorResponseDto> createMentor(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
