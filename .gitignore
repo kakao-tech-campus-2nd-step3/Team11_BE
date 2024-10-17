@@ -57,6 +57,3 @@ out/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-logs
-.DS_STORE
