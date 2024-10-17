@@ -1,17 +1,23 @@
 package boomerang.mentor.domain;
 
-import boomerang.IsDeleted;
 import boomerang.member.domain.Member;
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -22,7 +28,7 @@ public class Mentor {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private MentorType mentoType;
+    private MentorType mentorType;
 
     private String career;
 
@@ -48,8 +54,8 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentoType, String career, String introduce, Boolean advertisementStatus, Member member, String contact) {
-        this.mentoType = mentoType;
+    public Mentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Member member) {
+        this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
         this.advertisementStatus = advertisementStatus;

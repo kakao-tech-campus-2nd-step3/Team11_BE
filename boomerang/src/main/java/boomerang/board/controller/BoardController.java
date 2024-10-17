@@ -12,6 +12,7 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/board")
 public class BoardController {
@@ -43,7 +45,7 @@ public class BoardController {
 
     @GetMapping("/{board_id}")
     public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
-        Board board = boardService.getBoardById(boardId);
+        Board board = boardService.getBoard(boardId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BoardResponseDto(board));
@@ -90,7 +92,7 @@ public class BoardController {
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponseDto> handleOptionValidException(DomainValidationException e) {
-        System.out.println(e);
+        log.error(e.toString());
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
 }
