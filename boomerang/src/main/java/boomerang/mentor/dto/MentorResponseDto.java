@@ -21,7 +21,7 @@ public class MentorResponseDto {
 
     public MentorResponseDto(Mentor mentor) {
         this.id = mentor.getId();
-        this.mentorType = mentor.getMentoType();
+        this.mentorType = mentor.getMentorType();
         this.career = mentor.getCareer();
         this.introduce = mentor.getIntroduce();
         this.advertisementStatus = mentor.getAdvertisementStatus();

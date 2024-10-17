@@ -54,7 +54,7 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Member member) {
+    public Mentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
