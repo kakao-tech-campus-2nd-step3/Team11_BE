@@ -43,7 +43,7 @@ public class BoardController {
 
     @GetMapping("/{board_id}")
     public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
-        Board board = boardService.getBoardById(boardId);
+        Board board = boardService.getBoard(boardId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BoardResponseDto(board));

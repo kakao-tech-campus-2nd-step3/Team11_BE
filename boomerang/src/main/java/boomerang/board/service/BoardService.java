@@ -28,7 +28,7 @@ public class BoardService {
     }
 
     // ID로 게시물 가져오기
-    public Board getBoardById(Long id) {
+    public Board getBoard(Long id) {
         return validateBoardExists(id);
     }
 

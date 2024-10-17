@@ -31,7 +31,7 @@ public class MemberController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable(name = "id") Long id) {
-        Member member = memberService.getMemberById(id);
+        Member member = memberService.getMember(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(member);
     }
