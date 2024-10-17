@@ -9,6 +9,7 @@ import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
 import boomerang.mentor.dto.MentorUpdateRequestDto;
 import boomerang.mentor.repository.MentorRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,11 +40,32 @@ public class MentorService {
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(email);
 
-        if (mentorRepository.existsByMember(member)) {
+        // 기존에 기록이 있으면 재생성, 없다면 신규 생성
+        return mentorRepository.findByMember(member)
+            .map(existingMentor -> reactivateExistingMentor(existingMentor, requestDto))
+            .orElseGet(() -> createNewMentor(member, requestDto));
+    }
+
+    private MentorResponseDto reactivateExistingMentor(Mentor mentor, MentorCreateRequestDto requestDto) {
+        if (!mentor.getIsDeleted()) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
 
-        Mentor mentor = new Mentor(
+        mentor.updateMentor(
+            requestDto.getMentorType(),
+            requestDto.getCareer(),
+            requestDto.getIntroduce(),
+            requestDto.getAdvertisementStatus(),
+            false,
+            requestDto.getContact()
+        );
+
+        Mentor savedMentor = mentorRepository.save(mentor);
+        return new MentorResponseDto(savedMentor);
+    }
+
+    private MentorResponseDto createNewMentor(Member member, MentorCreateRequestDto requestDto) {
+        Mentor newMentor = new Mentor(
             requestDto.getMentorType(),
             requestDto.getCareer(),
             requestDto.getIntroduce(),
@@ -52,7 +74,7 @@ public class MentorService {
             requestDto.getContact()
         );
 
-        Mentor savedMentor = mentorRepository.save(mentor);
+        Mentor savedMentor = mentorRepository.save(newMentor);
         return new MentorResponseDto(savedMentor);
     }
 
@@ -71,6 +93,7 @@ public class MentorService {
             updateRequestDto.getCareer(),
             updateRequestDto.getIntroduce(),
             updateRequestDto.getAdvertisementStatus(),
+            false,
             updateRequestDto.getContact()
         );
 

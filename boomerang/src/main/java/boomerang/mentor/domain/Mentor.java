@@ -78,11 +78,12 @@ public class Mentor {
         return Objects.hash(id);
     }
 
-    public void updateMentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, String contact) {
+    public void updateMentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Boolean isDeleted, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
         this.advertisementStatus = advertisementStatus;
+        this.isDeleted = isDeleted != null ? isDeleted : false;
         this.contact = contact;
     }
 
