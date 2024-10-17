@@ -8,9 +8,11 @@ import boomerang.mentor.domain.Mentor;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
 import boomerang.mentor.repository.MentorRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,12 @@ public class MentorService {
 
     private final MentorRepository mentorRepository;
     private final MemberService memberService;
+
+    @Transactional(readOnly = true)
+    public Page<MentorResponseDto> getAllMentors(Pageable pageable) {
+        Page<Mentor> mentorPage = mentorRepository.findAllByIsDeletedFalse(pageable);
+        return mentorPage.map(MentorResponseDto::new);
+    }
 
     @Transactional
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
@@ -39,4 +47,5 @@ public class MentorService {
         Mentor savedMentor = mentorRepository.save(mentor);
         return new MentorResponseDto(savedMentor);
     }
+
 }
