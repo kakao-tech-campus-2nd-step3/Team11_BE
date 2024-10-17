@@ -85,4 +85,8 @@ public class Mentor {
         this.advertisementStatus = advertisementStatus;
         this.contact = contact;
     }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 }

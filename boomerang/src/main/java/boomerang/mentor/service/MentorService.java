@@ -76,4 +76,13 @@ public class MentorService {
 
         return new MentorResponseDto(mentor);
     }
+
+    @Transactional
+    public void deleteMentor(String email) {
+        Member member = memberService.getMemberByEmail(email);
+        Mentor mentor = mentorRepository.findByMemberAndIsDeletedFalse(member)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+
+        mentor.delete();
+    }
 }
