@@ -27,8 +27,8 @@ public class AmazonS3Service implements FileService {
     }
 
     @Override
-    public URL upload(MultipartFile multipartFile) {
-        String fileName = String.join("/",
+    public URL upload(String email, MultipartFile multipartFile) {
+        String fileName = String.join("/", email,
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss.SSSSSS")));
 
         return putImage(fileName, multipartFile);

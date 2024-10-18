@@ -7,5 +7,5 @@ import java.net.URL;
 
 @Service
 public interface FileService {
-    URL upload(MultipartFile multipartFile);
+    URL upload(String email, MultipartFile multipartFile);
 }
