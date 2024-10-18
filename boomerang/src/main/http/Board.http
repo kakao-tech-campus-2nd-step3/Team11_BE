@@ -1,6 +1,6 @@
 ### get boards
 GET http://localhost:8080/api/board?page=0&size=10&sortDirection=DESC&sortBy=id
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ3amR3b3FsczAwQGdtYWlsLmNvbSIsImlhdCI6MTcyOTI0NTkwOCwiZXhwIjoyNDE3MjkyNDU5MDh9.oVBDy9Cto2SgH-kQK15PFtXhHtfOC4ev0bALlNpshlg
 
 ### get board
 GET http://localhost:8080/api/board/1
@@ -8,13 +8,13 @@ GET http://localhost:8080/api/board/1
 ### create board
 POST http://localhost:8080/api/board
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJ3amR3b3FsczAwQGdtYWlsLmNvbSIsImlhdCI6MTcyOTI0NTkwOCwiZXhwIjoyNDE3MjkyNDU5MDh9.oVBDy9Cto2SgH-kQK15PFtXhHtfOC4ev0bALlNpshlg
 
 {
   "title": "Example Title",
   "subtitle": "Example Subtitle",
   "content": "This is an example content for the board.",
-  "boardType":  "GENERAL",
+  "boardType":  "ENTIRE",
   "location": "BUSAN",
   "anonymousStatus": "true"
 }
@@ -24,7 +24,7 @@ Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3M
 ### update board
 PUT http://localhost:8080/api/board/1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+Cookie: Authorization=cbec332b20d6f740dbedeb42b04f756e9451a870e104c1c33e4acd46ec3c0ee6c76819459e70903b1fd5e38bd37bdeeda0ae57c2c6b8c29b1d68adb2099d6c9e4843b7a6d735e6d89337fad38eecf4724c00edf97646eb49c1f9ce513879181cdad3c0fc359191849572dc3433313439303239333838343833333936333535373134323036383335333134bc7a276e3c6d282f73a015b3c6ff3744
 
 {
   "title": "Update Title",
