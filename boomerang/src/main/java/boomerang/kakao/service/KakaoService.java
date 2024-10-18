@@ -28,7 +28,7 @@ public class KakaoService {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>(); //바디 객체를 만드는 부분 Map으로 만들면 되고 key 값은 카카오문서에서 요청하는 이름으로
         map.add("grant_type", "authorization_code");
         map.add("client_id", clientId);
-        map.add("redirect_uri", "http://172.31.2.16:8080/api/v1/auth/login/callback");
+        map.add("redirect_uri", "http://13.125.238.177:8080/api/v1/auth/login/callback");
         map.add("code", code);
         RestClient restClient = RestClient.create();
 
