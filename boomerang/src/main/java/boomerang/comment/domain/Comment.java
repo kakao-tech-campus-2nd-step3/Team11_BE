@@ -59,4 +59,9 @@ public class Comment {
         this.text = commentRequestDto.getText();
         this.isDeleted = IsDeleted.NOT_DELETED;
     }
+
+    public boolean isMemberCommentAuthor(Member loginUser) {
+        return loginUser.equals(this.author);
+    }
+
 }
