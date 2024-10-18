@@ -5,7 +5,7 @@ import java.util.Random;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RandonNinkname {
+public class RandonNickname {
 
     private final String[] ADJECTIVES = {
         "행복한", "똑똑한", "즐거운", "강한", "빠른", "재치있는", "멋진", "훌륭한", "즐거운",

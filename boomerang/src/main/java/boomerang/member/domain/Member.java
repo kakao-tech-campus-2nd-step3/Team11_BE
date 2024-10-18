@@ -4,6 +4,8 @@ import boomerang.IsDeleted;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,8 +31,8 @@ public class Member {
     @Column(unique = true)
     private String email;
 
-    @Embedded
-    private MemberType memberType;
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
 
     //보험가입여부
     @Column(name = "insurance_status")
@@ -68,6 +70,7 @@ public class Member {
     public Member(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
+        this.memberRole = MemberRole.INCOMPLETE_USER;
     }
 
     @Override
@@ -86,4 +89,6 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
+
 }

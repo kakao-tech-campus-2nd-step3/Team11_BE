@@ -2,7 +2,7 @@ package boomerang.member.service;
 
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
-import boomerang.member.domain.RandonNinkname;
+import boomerang.member.domain.RandonNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
@@ -15,12 +15,12 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-    private final RandonNinkname randonNinkname;
+    private final RandonNickname randomNicknameGenerator;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandonNinkname randonNinkname) {
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandonNickname randomNicknameGenerator) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
-        this.randonNinkname = randonNinkname;
+        this.randomNicknameGenerator = randomNicknameGenerator;
     }
 
     public List<Member> getAllMembers() {
@@ -71,15 +71,17 @@ public class MemberService {
     }
 
     // 중복되지 않는 유니크한 닉네임을 생성하는 메서드
-    private String generateUniqueNickname() {
-        String nickname;
+    public String generateUniqueNickname() {
+        // 기본 랜덤 닉네임 생성
+        String baseNickname = randomNicknameGenerator.generateRandomNickname();
 
-        // 중복되지 않는 닉네임이 나올 때까지 반복
-        do {
-            nickname = randonNinkname.generateRandomNickname();
-        } while (memberRepository.existsByNickname(nickname)); // 중복된 닉네임이 있으면 다시 생성
+//        // DB에서 같은 패턴의 닉네임 중 가장 큰 숫자 찾기
+//        Integer maxSuffix = memberRepository.findMaxSuffixByNicknamePattern(baseNickname);
 
-        return nickname;
+//        // 중복된 닉네임이 없으면 그대로 사용, 있으면 큰 숫자에 1을 더해 닉네임 생성
+//        String uniqueNickname = (maxSuffix == null) ? baseNickname : baseNickname + (maxSuffix + 1);
+
+        return baseNickname;
     }
 
 }

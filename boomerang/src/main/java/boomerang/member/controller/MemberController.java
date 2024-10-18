@@ -8,6 +8,8 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -64,11 +66,21 @@ public class MemberController {
                 .build();
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PostMapping("/random_nickname")
+    public ResponseEntity<Map> generateRandomNickname(){
+        String nickname = memberService.generateUniqueNickname();
+        Map<String, Object> response = new HashMap<>();
+        response.put("랜덤 닉네임", nickname);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,
