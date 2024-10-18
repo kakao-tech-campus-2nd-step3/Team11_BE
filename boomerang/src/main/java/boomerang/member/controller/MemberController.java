@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,7 +44,7 @@ public class MemberController {
     }
 
     // 시큐리티 필터 테스트 컨트롤러
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
