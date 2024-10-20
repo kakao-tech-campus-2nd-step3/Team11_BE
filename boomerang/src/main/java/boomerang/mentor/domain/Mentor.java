@@ -1,17 +1,25 @@
 package boomerang.mentor.domain;
 
-import boomerang.IsDeleted;
 import boomerang.member.domain.Member;
-import jakarta.persistence.*;
-import lombok.Builder;
+import boomerang.mentor.dto.MentorCreateRequestDto;
+import boomerang.mentor.dto.MentorUpdateRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -28,7 +36,9 @@ public class Mentor {
 
     private String introduce;
 
-    private Boolean displayStatus;
+    private Boolean advertisementStatus;
+
+    private String contact;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -37,7 +47,7 @@ public class Mentor {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private IsDeleted isDeleted;
+    private Boolean isDeleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -46,12 +56,14 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentorType, String career, String introduce, Boolean displayStatus, Member member) {
+    public Mentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
-        this.displayStatus = displayStatus;
+        this.advertisementStatus = advertisementStatus;
         this.member = member;
+        this.contact = contact;
+        this.isDeleted = false;  // 기본값으로 false 설정
     }
 
     @Override
@@ -66,5 +78,27 @@ public class Mentor {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public void updateMentor(MentorCreateRequestDto mentorCreateRequestDto) {
+        this.mentorType = mentorCreateRequestDto.getMentorType();
+        this.career = mentorCreateRequestDto.getCareer();
+        this.introduce = mentorCreateRequestDto.getIntroduce();
+        this.advertisementStatus = mentorCreateRequestDto.getAdvertisementStatus();
+        this.isDeleted = false;
+        this.contact = mentorCreateRequestDto.getContact();
+    }
+
+    public void updateMentor(MentorUpdateRequestDto mentorUpdateRequestDto) {
+        this.mentorType = mentorUpdateRequestDto.getMentorType();
+        this.career = mentorUpdateRequestDto.getCareer();
+        this.introduce = mentorUpdateRequestDto.getIntroduce();
+        this.advertisementStatus = mentorUpdateRequestDto.getAdvertisementStatus();
+        this.isDeleted = false;
+        this.contact = mentorUpdateRequestDto.getContact();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
