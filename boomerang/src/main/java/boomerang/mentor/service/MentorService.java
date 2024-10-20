@@ -46,19 +46,13 @@ public class MentorService {
             .orElseGet(() -> createNewMentor(member, requestDto));
     }
 
-    private MentorResponseDto reactivateExistingMentor(Mentor mentor, MentorCreateRequestDto requestDto) {
+    private MentorResponseDto reactivateExistingMentor(Mentor mentor,
+        MentorCreateRequestDto requestDto) {
         if (!mentor.getIsDeleted()) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
 
-        mentor.updateMentor(
-            requestDto.getMentorType(),
-            requestDto.getCareer(),
-            requestDto.getIntroduce(),
-            requestDto.getAdvertisementStatus(),
-            false,
-            requestDto.getContact()
-        );
+        mentor.updateMentor(requestDto);
 
         Mentor savedMentor = mentorRepository.save(mentor);
         return new MentorResponseDto(savedMentor);
@@ -88,14 +82,7 @@ public class MentorService {
             throw new BusinessException(ErrorCode.MENTOR_UPDATE_NOT_AUTHORIZED);
         }
 
-        mentor.updateMentor(
-            updateRequestDto.getMentorType(),
-            updateRequestDto.getCareer(),
-            updateRequestDto.getIntroduce(),
-            updateRequestDto.getAdvertisementStatus(),
-            false,
-            updateRequestDto.getContact()
-        );
+        mentor.updateMentor(updateRequestDto);
 
         return new MentorResponseDto(mentor);
     }

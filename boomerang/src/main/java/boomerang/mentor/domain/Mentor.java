@@ -1,6 +1,8 @@
 package boomerang.mentor.domain;
 
 import boomerang.member.domain.Member;
+import boomerang.mentor.dto.MentorCreateRequestDto;
+import boomerang.mentor.dto.MentorUpdateRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -78,13 +80,22 @@ public class Mentor {
         return Objects.hash(id);
     }
 
-    public void updateMentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Boolean isDeleted, String contact) {
-        this.mentorType = mentorType;
-        this.career = career;
-        this.introduce = introduce;
-        this.advertisementStatus = advertisementStatus;
-        this.isDeleted = isDeleted != null ? isDeleted : false;
-        this.contact = contact;
+    public void updateMentor(MentorCreateRequestDto mentorCreateRequestDto) {
+        this.mentorType = mentorCreateRequestDto.getMentorType();
+        this.career = mentorCreateRequestDto.getCareer();
+        this.introduce = mentorCreateRequestDto.getIntroduce();
+        this.advertisementStatus = mentorCreateRequestDto.getAdvertisementStatus();
+        this.isDeleted = false;
+        this.contact = mentorCreateRequestDto.getContact();
+    }
+
+    public void updateMentor(MentorUpdateRequestDto mentorUpdateRequestDto) {
+        this.mentorType = mentorUpdateRequestDto.getMentorType();
+        this.career = mentorUpdateRequestDto.getCareer();
+        this.introduce = mentorUpdateRequestDto.getIntroduce();
+        this.advertisementStatus = mentorUpdateRequestDto.getAdvertisementStatus();
+        this.isDeleted = false;
+        this.contact = mentorUpdateRequestDto.getContact();
     }
 
     public void delete() {
