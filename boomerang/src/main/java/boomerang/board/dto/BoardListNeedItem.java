@@ -60,7 +60,6 @@ public class BoardListNeedItem {
         public static Item of(Board board) {
             return Item.builder()
                     .title(board.getTitle())
-                    .subtitle(board.getSubtitle())
                     .content(board.getContent())
                     .boardType(board.getBoardType())
                     .location(board.getLocation())
