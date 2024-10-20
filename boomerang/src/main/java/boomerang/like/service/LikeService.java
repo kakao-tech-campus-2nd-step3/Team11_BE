@@ -52,6 +52,7 @@ public class LikeService {
 
         Like like = new Like(loginMember, board);
         Like savedLike = likeRepository.save(like);
+        board.increaseLikeCount();
 
         return new LikeResponseDto(savedLike, true);
     }
@@ -65,6 +66,7 @@ public class LikeService {
             .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
+        board.decreaseLikeCount();
     }
 
     private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {

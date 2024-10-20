@@ -87,6 +87,22 @@ public class Board {
         this.member = member;
     }
 
+    public void increaseLikeCount() {
+        likeCount += 1;
+    }
+
+    public void increaseCommentCount() {
+        commentCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        likeCount -= 1;
+    }
+
+    public void decreaseCommentCount() {
+        commentCount -= 1;
+    }
+
 
     @Override
     public boolean equals(Object o) {

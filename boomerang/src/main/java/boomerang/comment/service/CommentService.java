@@ -28,6 +28,7 @@ public class CommentService {
     //댓글 생성
     public void createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
         Board board = boardService.getBoard(boardId);
+        board.increaseCommentCount();
         Member author = memberService.getMemberByEmail(email);
 
         commentRepository.save(new Comment(author, board, commentRequestDto));
@@ -53,6 +54,7 @@ public class CommentService {
         }
 
         //논리삭제
+        comment.getBoard().decreaseCommentCount();
         comment.softDelete();
 
         commentRepository.save(comment);
