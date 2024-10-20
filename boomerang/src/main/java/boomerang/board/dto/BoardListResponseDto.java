@@ -20,8 +20,5 @@ public class BoardListResponseDto {
     // 생성자: Board 리스트를 받아서 각 요소를 BoardResponseDto로 변환하여 List에 담는다
     public BoardListResponseDto(Page<Board> boardPage) {
         this.page = boardPage.getNumber();
-        this.boardResponseDtoList = boardPage.stream()
-                .map(BoardResponseDto::new)
-                .toList();
     }
 }

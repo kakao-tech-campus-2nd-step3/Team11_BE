@@ -6,6 +6,9 @@ import boomerang.board.dto.BoardListResponseDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.dto.BoardResponseDto;
 import boomerang.board.service.BoardService;
+import boomerang.comment.dto.CommentListRequestDto;
+import boomerang.comment.dto.CommentListResponseDto;
+import boomerang.comment.service.CommentService;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
@@ -26,10 +29,12 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
     private final BoardService boardService;
     private final MemberService memberService;
+    private final CommentService commentService;
 
-    public BoardController(BoardService boardService, MemberService memberService) {
+    public BoardController(BoardService boardService, MemberService memberService, CommentService commentService) {
         this.boardService = boardService;
         this.memberService = memberService;
+        this.commentService = commentService;
     }
 
     @GetMapping
@@ -46,9 +51,11 @@ public class BoardController {
     @GetMapping("/{board_id}")
     public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
         Board board = boardService.getBoard(boardId);
+        CommentListResponseDto commentListResponseDto =
+                new CommentListResponseDto(commentService.getAllComment(boardId, new CommentListRequestDto()));
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardResponseDto(board));
+                .body(new BoardResponseDto(board, commentListResponseDto));
     }
 
     @PostMapping
