@@ -41,7 +41,7 @@ public class MentorController {
     // 멘토 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<MentorResponseDto> getMentorById(@PathVariable Long id) {
-        MentorResponseDto mentorResponseDto = mentorService.getMentorById(id);
+        MentorResponseDto mentorResponseDto = mentorService.getMentor(id);
         return ResponseEntity.ok(mentorResponseDto);
     }
 

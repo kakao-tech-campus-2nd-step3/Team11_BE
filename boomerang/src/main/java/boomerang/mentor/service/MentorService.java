@@ -9,7 +9,6 @@ import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
 import boomerang.mentor.dto.MentorUpdateRequestDto;
 import boomerang.mentor.repository.MentorRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +29,7 @@ public class MentorService {
     }
 
     @Transactional(readOnly = true)
-    public MentorResponseDto getMentorById(Long id) {
+    public MentorResponseDto getMentor(Long id) {
         Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(id)
             .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
         return new MentorResponseDto(mentor);
