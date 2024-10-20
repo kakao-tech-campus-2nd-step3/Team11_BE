@@ -73,7 +73,7 @@ public class BoardService {
         return PageRequest.of(
                 boardListRequestDto.getPage(),
                 boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSortDirection(), boardListRequestDto.getSortBy())
+                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getSort_by())
         );
     }
 }

@@ -43,7 +43,7 @@ public class BoardController {
         Page<Board> boradPage = boardService.getAllBoards(boardListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardListResponseDto(boradPage, boardListRequestDto.getContentLength()));
+                .body(new BoardListResponseDto(boradPage, boardListRequestDto.getContent_length()));
     }
 
     @GetMapping("/{board_id}")

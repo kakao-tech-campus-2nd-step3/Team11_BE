@@ -1,6 +1,6 @@
 ### get boards
 GET http://localhost:8080/api/v1/board?
-    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=20
+    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
 Cookie: Authorization={{Authorization}}
 
 ### get board
@@ -23,15 +23,14 @@ Cookie: Authorization={{Authorization}}
 ### update board
 PUT http://localhost:8080/api/v1/board/1
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+Cookie: Authorization={{Authorization}}
 
 {
-  "title": "Update Title",
-  "subtitle": "Update Subtitle",
-  "content": "This is an Update content for the board.",
-  "boardType":  "Update GENERAL",
-  "location": "Update BUSAN",
-  "anonymousStatus": "Update true"
+  "title": "Example Title",
+  "content": "a.",
+  "board_type": "ENTIRE",
+  "location": "BUSAN",
+  "anonymous_status": "PRIVATE"
 }
 
 ### delete board
