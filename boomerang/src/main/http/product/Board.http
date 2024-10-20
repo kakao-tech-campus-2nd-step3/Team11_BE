@@ -1,5 +1,6 @@
 ### get boards
-GET http://localhost:8080/api/v1/board?page=0&size=1&sortDirection=DESC&sortBy=id
+GET http://localhost:8080/api/v1/board?
+    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=20
 Cookie: Authorization={{Authorization}}
 
 ### get board

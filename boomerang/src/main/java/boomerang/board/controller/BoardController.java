@@ -39,13 +39,11 @@ public class BoardController {
 
     @GetMapping
     public ResponseEntity<BoardListResponseDto> getAllBoards(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Page<Board> boradPage = boardService.getAllBoards(boardListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardListResponseDto(boradPage));
+                .body(new BoardListResponseDto(boradPage, boardListRequestDto.getContentLength()));
     }
 
     @GetMapping("/{board_id}")
