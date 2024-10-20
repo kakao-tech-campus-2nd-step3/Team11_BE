@@ -1,10 +1,7 @@
 package boomerang.board.controller;
 
 import boomerang.board.domain.Board;
-import boomerang.board.dto.BoardListRequestDto;
-import boomerang.board.dto.BoardListResponseDto;
-import boomerang.board.dto.BoardRequestDto;
-import boomerang.board.dto.BoardResponseDto;
+import boomerang.board.dto.*;
 import boomerang.board.service.BoardService;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentListResponseDto;
@@ -35,6 +32,15 @@ public class BoardController {
         this.boardService = boardService;
         this.memberService = memberService;
         this.commentService = commentService;
+    }
+
+    @GetMapping("/best")
+    public ResponseEntity<BoardListResponseDto> getBestBoards(
+            @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
+        Page<Board> boradPage = boardService.getBestBoards(boardBestListRequestDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BoardListResponseDto(boradPage, boardBestListRequestDto.getContent_length()));
     }
 
     @GetMapping

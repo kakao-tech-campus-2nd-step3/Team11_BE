@@ -1,6 +1,7 @@
 package boomerang.board.service;
 
 import boomerang.board.domain.Board;
+import boomerang.board.dto.BoardBestListRequestDto;
 import boomerang.board.dto.BoardListRequestDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.dto.BoardResponseDto;
@@ -22,6 +23,13 @@ public class BoardService {
 
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
+    }
+
+    // 베스트 게시물 가져오기
+    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
+        PageRequest pageRequest = getBestPageRequest(boardBestListRequestDto);
+        Page<Board> boardPage = boardRepository.findAll(pageRequest);
+        return boardPage;
     }
 
     // 모든 게시물 가져오기
@@ -67,6 +75,14 @@ public class BoardService {
         if (!board.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.BOARD_DONT_HAS_OWNERSHIP_ERROR);
         }
+    }
+
+    private PageRequest getBestPageRequest(BoardBestListRequestDto boardBestListRequestDto) {
+        return PageRequest.of(
+                0,
+                boardBestListRequestDto.getSize(),
+                Sort.by(Sort.Direction.DESC, "likeCount")
+        );
     }
 
     private PageRequest getPageRequest(BoardListRequestDto boardListRequestDto) {
