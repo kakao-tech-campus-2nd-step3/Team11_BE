@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardResponseDto {
@@ -23,6 +25,7 @@ public class BoardResponseDto {
     private Long likeCount;
     private Long commentCount;
     private CommentListResponseDto commentListResponseDto;
+    private LocalDateTime createdAt;
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
     public BoardResponseDto(Board board, CommentListResponseDto commentListResponseDto) {
@@ -36,5 +39,6 @@ public class BoardResponseDto {
         this.likeCount = board.getLikeCount();
         this.commentCount = board.getCommentCount();
         this.commentListResponseDto = commentListResponseDto;
+        this.createdAt = board.getCreatedAt();
     }
 }
