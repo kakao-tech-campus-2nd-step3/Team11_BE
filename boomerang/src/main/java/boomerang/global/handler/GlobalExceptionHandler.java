@@ -8,6 +8,7 @@ import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -32,10 +33,20 @@ public class GlobalExceptionHandler {
     }
 
     @Order(2)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDto> handleJwtException(MethodArgumentNotValidException e) {
+        log.error(e.toString());
+        ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
+        // BindingResult를 통해 필드 에러 가져오기
+        // 메시지를 포함하여 에러 응답 생성
+        return ResponseHelper.createErrorResponse(errorCode,e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    @Order(3)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error(Arrays.toString(e.getStackTrace()));
         ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
-        return ResponseHelper.createErrorResponse(errorCode);
+        return ResponseHelper.createErrorResponse(errorCode,e.getMessage());
     }
 }

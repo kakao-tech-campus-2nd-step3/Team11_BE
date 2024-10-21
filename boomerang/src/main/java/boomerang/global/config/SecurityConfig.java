@@ -84,12 +84,13 @@ public class SecurityConfig {
 
         //경로별 인가 작업
         http
-            .authorizeHttpRequests((auth) -> auth
-                .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
-                .requestMatchers( "/api/v1/board/comments/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
-                .anyRequest().permitAll());
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/v1/board/comments/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/member/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/consultation/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/consultation/**","/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
+                        .anyRequest().permitAll());
 
 
         //세션 설정 : STATELESS
