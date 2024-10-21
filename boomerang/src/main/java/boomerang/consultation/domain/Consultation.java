@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Consultation {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -40,10 +41,10 @@ public class Consultation {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Consultation(Member mentee, Mentor mentor, LocalDate localDateTime) {
+    public Consultation(Member mentee, Mentor mentor, LocalDate localDate) {
         this.mentee = mentee;
         this.mentor = mentor;
-        this.consultationDate = localDateTime;
+        this.consultationDate = localDate;
         this.consultationStatus= ConsultationStatus.PENDING;
     }
 
@@ -64,11 +65,11 @@ public class Consultation {
     }
 
     public boolean isMentor(Mentor mentor) {
-        return this.mentor == mentor;
+        return this.mentor.equals(mentor);
     }
 
     public boolean isMentee(Member mentee) {
-        return this.mentee == mentee;
+        return this.mentee.equals(mentee);
     }
 
     public void complete() {
