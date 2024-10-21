@@ -31,6 +31,11 @@ public enum ErrorCode {
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),
     LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "MB002", "로그인이 필요합니다."),
 
+    // Mentor
+    MENTOR_ALREADY_EXISTS(HttpStatus.CONFLICT, "MT_001", "이미 멘토로 등록된 사용자입니다."),
+    MENTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "MT_002", "해당 멘토를 찾을 수 없습니다."),
+    MENTOR_UPDATE_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "MT003", "멘토 정보 수정 권한이 없습니다."),
+
     //Consultation
     CONSULTATION_NOT_A_MENTEE(HttpStatus.UNAUTHORIZED, "CS001", "로그인한 멤버가 상담의 멘티가 아닙니다."),
     CONSULTATION_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS002", "해당 상담은 존재하지 않습니다."),
