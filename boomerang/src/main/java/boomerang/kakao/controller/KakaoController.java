@@ -11,6 +11,8 @@ import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class KakaoController {
@@ -63,7 +66,7 @@ public class KakaoController {
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponseDto> handleOptionValidException(DomainValidationException e) {
-        System.out.println(e);
+        log.error(e.toString());
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
 }

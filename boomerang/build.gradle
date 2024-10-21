@@ -44,6 +44,16 @@ dependencies {
 
 	// AWS S3
 	implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.1.0'
+
+	// Log4j2
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.1.2'
+}
+
+configurations {
+	configureEach {
+		// Log4j2
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
 }
 
 tasks.named('test') {
