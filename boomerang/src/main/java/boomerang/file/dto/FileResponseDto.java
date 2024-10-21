@@ -8,7 +8,6 @@ import lombok.Getter;
 import java.net.URL;
 
 @Getter
-@Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FileResponseDto {
     private URL fileUrl;
