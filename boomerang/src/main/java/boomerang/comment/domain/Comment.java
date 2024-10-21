@@ -40,6 +40,10 @@ public class Comment {
         return author.getNickname();
     }
 
+    public String getAuthorEmail() {
+        return author.getEmail();
+    }
+
     @CreatedDate
     private LocalDateTime createdAt; //기본 업데이트 됨
 

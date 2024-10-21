@@ -20,6 +20,7 @@ public class BoardResponseDto {
     private String title;
     private String content;
     private String writerEmail;
+    private String writerName;
     private BoardType boardType;
     private Location location;
     private AnonymousStatus anonymousStatus;
@@ -38,6 +39,7 @@ public class BoardResponseDto {
         this.location = board.getLocation();
         this.anonymousStatus = board.getAnonymousStatus();
         this.writerEmail = board.getMember().getEmail();
+        this.writerName = board.getMember().getNickname();
         this.likeCount = board.getLikeCount();
         this.commentCount = board.getCommentCount();
         this.commentListResponseDto = commentListResponseDto;

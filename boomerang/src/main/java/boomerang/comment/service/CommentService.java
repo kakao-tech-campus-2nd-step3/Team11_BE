@@ -80,12 +80,13 @@ public class CommentService {
     }
 
 
-    private CommentResponseDto createCommentResponseDto(Comment comment, boolean isUserLoggedIn, Member loginMember) {
-        if (!isUserLoggedIn) {
-            return new CommentResponseDto(comment); // 로그인하지 않은 경우
-        }
-        return new CommentResponseDto(comment, comment.isMemberCommentAuthor(loginMember)); // 로그인한 경우
-    }
+//    안쓰게 된 메서드
+//    private CommentResponseDto createCommentResponseDto(Comment comment, boolean isUserLoggedIn, Member loginMember) {
+//        if (!isUserLoggedIn) {
+//            return new CommentResponseDto(comment); // 로그인하지 않은 경우
+//        }
+//        return new CommentResponseDto(comment, comment.isMemberCommentAuthor(loginMember)); // 로그인한 경우
+//    }
 
     private PageRequest getPageRequest(CommentListRequestDto commentListRequestDto) {
         return PageRequest.of(
