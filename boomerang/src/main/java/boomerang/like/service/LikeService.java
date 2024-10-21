@@ -1,7 +1,6 @@
 package boomerang.like.service;
 
 import boomerang.board.domain.Board;
-import boomerang.board.repository.BoardRepository;
 import boomerang.board.service.BoardService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
@@ -10,12 +9,11 @@ import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
 import boomerang.like.repository.LikeRepository;
 import boomerang.member.domain.Member;
-import boomerang.member.repository.MemberRepository;
 import boomerang.member.service.MemberService;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +50,7 @@ public class LikeService {
 
         Like like = new Like(loginMember, board);
         Like savedLike = likeRepository.save(like);
+        board.increaseLikeCount();
 
         return new LikeResponseDto(savedLike, true);
     }
@@ -65,6 +64,7 @@ public class LikeService {
             .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
+        board.decreaseLikeCount();
     }
 
     private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {
