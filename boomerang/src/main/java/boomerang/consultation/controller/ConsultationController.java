@@ -5,6 +5,7 @@ import boomerang.consultation.dto.ConsultationResponseDto;
 import boomerang.consultation.dto.ConsultationResponseListDto;
 import boomerang.consultation.service.ConsultationService;
 import boomerang.global.oauth.dto.PrincipalDetails;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ConsultationController {
     //상담신청
     @PostMapping("/consultation")
     public ResponseEntity<ConsultationResponseDto> requestConsultation(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                       @RequestBody ConsultationRequestDto consultationRequestDto) {
+                                                                       @Valid @RequestBody ConsultationRequestDto consultationRequestDto) {
         ConsultationResponseDto consultationResponseDto = consultationService.requestConsultation(principalDetails, consultationRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
     }
