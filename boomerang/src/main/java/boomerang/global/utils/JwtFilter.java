@@ -79,9 +79,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
-        if (memberDetail.getMemberRole() == MemberRole.INCOMPLETE_USER) {
-            filterChain.doFilter(request, response);
-        }
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.getAuthorities());
