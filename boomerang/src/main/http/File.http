@@ -1,0 +1,13 @@
+### upload file
+### /Users/jaebin/Desktop/test.png 부분을 절대 경로로 지정해야만 보낼 수 있습니다
+POST http://localhost:8080/api/v1/files/upload
+Content-Type: multipart/form-data; boundary=boundary
+Cookie: Authorization={{Authorization}}
+
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="test.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test.png
+--boundary--

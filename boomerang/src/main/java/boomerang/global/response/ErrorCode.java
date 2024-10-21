@@ -40,7 +40,8 @@ public enum ErrorCode {
     MENTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "MT_002", "해당 멘토를 찾을 수 없습니다."),
     MENTOR_UPDATE_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "MT003", "멘토 정보 수정 권한이 없습니다."),
 
-
+    // File
+    S3_UPLOAD_ERROR(HttpStatus.NOT_FOUND, "EF001", "S3와 정상적인 연결이 불가능합니다"),
 
     ;
 
