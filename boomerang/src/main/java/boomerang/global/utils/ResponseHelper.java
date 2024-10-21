@@ -16,4 +16,10 @@ public class ResponseHelper {
         return ResponseEntity.status(errorCode.getStatus())
                 .body(errorResponseDto);
     }
+
+    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode,String message) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode,message);
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(errorResponseDto);
+    }
 }
