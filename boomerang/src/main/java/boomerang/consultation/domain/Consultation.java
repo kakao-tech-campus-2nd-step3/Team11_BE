@@ -22,11 +22,11 @@ public class Consultation {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "mentee_id")
     private Member mentee;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "mentor_id")
     private Mentor mentor;
 
     @Enumerated(EnumType.STRING)
@@ -61,6 +61,14 @@ public class Consultation {
 
     public long getMenteeId() {
         return this.mentee.getId();
+    }
+
+    public boolean isMentor(Mentor mentor) {
+        return this.mentor == mentor;
+    }
+
+    public boolean isMentee(Member mentee) {
+        return this.mentee == mentee;
     }
 
     public void complete() {
