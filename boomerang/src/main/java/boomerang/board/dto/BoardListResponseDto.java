@@ -31,6 +31,7 @@ public class BoardListResponseDto {
 
     @Getter
     @Builder
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Item {
         private String title;
         private String content;
