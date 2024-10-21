@@ -6,6 +6,7 @@ import boomerang.board.domain.BoardType;
 import boomerang.board.domain.Location;
 import boomerang.comment.dto.CommentListResponseDto;
 import boomerang.comment.dto.CommentResponseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class BoardResponseDto {
     private Long likeCount;
     private Long commentCount;
     private CommentListResponseDto commentListResponseDto;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
