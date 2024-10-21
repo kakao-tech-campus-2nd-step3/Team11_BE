@@ -1,5 +1,6 @@
 package boomerang.member.controller;
 
+import boomerang.global.utils.CookieUtil;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
 import boomerang.member.service.MemberService;
@@ -7,7 +8,11 @@ import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,7 +44,7 @@ public class MemberController {
     }
 
     // 시큐리티 필터 테스트 컨트롤러
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<Member> getMember(
         @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
@@ -47,9 +52,10 @@ public class MemberController {
                 .body(member);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-        memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+    @PostMapping
+    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addCookie(CookieUtil.createCookies(token));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
@@ -61,11 +67,21 @@ public class MemberController {
                 .build();
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
         memberService.deleteMember(id);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
+    }
+
+    @PostMapping("/random_nickname")
+    public ResponseEntity<Map> generateRandomNickname(){
+        String nickname = memberService.generateUniqueNickname();
+        Map<String, Object> response = new HashMap<>();
+        response.put("랜덤 닉네임", nickname);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,

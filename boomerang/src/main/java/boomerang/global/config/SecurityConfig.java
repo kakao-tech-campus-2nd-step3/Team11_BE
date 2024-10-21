@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));        //3000 허용
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));        //3000 허용
                         configuration.setAllowedMethods(Collections.singletonList("*"));                            //모든 HTTP 메서드 허용
                         configuration.setAllowCredentials(true);                                                    //쿠키 사용
                         configuration.setAllowedHeaders(Collections.singletonList("*"));                            //클라이언트는 모든 타입의 헤더를 사용
