@@ -75,7 +75,7 @@ public class CommentService {
     }
 
     public Comment getComment(Long commentId) {
-        return commentRepository.findById(commentId)
+        return commentRepository.findActiveById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
     }
 
