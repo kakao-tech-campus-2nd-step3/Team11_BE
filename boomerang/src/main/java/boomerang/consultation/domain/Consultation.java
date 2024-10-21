@@ -75,5 +75,9 @@ public class Consultation {
     public void complete() {
         this.consultationStatus = ConsultationStatus.FINISHED;
     }
+
+    public boolean isFinished() {
+        return this.consultationStatus.equals(ConsultationStatus.FINISHED);
+    }
 }
 

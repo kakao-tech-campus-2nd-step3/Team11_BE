@@ -40,6 +40,7 @@ public enum ErrorCode {
     CONSULTATION_NOT_A_MENTEE(HttpStatus.UNAUTHORIZED, "CS001", "로그인한 멤버가 상담의 멘티가 아닙니다."),
     CONSULTATION_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS002", "해당 상담은 존재하지 않습니다."),
     CONSULTATION_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "CS003", "같은날짜에 동일한 상담이 존재합니다."),
+    CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
 
 
     ;

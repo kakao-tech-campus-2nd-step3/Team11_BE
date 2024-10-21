@@ -50,6 +50,10 @@ public class ConsultationService {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
         }
 
+        if (consultation.isFinished()) {
+            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_FINISHED);
+        }
+
         consultation.complete();
 
         Consultation savedConsultation = consultationRepository.save(consultation);
