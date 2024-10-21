@@ -37,6 +37,7 @@ public class BoardListResponseDto {
         private String content;
         private AnonymousStatus anonymousStatus;
         private String writerEmail;
+        private String writerName;
         private Long likeCount;
         private Long commentCount;
 
@@ -53,6 +54,7 @@ public class BoardListResponseDto {
                     .content(content)  // 자른 content 사용
                     .anonymousStatus(board.getAnonymousStatus())
                     .writerEmail(board.getWriterEmail())
+                    .writerName(board.getMember().getNickname())
                     .likeCount(board.getLikeCount())
                     .commentCount(board.getCommentCount())
                     .build();
