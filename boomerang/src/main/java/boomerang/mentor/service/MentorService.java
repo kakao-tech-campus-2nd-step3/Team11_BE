@@ -29,9 +29,8 @@ public class MentorService {
     }
 
     @Transactional(readOnly = true)
-    public MentorResponseDto getMentor(Long id) {
-        Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(id)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+    public MentorResponseDto getMentorProfile(Long id) {
+        Mentor mentor = getMentor(id);
         return new MentorResponseDto(mentor);
     }
 
@@ -93,5 +92,10 @@ public class MentorService {
             .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
 
         mentor.delete();
+    }
+
+    public Mentor getMentor(Long id) {
+        return mentorRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
     }
 }
