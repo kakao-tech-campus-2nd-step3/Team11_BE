@@ -49,7 +49,7 @@ public class CommentService {
     public void deleteComment(String email, Long commentId) {
         Comment comment = getComment(commentId);
 
-        if (comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
+        if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -65,7 +65,7 @@ public class CommentService {
     public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = getComment(commentId);
 
-        if (comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
+        if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
