@@ -6,6 +6,8 @@ import boomerang.board.service.BoardService;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentListResponseDto;
 import boomerang.comment.service.CommentService;
+import boomerang.like.domain.Like;
+import boomerang.like.service.LikeService;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
@@ -27,11 +29,14 @@ public class BoardController {
     private final BoardService boardService;
     private final MemberService memberService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
-    public BoardController(BoardService boardService, MemberService memberService, CommentService commentService) {
+    public BoardController(BoardService boardService, MemberService memberService, CommentService commentService,
+        LikeService likeService) {
         this.boardService = boardService;
         this.memberService = memberService;
         this.commentService = commentService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/best")
@@ -53,13 +58,21 @@ public class BoardController {
     }
 
     @GetMapping("/{board_id}")
-    public ResponseEntity<BoardResponseDto> getBoardById(@PathVariable(name = "board_id") Long boardId) {
+    public ResponseEntity<BoardResponseDto> getBoardById(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable(name = "board_id") Long boardId) {
         Board board = boardService.getBoard(boardId);
         CommentListResponseDto commentListResponseDto =
                 new CommentListResponseDto(commentService.getAllComment(boardId, new CommentListRequestDto()));
 
+        boolean isLiked = false;
+        if (principalDetails != null) {
+            Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+            isLiked = likeService.isLikedByMember(board, member);
+        }
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardResponseDto(board, commentListResponseDto));
+                .body(new BoardResponseDto(board, commentListResponseDto, isLiked));
     }
 
     @PostMapping

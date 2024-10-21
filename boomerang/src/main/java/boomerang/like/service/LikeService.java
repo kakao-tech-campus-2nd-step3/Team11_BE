@@ -74,4 +74,8 @@ public class LikeService {
         }
         return new LikeResponseDto(like, like.getMember().equals(loginMember));
     }
+
+    public boolean isLikedByMember(Board board, Member member) {
+        return likeRepository.existsByMemberAndBoardAndIsDeletedFalse(member, board);
+    }
 }
