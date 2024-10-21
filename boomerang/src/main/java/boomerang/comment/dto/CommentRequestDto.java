@@ -1,6 +1,5 @@
 package boomerang.comment.dto;
 
-import boomerang.comment.domain.Comment;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonCreator;

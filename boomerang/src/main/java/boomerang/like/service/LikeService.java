@@ -7,10 +7,10 @@ import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
+import boomerang.like.dto.LikeSummaryResponseDto;
 import boomerang.like.repository.LikeRepository;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,17 +25,17 @@ public class LikeService {
 
 
     @Transactional(readOnly = true)
-    public List<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId) {
+    public LikeSummaryResponseDto getLikeSummary(PrincipalDetails principalDetails, Long boardId) {
         Board board = boardService.getBoard(boardId);
+        int likeCount = likeRepository.countByBoardIdAndIsDeletedFalse(board.getId());
 
-        List<Like> likes = likeRepository.findAllByBoardIdAndIsDeletedFalse(board.getId());
+        boolean isLiked = false;
+        if (principalDetails != null) {
+            Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+            isLiked = likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board);
+        }
 
-        boolean isUserLoggedIn = principalDetails != null;
-        Member loginMember = isUserLoggedIn ? memberService.getMemberByEmail(principalDetails.getMemberEmail()) : null;
-
-        return likes.stream()
-            .map(like -> createLikeResponseDto(like, isUserLoggedIn, loginMember))
-            .toList();
+        return new LikeSummaryResponseDto(likeCount, isLiked);
     }
 
     @Transactional
@@ -72,5 +72,9 @@ public class LikeService {
             return new LikeResponseDto(like, false);
         }
         return new LikeResponseDto(like, like.getMember().equals(loginMember));
+    }
+
+    public boolean isLikedByMember(Board board, Member member) {
+        return likeRepository.existsByMemberAndBoardAndIsDeletedFalse(member, board);
     }
 }

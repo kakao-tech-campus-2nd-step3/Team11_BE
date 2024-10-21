@@ -5,7 +5,6 @@ import boomerang.board.service.BoardService;
 import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentRequestDto;
-import boomerang.comment.dto.CommentResponseDto;
 import boomerang.comment.repository.CommentRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;

@@ -1,8 +1,5 @@
 package boomerang.kakao.dto;
 
-import boomerang.template.domain.TemplateColumn1;
-import boomerang.template.domain.TemplateColumn2;
-import boomerang.template.domain.TemplateDomain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

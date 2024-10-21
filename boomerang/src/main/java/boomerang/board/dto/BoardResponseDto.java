@@ -5,13 +5,11 @@ import boomerang.board.domain.Board;
 import boomerang.board.domain.BoardType;
 import boomerang.board.domain.Location;
 import boomerang.comment.dto.CommentListResponseDto;
-import boomerang.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -29,9 +27,10 @@ public class BoardResponseDto {
     private CommentListResponseDto commentListResponseDto;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+    private boolean isLiked;
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
-    public BoardResponseDto(Board board, CommentListResponseDto commentListResponseDto) {
+    public BoardResponseDto(Board board, CommentListResponseDto commentListResponseDto, boolean isLiked) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
@@ -44,5 +43,6 @@ public class BoardResponseDto {
         this.commentCount = board.getCommentCount();
         this.commentListResponseDto = commentListResponseDto;
         this.createdAt = board.getCreatedAt();
+        this.isLiked = isLiked;
     }
 }

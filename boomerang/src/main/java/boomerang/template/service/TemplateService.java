@@ -3,9 +3,8 @@ package boomerang.template.service;
 import boomerang.template.domain.TemplateDomain;
 import boomerang.template.exception.TemplateNotFoundException;
 import boomerang.template.repository.TemplateRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TemplateService {
