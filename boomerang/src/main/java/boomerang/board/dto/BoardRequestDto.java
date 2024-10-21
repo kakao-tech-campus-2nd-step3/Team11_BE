@@ -11,16 +11,14 @@ import lombok.Getter;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardRequestDto {
     private String title;
-    private String subtitle;
     private String content;
     private BoardType boardType;
     private Location location;
     private AnonymousStatus anonymousStatus;
 
     // 생성자
-    public BoardRequestDto(String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+    public BoardRequestDto(String title, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
         this.title = title;
-        this.subtitle = subtitle;
         this.content = content;
         this.boardType = boardType;
         this.location = location;
