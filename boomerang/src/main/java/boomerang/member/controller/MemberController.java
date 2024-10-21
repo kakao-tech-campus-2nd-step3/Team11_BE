@@ -1,18 +1,17 @@
 package boomerang.member.controller;
 
-import boomerang.global.utils.CookieUtil;
-import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
+import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
+import boomerang.member.domain.Member;
+import boomerang.member.dto.MemberCreateRequestDto;
+import boomerang.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

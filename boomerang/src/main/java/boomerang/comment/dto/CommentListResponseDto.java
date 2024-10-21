@@ -1,16 +1,12 @@
 package boomerang.comment.dto;
 
-import boomerang.board.domain.Board;
-import boomerang.board.dto.BoardResponseDto;
 import boomerang.comment.domain.Comment;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
-import org.springframework.data.domain.Page;
-
-import java.time.LocalDateTime;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 @Getter
 @EqualsAndHashCode

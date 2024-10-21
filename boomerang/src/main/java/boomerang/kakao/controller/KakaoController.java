@@ -1,17 +1,16 @@
 package boomerang.kakao.controller;
 
-import boomerang.kakao.domain.KakaoMember;
-import boomerang.kakao.dto.KakaoTokenResponseDto;
-import boomerang.kakao.service.KakaoService;
-import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
+import boomerang.kakao.domain.KakaoMember;
+import boomerang.kakao.dto.KakaoTokenResponseDto;
+import boomerang.kakao.service.KakaoService;
+import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

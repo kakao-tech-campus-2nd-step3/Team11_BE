@@ -5,13 +5,11 @@ import boomerang.board.domain.Board;
 import boomerang.board.domain.BoardType;
 import boomerang.board.domain.Location;
 import boomerang.comment.dto.CommentListResponseDto;
-import boomerang.comment.dto.CommentResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)

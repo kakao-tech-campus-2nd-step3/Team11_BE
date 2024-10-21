@@ -4,12 +4,11 @@ import boomerang.board.domain.AnonymousStatus;
 import boomerang.board.domain.Board;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 @Getter
 @EqualsAndHashCode

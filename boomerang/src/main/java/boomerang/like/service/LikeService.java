@@ -11,7 +11,6 @@ import boomerang.like.dto.LikeSummaryResponseDto;
 import boomerang.like.repository.LikeRepository;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

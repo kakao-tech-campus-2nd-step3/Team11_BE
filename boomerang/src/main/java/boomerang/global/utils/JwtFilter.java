@@ -2,7 +2,6 @@ package boomerang.global.utils;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.oauth.service.PrincipalService;
-import boomerang.member.domain.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

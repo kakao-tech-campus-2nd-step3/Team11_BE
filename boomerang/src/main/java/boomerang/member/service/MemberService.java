@@ -1,14 +1,13 @@
 package boomerang.member.service;
 
+import boomerang.global.utils.JwtUtil;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
 import boomerang.member.domain.RandonNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
-import boomerang.global.utils.JwtUtil;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 @Service

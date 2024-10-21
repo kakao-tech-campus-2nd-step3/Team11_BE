@@ -1,9 +1,6 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.Board;
 import boomerang.board.domain.BoardType;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
