@@ -2,8 +2,8 @@ package boomerang.like.controller;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.like.dto.LikeResponseDto;
+import boomerang.like.dto.LikeSummaryResponseDto;
 import boomerang.like.service.LikeService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +23,11 @@ public class LikeController {
     private final LikeService likeService;
 
     @GetMapping("/{board_id}/likes")
-    public ResponseEntity<List<LikeResponseDto>> getLikesByBoardId(
+    public ResponseEntity<LikeSummaryResponseDto> getLikesByBoardId(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        List<LikeResponseDto> likeResponses = likeService.getLikesByBoardId(principalDetails, boardId);
-        return ResponseEntity.status(HttpStatus.OK).body(likeResponses);
+        LikeSummaryResponseDto summary = likeService.getLikeSummary(principalDetails, boardId);
+        return ResponseEntity.ok(summary);
     }
 
     @PostMapping("/{board_id}/likes")

@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    List<Like> findAllByBoardIdAndIsDeletedFalse(Long boardId);
-
     boolean existsByMemberAndBoardAndIsDeletedFalse(Member loginMember, Board board);
 
     Optional<Like> findByMemberAndBoardAndIsDeletedFalse(Member member, Board board);
+
+    int countByBoardIdAndIsDeletedFalse(Long id);
 }
