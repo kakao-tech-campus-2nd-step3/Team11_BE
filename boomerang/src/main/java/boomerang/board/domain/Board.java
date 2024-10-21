@@ -72,6 +72,7 @@ public class Board {
         this.writerEmail = member.getEmail();
         this.boardType = boardRequestDto.getBoardType();
         this.location = boardRequestDto.getLocation();
+        this.anonymousStatus = boardRequestDto.getAnonymousStatus();
         this.member = member;
     }
 
