@@ -35,8 +35,9 @@ public class MemberService {
             .orElseThrow(MemberNotFoundException::new);
     }
 
-    public Member createMember(MemberServiceDto memberCreateServiceDto) {
-        return memberRepository.save(memberCreateServiceDto.toMemberDomain());
+    public String createMember(MemberServiceDto memberCreateServiceDto) {
+        Member member = memberRepository.save(memberCreateServiceDto.toMemberDomain());
+        return jwtUtil.generateToken(member.getId(),member.getEmail());
     }
 
     public String loginKakaoMember(KakaoMember kakaoMember) {
