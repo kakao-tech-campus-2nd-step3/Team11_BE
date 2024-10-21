@@ -80,7 +80,6 @@ public class JwtFilter extends OncePerRequestFilter {
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
         if (memberDetail.getMemberRole() == MemberRole.INCOMPLETE_USER) {
-            response.sendRedirect("http://localhost:5173/welcome");
             filterChain.doFilter(request, response);
         }
 

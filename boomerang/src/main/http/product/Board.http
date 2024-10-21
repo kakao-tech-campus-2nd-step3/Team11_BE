@@ -1,6 +1,6 @@
 ### get boards
 GET http://localhost:8080/api/board?page=0&size=10&sortDirection=DESC&sortBy=id
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+Cookie: Authorization={{Authorization}}
 
 ### get board
 GET http://localhost:8080/api/board/1
