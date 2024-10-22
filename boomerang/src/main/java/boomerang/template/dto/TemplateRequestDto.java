@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TemplateRequestDto {
     private TemplateColumn1 templateColumn1;
     private TemplateColumn2 templateColumn2;
