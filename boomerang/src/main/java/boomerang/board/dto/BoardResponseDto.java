@@ -23,11 +23,12 @@ public class BoardResponseDto {
     private Location location;
     private AnonymousStatus anonymousStatus;
     private Long likeCount;
+    private boolean isLiked;
     private Long commentCount;
     private CommentListResponseDto commentListResponseDto;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    private boolean isLiked;
+
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
     public BoardResponseDto(Board board, CommentListResponseDto commentListResponseDto, boolean isLiked) {
@@ -40,9 +41,10 @@ public class BoardResponseDto {
         this.writerEmail = board.getMember().getEmail();
         this.writerName = board.getMember().getNickname();
         this.likeCount = board.getLikeCount();
+        this.isLiked = isLiked;
         this.commentCount = board.getCommentCount();
         this.commentListResponseDto = commentListResponseDto;
         this.createdAt = board.getCreatedAt();
-        this.isLiked = isLiked;
+
     }
 }
