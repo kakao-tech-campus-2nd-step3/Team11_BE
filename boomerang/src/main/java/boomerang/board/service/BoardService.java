@@ -1,12 +1,13 @@
 package boomerang.board.service;
 
 import boomerang.board.domain.Board;
+import boomerang.board.dto.BoardBestListRequestDto;
 import boomerang.board.dto.BoardListRequestDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.repository.BoardRepository;
-import boomerang.member.domain.Member;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
+import boomerang.member.domain.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,13 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    // 베스트 게시물 가져오기
+    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
+        PageRequest pageRequest = getBestPageRequest(boardBestListRequestDto);
+        Page<Board> boardPage = boardRepository.findAll(pageRequest);
+        return boardPage;
+    }
+
     // 모든 게시물 가져오기
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
@@ -28,7 +36,7 @@ public class BoardService {
     }
 
     // ID로 게시물 가져오기
-    public Board getBoardById(Long id) {
+    public Board getBoard(Long id) {
         return validateBoardExists(id);
     }
 
@@ -65,11 +73,19 @@ public class BoardService {
         }
     }
 
+    private PageRequest getBestPageRequest(BoardBestListRequestDto boardBestListRequestDto) {
+        return PageRequest.of(
+                0,
+                boardBestListRequestDto.getSize(),
+                Sort.by(Sort.Direction.DESC, "likeCount")
+        );
+    }
+
     private PageRequest getPageRequest(BoardListRequestDto boardListRequestDto) {
         return PageRequest.of(
                 boardListRequestDto.getPage(),
                 boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSortDirection(), boardListRequestDto.getSortBy())
+                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getSort_by())
         );
     }
 }

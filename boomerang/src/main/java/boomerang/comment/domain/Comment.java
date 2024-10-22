@@ -4,13 +4,22 @@ import boomerang.IsDeleted;
 import boomerang.board.domain.Board;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.member.domain.Member;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -39,6 +48,10 @@ public class Comment {
         return author.getNickname();
     }
 
+    public String getAuthorEmail() {
+        return author.getEmail();
+    }
+
     @CreatedDate
     private LocalDateTime createdAt; //기본 업데이트 됨
 
@@ -59,4 +72,9 @@ public class Comment {
         this.text = commentRequestDto.getText();
         this.isDeleted = IsDeleted.NOT_DELETED;
     }
+
+    public boolean isMemberCommentAuthor(Member loginUser) {
+        return loginUser.equals(this.author);
+    }
+
 }
