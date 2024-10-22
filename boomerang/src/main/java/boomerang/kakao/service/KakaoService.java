@@ -24,21 +24,23 @@ public class KakaoService {
     @Value("${client_id}")
     private String clientId;
 
+    @Value("${app.server.ip}")
+    private String serverIp;
+
     public KakaoTokenResponseDto getAccessTokenFromKakao(String code) {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>(); //바디 객체를 만드는 부분 Map으로 만들면 되고 key 값은 카카오문서에서 요청하는 이름으로
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
         map.add("client_id", clientId);
-        map.add("redirect_uri", "http://43.201.70.251:8080/api/v1/auth/login/callback");
+        map.add("redirect_uri", String.format("http://%s:8080/api/v1/auth/login/callback", serverIp));
         map.add("code", code);
-        RestClient restClient = RestClient.create();
 
-        return restClient.post().uri("https://kauth.kakao.com/oauth/token") //요청 보낼 uri 등록
-            .contentType(CONTENT_TYPE) //보내는 바디의 타입을 지정하는 부분
-            .body(map) //바디 객체를 넣는 방법
-            .retrieve() //요청을 보내고 응답을 가져오는 메서드, 실질적은 요청은 여기에서 일어남
-            .toEntity(KakaoTokenResponseDto.class) // 요청을 어떤 엔티티로 바꿀지 등록하는 부분
+        return restClient.post()
+            .uri("https://kauth.kakao.com/oauth/token")
+            .contentType(CONTENT_TYPE)
+            .body(map)
+            .retrieve()
+            .toEntity(KakaoTokenResponseDto.class)
             .getBody();
-
     }
 
     public KakaoMember getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
