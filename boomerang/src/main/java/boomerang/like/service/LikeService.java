@@ -20,7 +20,6 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final MemberService memberService;
-    private final BoardService boardService;
 
 
     @Transactional(readOnly = true)
