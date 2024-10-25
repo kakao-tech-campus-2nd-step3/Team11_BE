@@ -1,11 +1,11 @@
 package boomerang.progress.domain;
 
-import boomerang.progress.dto.SubStepResponseDto;
+import boomerang.progress.dto.SubStepDto;
 
 import java.util.List;
 
 public interface MainStep {
     String getMainName();
-    List<SubStepResponseDto> getSubStepAllForResponse();
+    List<SubStepDto> getSubStepAllForResponse();
     Boolean getCompletion();
 }
