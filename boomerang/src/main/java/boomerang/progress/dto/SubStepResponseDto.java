@@ -11,9 +11,9 @@ public class SubStepResponseDto {
     private String name;                  //보험가입여부
     private boolean completion;
 
-    public SubStepResponseDto(String name, boolean completion) {
-        this.name = name;
-        this.completion = completion;
+    public SubStepResponseDto(SubStepDto subStepDto) {
+        this.name = subStepDto.getName();
+        this.completion = subStepDto.getCompletion();
     }
 
 }
