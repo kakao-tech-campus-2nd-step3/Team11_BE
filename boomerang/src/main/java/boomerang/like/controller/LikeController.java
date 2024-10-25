@@ -47,7 +47,7 @@ public class LikeController {
     public ResponseEntity<Void> deleteLike(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        likeService.deleteLike(principalDetails, boardId);
+        likeService.deleteLike(principalDetails.getMemberEmail(), boardId);
         return ResponseEntity.noContent().build();
     }
 }

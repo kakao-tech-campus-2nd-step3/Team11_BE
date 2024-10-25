@@ -56,8 +56,8 @@ public class LikeService {
     }
 
     @Transactional
-    public void deleteLike(PrincipalDetails principalDetails, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public void deleteLike(String email, Long boardId) {
+        Member loginMember = memberService.getMemberByEmail(email);
         Board board = boardService.getBoard(boardId);
 
         Like like = likeRepository.findByMemberAndBoardAndIsDeletedFalse(loginMember, board)
