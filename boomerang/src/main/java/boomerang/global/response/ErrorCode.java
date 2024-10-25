@@ -46,8 +46,8 @@ public enum ErrorCode {
     PROGRESS_SUB_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG006", "세부 단계의 이름이 잘못되었습니다."),
     PROGRESS_MAIN_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG007", "메인 단계의 이름이 잘못되었습니다."),
     PROGRESS_SUB_MAIN_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "PG008", "서브단계와 메인 단계가 적절하게 매칭되지 않습니다."),
-    PROGRESS_SUB_ERROR(HttpStatus.NOT_FOUND, "PG009", "해당 메인단계에 대한 정보가 없습니다."),
-    PROGRESS_MAIN_ERROR(HttpStatus.NOT_FOUND, "PG010", "해당 세부단계에 대한 정보가 없습니다."),
+    PROGRESS_SUB_ERROR(HttpStatus.NOT_FOUND, "PG009", "해당 세부단계에 대한 정보가 없습니다."),
+    PROGRESS_MAIN_ERROR(HttpStatus.NOT_FOUND, "PG010", "해당 메인단계에 대한 정보가 없습니다."),
 
     ;
 
