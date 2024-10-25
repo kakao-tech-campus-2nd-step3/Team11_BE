@@ -20,7 +20,7 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final MemberService memberService;
-
+    private final BoardService boardService;
 
     @Transactional(readOnly = true)
     public LikeSummaryResponseDto getLikeSummary(String email, Long boardId) {
@@ -65,7 +65,8 @@ public class LikeService {
         board.decreaseLikeCount();
     }
 
-    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {
+    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn,
+        Member loginMember) {
         if (!isUserLoggedIn) {
             return new LikeResponseDto(like, false);
         }
