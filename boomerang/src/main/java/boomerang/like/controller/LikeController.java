@@ -26,7 +26,12 @@ public class LikeController {
     public ResponseEntity<LikeSummaryResponseDto> getLikesByBoardId(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        LikeSummaryResponseDto summary = likeService.getLikeSummary(principalDetails, boardId);
+        String email = null;
+        if (principalDetails != null) {
+            email = principalDetails.getMemberEmail();
+        }
+
+        LikeSummaryResponseDto summary = likeService.getLikeSummary(email, boardId);
         return ResponseEntity.ok(summary);
     }
 

@@ -25,13 +25,13 @@ public class LikeService {
 
 
     @Transactional(readOnly = true)
-    public LikeSummaryResponseDto getLikeSummary(PrincipalDetails principalDetails, Long boardId) {
+    public LikeSummaryResponseDto getLikeSummary(String email, Long boardId) {
         Board board = boardService.getBoard(boardId);
         int likeCount = likeRepository.countByBoardIdAndIsDeletedFalse(board.getId());
 
         boolean isLiked = false;
-        if (principalDetails != null) {
-            Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        if (email != null) {
+            Member loginMember = memberService.getMemberByEmail(email);
             isLiked = likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board);
         }
 
