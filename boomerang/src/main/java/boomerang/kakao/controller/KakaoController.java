@@ -1,17 +1,16 @@
 package boomerang.kakao.controller;
 
-import boomerang.kakao.domain.KakaoMember;
-import boomerang.kakao.dto.KakaoTokenResponseDto;
-import boomerang.kakao.service.KakaoService;
-import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
+import boomerang.kakao.domain.KakaoMember;
+import boomerang.kakao.dto.KakaoTokenResponseDto;
+import boomerang.kakao.service.KakaoService;
+import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -42,10 +41,17 @@ public class KakaoController {
     @Value("${client_id}")
     private String clientId;
 
+    @Value("${app.server.ip}")
+    private String serverIp;
+
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
-        response.sendRedirect(
-            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+clientId+"&redirect_uri=http://localhost:8080/api/v1/auth/login/callback");
+        String redirectUri = String.format("http://%s:8080/api/v1/auth/login/callback", serverIp);
+        String authorizationUrl = String.format(
+            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s",
+            clientId, redirectUri
+        );
+        response.sendRedirect(authorizationUrl);
     }
 
     @GetMapping("/login/callback")
