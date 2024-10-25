@@ -43,6 +43,8 @@ public enum ErrorCode {
     // Chat
     CHATROOM_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.FORBIDDEN, "CH001", "채팅방에 대한 소유 권한이 없습니다."),
     CHATROOM_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CH002", "해당 채팅방을 찾을 수 없습니다.")
+    // File
+    S3_UPLOAD_ERROR(HttpStatus.NOT_FOUND, "EF001", "S3와 정상적인 연결이 불가능합니다"),
 
     ;
 
