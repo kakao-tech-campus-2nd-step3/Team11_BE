@@ -11,38 +11,41 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/chat")
 public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
 
-    // 채팅방 목록 조회
     @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoom>> getAllChatRooms() {
         List<ChatRoom> chatRooms = chatRoomService.getAllChatRooms();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(chatRooms);
+        return ResponseEntity.status(HttpStatus.OK).body(chatRooms);
     }
 
-    // 채팅방 생성
     @PostMapping("/room")
-    public ResponseEntity<Void> createChatRoom(
-            @Valid @RequestBody ChatRoomRequestDto chatRoomRequestDto) {
+    public ResponseEntity<Void> createChatRoom(@RequestBody ChatRoomRequestDto chatRoomRequestDto) {
         chatRoomService.createChatRoom(chatRoomRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // WebSocket 연결을 위한 엔드포인트 설명
-    @GetMapping("/ws")
-    public String websocketInfo() {
-        return "WebSocket endpoint: /ws/chat/{room_id}";
+    @GetMapping("/rooms/page")
+    public String getChatRoomsPage(Model model) {
+        return "chat_rooms";
+    }
+
+    @GetMapping("/room/{roomId}")
+    public String getChatRoomPage(@PathVariable Long roomId, Model model) {
+        model.addAttribute("roomId", roomId);
+        return "chat_room";
     }
 
     @ExceptionHandler(BusinessException.class)

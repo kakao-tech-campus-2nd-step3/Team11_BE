@@ -18,9 +18,10 @@ public class ChatRoom {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "creator_id", nullable = false)
-    private Member creator;
+    // 테스트를 위해 주석처리
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "creator_id", nullable = false)
+//    private Member creator;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
