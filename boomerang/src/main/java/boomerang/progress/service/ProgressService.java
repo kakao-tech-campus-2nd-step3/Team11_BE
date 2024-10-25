@@ -5,14 +5,8 @@ import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.repository.MemberRepository;
-import boomerang.progress.domain.MainStepEnum;
-import boomerang.progress.domain.Progress;
-import boomerang.progress.domain.ProgressType;
-import boomerang.progress.domain.SubStepEnum;
-import boomerang.progress.dto.MainStepResponseDto;
-import boomerang.progress.dto.ProgressDetailsResponseDto;
-import boomerang.progress.dto.ProgressTypeRequestDto;
-import boomerang.progress.dto.SubStepResponseDto;
+import boomerang.progress.domain.*;
+import boomerang.progress.dto.*;
 import boomerang.progress.repository.ProgressRepository;
 import boomerang.progress.util.ProgressStrategy;
 import lombok.RequiredArgsConstructor;
@@ -64,8 +58,9 @@ public class ProgressService {
     public MainStepResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
+        MainStep mainStep = ProgressStrategy.getMainStep(progress,mainStepEnum);
 
-        return new MainStepResponseDto(progress.findMainStepByEnum(mainStepEnum));
+        return new MainStepResponseDto(mainStep);
     }
 
     //특정 서브단계만 조회
@@ -80,11 +75,15 @@ public class ProgressService {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
-        return progress.findSubStepByEnum(subStepEnum);
+        SubStepDto subStepDto = ProgressStrategy.getSubStep(progress,subStepEnum);
+
+        //전략객체
+        return new SubStepResponseDto(subStepDto);
     }
 
     //진행도 업데이트
     public SubStepResponseDto completeProgress(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+        //메인스탭이랑 서브 스텝이 매칭이 되는지를 검사
         if (!subStepEnum.isMatchingMainStep(mainStepEnum)) {
             throw new BusinessException(ErrorCode.PROGRESS_SUB_MAIN_DO_NOT_MATCH);
         }
@@ -92,15 +91,17 @@ public class ProgressService {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
-        ProgressStrategy.updateProgress(progress, mainStepEnum, subStepEnum, true);
-
+        SubStepDto subStepDto = ProgressStrategy.completeProgress(progress, subStepEnum);
         progressRepository.save(progress);
 
-        return progress.findSubStepByEnum(subStepEnum);
+        return new SubStepResponseDto(subStepDto);
+
 
     }
-    //진행도 업데이트
+
+    //진행도 완료 취소
     public SubStepResponseDto revertProgressToIncomplete(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+        //메인스탭이랑 서브 스텝이 매칭이 되는지를 검사
         if (!subStepEnum.isMatchingMainStep(mainStepEnum)) {
             throw new BusinessException(ErrorCode.PROGRESS_SUB_MAIN_DO_NOT_MATCH);
         }
@@ -108,11 +109,9 @@ public class ProgressService {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
-        ProgressStrategy.updateProgress(progress, mainStepEnum, subStepEnum, false);
-
+        SubStepDto subStepDto = ProgressStrategy.revertProgressToIncomplete(progress, subStepEnum);
         progressRepository.save(progress);
-
-        return progress.findSubStepByEnum(subStepEnum);
+        return new SubStepResponseDto(subStepDto);
 
     }
 

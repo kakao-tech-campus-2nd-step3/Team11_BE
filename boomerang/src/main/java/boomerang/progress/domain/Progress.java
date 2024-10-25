@@ -1,16 +1,12 @@
 package boomerang.progress.domain;
 
 import boomerang.member.domain.Member;
-import boomerang.progress.dto.SubStepResponseDto;
-import boomerang.progress.util.ProgressStrategy;
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.List;
 
 @Getter
 @Entity
@@ -29,7 +25,6 @@ public class Progress {
     @Enumerated(value = EnumType.STRING)
     private ProgressType progressType;
 
-    //이
     @Embedded
     private MainStepEx mainStepEx;
 
@@ -52,15 +47,4 @@ public class Progress {
         }
     }
 
-    public List<MainStep> getActiveMainStepList() {
-        return ProgressStrategy.generateActiveMainStepsByType(this);
-    }
-
-    public MainStep findMainStepByEnum(MainStepEnum mainStepEnum) {
-        return ProgressStrategy.findMainStepByEnum(this,mainStepEnum);
-    }
-
-    public SubStepResponseDto findSubStepByEnum(SubStepEnum subStepEnum) {
-        return ProgressStrategy.findSubStepByEnum(this,subStepEnum);
-    }
 }
