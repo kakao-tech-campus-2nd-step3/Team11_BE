@@ -3,7 +3,6 @@ package boomerang.like.service;
 import boomerang.board.domain.Board;
 import boomerang.board.service.BoardService;
 import boomerang.global.exception.BusinessException;
-import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
