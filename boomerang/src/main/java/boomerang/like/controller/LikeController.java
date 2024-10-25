@@ -39,7 +39,7 @@ public class LikeController {
     public ResponseEntity<LikeResponseDto> createLike(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        LikeResponseDto likeResponseDto = likeService.createLike(principalDetails, boardId);
+        LikeResponseDto likeResponseDto = likeService.createLike(principalDetails.getMemberEmail(), boardId);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponseDto);
     }
 

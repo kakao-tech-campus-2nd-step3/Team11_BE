@@ -39,8 +39,8 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeResponseDto createLike(PrincipalDetails principalDetails, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public LikeResponseDto createLike(String email, Long boardId) {
+        Member loginMember = memberService.getMemberByEmail(email);
         Board board = boardService.getBoard(boardId);
 
         // 이미 좋아요를 눌렀는지 확인
