@@ -1,7 +1,7 @@
 package boomerang.member.domain;
 
-import boomerang.member.exception.MemberValidException;
 import boomerang.global.response.ErrorCode;
+import boomerang.member.exception.MemberValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

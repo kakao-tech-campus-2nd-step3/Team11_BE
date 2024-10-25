@@ -1,16 +1,17 @@
 package boomerang.kakao.controller;
 
-import boomerang.kakao.domain.KakaoMember;
-import boomerang.kakao.dto.KakaoTokenResponseDto;
-import boomerang.kakao.service.KakaoService;
-import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
+import boomerang.kakao.domain.KakaoMember;
+import boomerang.kakao.dto.KakaoTokenResponseDto;
+import boomerang.kakao.service.KakaoService;
+import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class KakaoController {
@@ -39,10 +41,17 @@ public class KakaoController {
     @Value("${client_id}")
     private String clientId;
 
+    @Value("${app.server.ip}")
+    private String serverIp;
+
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
-        response.sendRedirect(
-            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="+clientId+"&redirect_uri=http://localhost:8080/api/v1/auth/login/callback");
+        String redirectUri = String.format("http://%s:8080/api/v1/auth/login/callback", serverIp);
+        String authorizationUrl = String.format(
+            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s",
+            clientId, redirectUri
+        );
+        response.sendRedirect(authorizationUrl);
     }
 
     @GetMapping("/login/callback")
@@ -63,7 +72,7 @@ public class KakaoController {
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponseDto> handleOptionValidException(DomainValidationException e) {
-        System.out.println(e);
+        log.error(e.toString());
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
 }
