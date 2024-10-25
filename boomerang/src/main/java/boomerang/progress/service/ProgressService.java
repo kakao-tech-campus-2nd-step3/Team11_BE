@@ -12,6 +12,8 @@ import boomerang.progress.util.ProgressStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +53,9 @@ public class ProgressService {
         Member member = getMemberOrThrow(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
-        return new ProgressDetailsResponseDto(progress);
+        List<MainStep> mainStepList = ProgressStrategy.getActiveMainStepList(progress);
+
+        return new ProgressDetailsResponseDto(progress,mainStepList);
     }
 
     //특정 메인 단계만 조회
