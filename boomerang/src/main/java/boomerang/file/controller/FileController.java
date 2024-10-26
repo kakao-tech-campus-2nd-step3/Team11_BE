@@ -30,8 +30,6 @@ public class FileController {
             @RequestParam("file") MultipartFile multipartFile) {
         URL fileUrl = fileService.upload(principalDetails.getMemberEmail(), multipartFile);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(FileResponseDto.builder()
-                        .fileUrl(fileUrl)
-                        .build());
+                .body(new FileResponseDto(fileUrl));
     }
 }
