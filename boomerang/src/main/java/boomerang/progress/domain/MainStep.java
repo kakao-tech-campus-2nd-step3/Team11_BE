@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface MainStep {
     String getMainName();
-    List<SubStepDto> getSubStepAllForResponse();
+    List<SubStepDto> getSubStepAll();
     Boolean getCompletion();
 }

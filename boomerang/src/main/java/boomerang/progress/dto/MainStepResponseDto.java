@@ -20,6 +20,9 @@ public class MainStepResponseDto {
     public MainStepResponseDto(MainStep mainStep) {
         this.mainStepName = mainStep.getMainName();
         this.completion = mainStep.getCompletion();
-        this.subStepList = mainStep.getSubStepAllForResponse();
+        this.subStepList = mainStep.getSubStepAll()
+                .stream().
+                map(SubStepResponseDto::new).
+                toList();
     }
 }

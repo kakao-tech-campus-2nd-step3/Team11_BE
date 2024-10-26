@@ -1,7 +1,6 @@
 package boomerang.progress.domain;
 
-import boomerang.progress.dto.SubStepResponseDto;
-import jakarta.persistence.Column;
+import boomerang.progress.dto.SubStepDto;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 
@@ -36,10 +35,10 @@ public class MainStepEx implements MainStep {
     }
 
     @Override
-    public List<SubStepResponseDto> getSubStepAllForResponse() {
-        List<SubStepResponseDto> response = new ArrayList<>();
-        response.add(new SubStepResponseDto("sub_step1", subStep1));
-        response.add(new SubStepResponseDto("sub_step2", subStep2));
+    public List<SubStepDto> getSubStepAll() {
+        List<SubStepDto> response = new ArrayList<>();
+        response.add(new SubStepDto("sub_step1", subStep1));
+        response.add(new SubStepDto("sub_step2", subStep2));
         return response;
     }
 
