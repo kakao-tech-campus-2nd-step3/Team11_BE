@@ -18,9 +18,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
-        //mvc에서 cors 해결
         corsRegistry.addMapping("/**")
-            .exposedHeaders("Set-Cookie")
-            .allowedOrigins("http://localhost:5173");
+                // 8080 추가
+                .allowedOrigins("http://localhost:5173", "http://localhost:8080")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .exposedHeaders("Set-Cookie", "Authorization");  // Authorization 헤더 추가
     }
 }

@@ -32,6 +32,7 @@ public class BoardListResponseDto {
     @Builder
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Item {
+        private Long id;
         private String title;
         private String content;
         private AnonymousStatus anonymousStatus;
@@ -49,6 +50,7 @@ public class BoardListResponseDto {
             }
 
             return Item.builder()
+                    .id(board.getId())
                     .title(board.getTitle())
                     .content(content)  // 자른 content 사용
                     .anonymousStatus(board.getAnonymousStatus())
@@ -58,5 +60,6 @@ public class BoardListResponseDto {
                     .commentCount(board.getCommentCount())
                     .build();
         }
+
     }
 }

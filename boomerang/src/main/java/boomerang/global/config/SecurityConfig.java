@@ -5,6 +5,8 @@ import boomerang.global.oauth.service.PrincipalService;
 import boomerang.global.utils.JwtFilter;
 import boomerang.global.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +47,8 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));        //3000 허용
+                        // 8080 추가
+                        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:8080"));        //3000 허용
                         configuration.setAllowedMethods(Collections.singletonList("*"));                            //모든 HTTP 메서드 허용
                         configuration.setAllowCredentials(true);                                                    //쿠키 사용
                         configuration.setAllowedHeaders(Collections.singletonList("*"));                            //클라이언트는 모든 타입의 헤더를 사용
@@ -83,12 +86,13 @@ public class SecurityConfig {
 
         //경로별 인가 작업
         http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
-                        .requestMatchers("/api/v1/board/comments/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
-                        .anyRequest().permitAll());
+            .authorizeHttpRequests((auth) -> auth
+                .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
+                .requestMatchers( "/api/v1/board/comments/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
+                .requestMatchers("/api/v1/chat/**").permitAll()  // 채팅 경로 모두 허용
+                .anyRequest().permitAll());
 
 
         //세션 설정 : STATELESS
