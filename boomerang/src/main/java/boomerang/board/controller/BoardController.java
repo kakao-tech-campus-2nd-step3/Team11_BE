@@ -13,6 +13,7 @@ import boomerang.comment.service.CommentService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
+import boomerang.global.response.PageResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.like.service.LikeService;
 import boomerang.member.domain.Member;
@@ -54,21 +55,21 @@ public class BoardController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<BoardListResponseDto> getBestBoards(
+    public ResponseEntity<PageResponseDto> getBestBoards(
         @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
         Page<Board> boradPage = boardService.getBestBoards(boardBestListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new BoardListResponseDto(boradPage, boardBestListRequestDto.getContent_length()));
+                .body(new PageResponseDto(boradPage));
     }
 
     @GetMapping
-    public ResponseEntity<BoardListResponseDto> getAllBoards(
+    public ResponseEntity<PageResponseDto> getAllBoards(
         @ModelAttribute BoardListRequestDto boardListRequestDto) {
         Page<Board> boradPage = boardService.getAllBoards(boardListRequestDto);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new BoardListResponseDto(boradPage, boardListRequestDto.getContent_length()));
+            .body(new PageResponseDto(boradPage));
     }
 
     @GetMapping("/{board_id}")
