@@ -3,8 +3,8 @@ package boomerang.board.controller;
 import boomerang.board.domain.Board;
 import boomerang.board.dto.*;
 import boomerang.board.service.BoardService;
-import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
+import boomerang.comment.dto.CommentResponseDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
@@ -64,8 +64,9 @@ public class BoardController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "board_id") Long boardId) {
         Board board = boardService.getBoard(boardId);
-        PageResponseDto<Comment> commentListResponseDto =
-                new PageResponseDto<>(commentService.getAllComment(boardId, new CommentListRequestDto()));
+        PageResponseDto<CommentResponseDto> commentListResponseDto = new PageResponseDto<>(
+                        commentService.getAllComment(boardId, new CommentListRequestDto())
+                                .map(CommentResponseDto::new));
 
         boolean isLiked = false;
 
