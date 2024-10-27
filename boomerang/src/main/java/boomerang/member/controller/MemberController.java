@@ -76,12 +76,11 @@ public class MemberController {
     }
 
     @PostMapping("/random_nickname")
-    public ResponseEntity<Map> generateRandomNickname(){
+    public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname(){
         String nickname = memberService.generateUniqueNickname();
-        Map<String, Object> response = new HashMap<>();
-        response.put("랜덤 닉네임", nickname);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+            .body(new RandomNicknameCreateResponseDTO(nickname));
+    }
     }
 
     // GlobalException Handler 에서 처리할 경우,
