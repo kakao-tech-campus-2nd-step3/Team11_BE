@@ -1,0 +1,43 @@
+### get best boards
+GET http://localhost:8080/api/v1/board/best?
+    size=5&board_type=ENTIRE&content_length=10
+Cookie: Authorization={{Authorization}}
+
+### get boards
+GET http://localhost:8080/api/v1/board?
+    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
+Cookie: Authorization={{Authorization}}
+
+### get board
+GET http://localhost:8080/api/v1/board/1
+
+### create board
+POST http://localhost:8080/api/v1/board
+Content-Type: application/json
+Cookie: Authorization={{Authorization}}
+
+{
+  "title": "Example Title",
+  "content": "This is an example content for the board.",
+  "board_type": "ENTIRE",
+  "location": "BUSAN",
+  "anonymous_status": "PRIVATE"
+}
+
+
+### update board
+PUT http://localhost:8080/api/v1/board/1
+Content-Type: application/json
+Cookie: Authorization={{Authorization}}
+
+{
+  "title": "Example Title",
+  "content": "a.",
+  "board_type": "ENTIRE",
+  "location": "BUSAN",
+  "anonymous_status": "PRIVATE"
+}
+
+### delete board
+DELETE http://localhost:8080/api/v1/board/1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NjE2NjUsImV4cCI6MTcyNzg2NDA2NX0.Lc3gVOdsj_D3Zn_y6bvMRipYMCr_IenbLm1XVPi8Rr4

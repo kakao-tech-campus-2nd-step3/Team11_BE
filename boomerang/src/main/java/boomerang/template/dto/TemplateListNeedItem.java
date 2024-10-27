@@ -3,11 +3,10 @@ package boomerang.template.dto;
 import boomerang.template.domain.TemplateColumn1;
 import boomerang.template.domain.TemplateColumn2;
 import boomerang.template.domain.TemplateDomain;
+import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.List;
 
     /*
         상황에 따라서는 List 로 담고 싶은 ResponseDto 와 기존의 ResponseDto의 형태가 조금 달라지는 경우가 있다

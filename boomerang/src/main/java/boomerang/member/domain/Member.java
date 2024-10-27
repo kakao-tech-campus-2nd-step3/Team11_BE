@@ -1,17 +1,13 @@
 package boomerang.member.domain;
 
 import boomerang.IsDeleted;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import boomerang.progress.domain.Progress;
+import boomerang.progress.domain.ProgressType;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +15,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "member")
 @Getter
-@Setter
 @ToString
 public class Member {
 
@@ -27,16 +22,17 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String email;
 
-    @Embedded
-    private MemberType memberType;
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
 
     //보험가입여부
     @Column(name = "insurance_status")
     private boolean insuranceStatus;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", unique = true)
     private String nickname;
 
     //돌려받을 수 있는 보증금
@@ -47,9 +43,6 @@ public class Member {
     private SafetyScore safetyScore;
 
     private String profileImage;
-
-    @Embedded
-    private ProgressStep progressStep;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -62,12 +55,32 @@ public class Member {
     @Column(name = "is_deleted")
     private IsDeleted isDeleted;
 
+    @OneToOne(mappedBy = "member")
+    private Progress progress;
+
     protected Member() {
     }
 
     public Member(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
+        this.memberRole = MemberRole.INCOMPLETE_USER;
+    }
+
+    public ProgressType getProgressType() {
+        if (this.progress == null) {
+            return null;
+        }
+        return this.progress.getProgressType();
+    }
+
+    public void registerProgress(Progress progress) {
+        this.progress = progress;
+    }
+
+
+    public boolean hasProgress() {
+        return this.progress != null;
     }
 
     @Override
@@ -86,4 +99,6 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
+
 }

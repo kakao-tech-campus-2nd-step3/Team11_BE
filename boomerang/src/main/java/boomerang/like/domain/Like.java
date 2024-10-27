@@ -12,20 +12,17 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
-@Setter
 @Entity
-@Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "likes")
 public class Like {
@@ -41,7 +38,6 @@ public class Like {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @Builder.Default
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isDeleted = false;
 
