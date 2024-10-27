@@ -13,7 +13,7 @@ import lombok.Getter;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class BoardResponseDto {
+public class BoardDetailResponseDto {
     private Long id;
     private String title;
     private String content;
@@ -31,7 +31,7 @@ public class BoardResponseDto {
 
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
-    public BoardResponseDto(Board board, PageResponseDto commentListResponseDto, boolean isLiked) {
+    public BoardDetailResponseDto(Board board, PageResponseDto commentListResponseDto, boolean isLiked) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
