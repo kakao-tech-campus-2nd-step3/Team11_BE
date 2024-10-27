@@ -5,7 +5,6 @@ import boomerang.board.service.BoardService;
 import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentRequestDto;
-import boomerang.comment.dto.CommentResponseDto;
 import boomerang.comment.repository.CommentRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
@@ -49,7 +48,7 @@ public class CommentService {
     public void deleteComment(String email, Long commentId) {
         Comment comment = getComment(commentId);
 
-        if (comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
+        if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -65,7 +64,7 @@ public class CommentService {
     public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = getComment(commentId);
 
-        if (comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
+        if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
@@ -75,17 +74,18 @@ public class CommentService {
     }
 
     public Comment getComment(Long commentId) {
-        return commentRepository.findById(commentId)
+        return commentRepository.findActiveById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
     }
 
 
-    private CommentResponseDto createCommentResponseDto(Comment comment, boolean isUserLoggedIn, Member loginMember) {
-        if (!isUserLoggedIn) {
-            return new CommentResponseDto(comment); // 로그인하지 않은 경우
-        }
-        return new CommentResponseDto(comment, comment.isMemberCommentAuthor(loginMember)); // 로그인한 경우
-    }
+//    안쓰게 된 메서드
+//    private CommentResponseDto createCommentResponseDto(Comment comment, boolean isUserLoggedIn, Member loginMember) {
+//        if (!isUserLoggedIn) {
+//            return new CommentResponseDto(comment); // 로그인하지 않은 경우
+//        }
+//        return new CommentResponseDto(comment, comment.isMemberCommentAuthor(loginMember)); // 로그인한 경우
+//    }
 
     private PageRequest getPageRequest(CommentListRequestDto commentListRequestDto) {
         return PageRequest.of(
