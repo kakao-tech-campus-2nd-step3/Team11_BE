@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 
 public enum MainStepEnum {
-    MAIN_STEP_1("진행도 1단계", List.of(SubStepEnum.SUB_STEP_1, SubStepEnum.SUB_STEP_2)),
+    MAIN_STEP_1("진행도1단계", List.of(SubStepEnum.SUB_STEP_1, SubStepEnum.SUB_STEP_2)),
+    MAIN_STEP_2("진행도2단계", List.of(SubStepEnum.SUB_STEP_1, SubStepEnum.SUB_STEP_2)),
+    MAIN_STEP_3("진행도3단계", List.of(SubStepEnum.SUB_STEP_1, SubStepEnum.SUB_STEP_2)),
     ;
 
     private final String mainStepName;
@@ -20,8 +22,12 @@ public enum MainStepEnum {
     }
 
     @JsonValue
-    public String getSubStepName() {
+    public String getMainStepName() {
         return mainStepName;
+    }
+
+    public List<SubStepEnum> getSubStepEnumList() {
+        return subStepEnumList;
     }
 
     @JsonCreator
@@ -31,7 +37,7 @@ public enum MainStepEnum {
                 return mainStepEnum;
             }
         }
-        throw new BusinessException(ErrorCode.PROGRESS_MAIN_INVALID_NAME);
+        throw new IllegalArgumentException(ErrorCode.PROGRESS_MAIN_INVALID_NAME.getMessage());
     }
 
     public boolean isMatchingMainAndSub(SubStepEnum subStepEnum) {

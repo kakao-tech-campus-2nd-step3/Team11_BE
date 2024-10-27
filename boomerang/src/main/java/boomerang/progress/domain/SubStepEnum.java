@@ -27,6 +27,6 @@ public enum SubStepEnum {
                 return subStepEnum;
             }
         }
-        throw new BusinessException(ErrorCode.PROGRESS_SUB_INVALID_NAME);
+        throw new IllegalStateException(ErrorCode.PROGRESS_SUB_INVALID_NAME.getMessage());
     }
 }
