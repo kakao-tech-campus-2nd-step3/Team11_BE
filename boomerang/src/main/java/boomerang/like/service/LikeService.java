@@ -1,45 +1,47 @@
 package boomerang.like.service;
 
 import boomerang.board.domain.Board;
-import boomerang.board.service.BoardService;
+import boomerang.board.repository.BoardRepository;
 import boomerang.global.exception.BusinessException;
+import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
-import boomerang.like.dto.LikeSummaryResponseDto;
 import boomerang.like.repository.LikeRepository;
 import boomerang.member.domain.Member;
-import boomerang.member.service.MemberService;
+import boomerang.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class LikeService {
 
     private final LikeRepository likeRepository;
-    private final MemberService memberService;
-    private final BoardService boardService;
+    private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
 
-    @Transactional(readOnly = true)
-    public LikeSummaryResponseDto getLikeSummary(String email, Long boardId) {
-        Board board = boardService.getBoard(boardId);
-        int likeCount = likeRepository.countByBoardIdAndIsDeletedFalse(board.getId());
+    @Transactional
+    public List<LikeResponseDto> getLikesByBoardId(PrincipalDetails principalDetails, Long boardId) {
+        Board board = getBoardOrThrow(boardId);
 
-        boolean isLiked = false;
-        if (email != null) {
-            Member loginMember = memberService.getMemberByEmail(email);
-            isLiked = likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board);
-        }
+        List<Like> likes = likeRepository.findAllByBoardIdAndIsDeletedFalse(board.getId());
 
-        return new LikeSummaryResponseDto(likeCount, isLiked);
+        boolean isUserLoggedIn = principalDetails != null;
+        Member loginMember = isUserLoggedIn ? getMemberOrThrow(principalDetails.getMemberEmail()) : null;
+
+        return likes.stream()
+            .map(like -> createLikeResponseDto(like, isUserLoggedIn, loginMember))
+            .collect(Collectors.toList());
     }
 
     @Transactional
-    public LikeResponseDto createLike(String email, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(email);
-        Board board = boardService.getBoard(boardId);
+    public LikeResponseDto createLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
+        Board board = getBoardOrThrow(boardId);
 
         // 이미 좋아요를 눌렀는지 확인
         if (likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board)) {
@@ -48,32 +50,36 @@ public class LikeService {
 
         Like like = new Like(loginMember, board);
         Like savedLike = likeRepository.save(like);
-        board.increaseLikeCount();
 
         return new LikeResponseDto(savedLike, true);
     }
 
     @Transactional
-    public void deleteLike(String email, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(email);
-        Board board = boardService.getBoard(boardId);
+    public void deleteLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = getMemberOrThrow(principalDetails.getMemberEmail());
+        Board board = getBoardOrThrow(boardId);
 
         Like like = likeRepository.findByMemberAndBoardAndIsDeletedFalse(loginMember, board)
             .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
-        board.decreaseLikeCount();
+        likeRepository.save(like);
     }
 
-    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn,
-        Member loginMember) {
+    private Member getMemberOrThrow(String email) {
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+    }
+
+    private Board getBoardOrThrow(Long boardId) {
+        return boardRepository.findById(boardId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
+    }
+
+    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {
         if (!isUserLoggedIn) {
             return new LikeResponseDto(like, false);
         }
         return new LikeResponseDto(like, like.getMember().equals(loginMember));
-    }
-
-    public boolean isLikedByMember(Board board, Member member) {
-        return likeRepository.existsByMemberAndBoardAndIsDeletedFalse(member, board);
     }
 }

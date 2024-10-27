@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<div th:replace="layout :: header"></div>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Manage Products</h2>
+        <div>
+            <button class="btn btn-danger" id="deleteSelected">Delete</button>
+            <button class="btn btn-success" id="addProduct">Add New Product</button>
+        </div>
+    </div>
+    <!-- Search Box -->
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input type="text" class="form-control" id="searchProductId" placeholder="Product ID 입력">
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary btn-block" id="searchProduct">Search</button>
+        </div>
+    </div>
+    <!-- Products Table -->
+    <table class="table table-striped">
+        <!-- table header -->
+        <thead class="thead-dark">
+        <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image URL</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="productTableBody">
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+        </ul>
+    </nav>
+</div>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalLabel">Add New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- form 을 통해 POST, PUT api 요청을 보낸다 -->
+                <form id="productForm">
+                    <input type="hidden" id="productId" name="id">
+                    <div class="form-group">
+                        <label for="productName">Name</label>
+                        <input type="text" class="form-control" id="productName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price</label>
+                        <input type="number" class="form-control" id="productPrice" name="price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImageUrl">Image URL</label>
+                        <input type="text" class="form-control" id="productImageUrl" name="imageUrl" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveProduct">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        const apiBaseUrl = '/api/products';
+        let currentPage = 0;
+
+        function loadProducts(page) {
+            $.get(apiBaseUrl + '?page=' + page, function (response) {
+                $('#productTableBody').empty();
+                response.data.products.forEach(product => {
+                    $('#productTableBody').append(`
+                        <tr data-id="${product.id}">
+                            <td><input type="checkbox" class="productCheckbox"></td>
+                            <td>${product.name.value}</td>
+                            <td>${product.price.value}</td>
+                            <td>${product.imageUrl.value}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm editProduct">✏️</button>
+                                <button class="btn btn-danger btn-sm deleteProduct">🗑️</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+                $('#pagination').empty();
+                for (let i = 0; i < response.data.page; i++) {
+                    $('#pagination').append(`
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#">${i + 1}</a>
+                        </li>
+                    `);
+                }
+            });
+        }
+
+        $('#pagination').on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).text() - 1;
+            if (page !== currentPage) {
+                currentPage = page;
+                loadProducts(currentPage);
+            }
+        });
+
+        $('#addProduct').click(function () {
+            $('#productModalLabel').text('Add New Product');
+            $('#productForm')[0].reset();
+            $('#productId').val('');
+            $('#productModal').modal('show');
+        });
+
+        $('#saveProduct').click(function () {
+            const productData = {
+                name: { value: $('#productName').val() },
+                price: { value: $('#productPrice').val() },
+                imageUrl: { value: $('#productImageUrl').val() }
+            };
+            const productId = $('#productId').val();
+
+            const ajaxOptions = {
+                url: apiBaseUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function () {
+                    $('#productModal').modal('hide');
+                    loadProducts(currentPage);
+                },
+                error: function (xhr) {
+                    if (xhr.status >= 400 && xhr.status < 500) {
+                        alert(xhr.responseJSON.message);
+                    }
+                }
+            };
+
+            if (productId) {
+                ajaxOptions.url = apiBaseUrl + '/' + productId;
+                ajaxOptions.type = 'PUT';
+            }
+
+            $.ajax(ajaxOptions);
+        });
+
+        $(document).on('click', '.editProduct', function () {
+            const productId = $(this).closest('tr').data('id');
+            $.get(apiBaseUrl + '/' + productId, function (response) {
+                $('#productModalLabel').text('Edit Product');
+                $('#productId').val(response.data.id);
+                $('#productName').val(response.data.name.value);
+                $('#productPrice').val(response.data.price.value);
+                $('#productImageUrl').val(response.data.imageUrl.value);
+                $('#productModal').modal('show');
+            });
+        });
+
+        $(document).on('click', '.deleteProduct', function () {
+            const productId = $(this).closest('tr').data('id');
+            $.ajax({
+                url: apiBaseUrl + '/' + productId,
+                type: 'DELETE',
+                success: function () {
+                    loadProducts(currentPage);
+                }
+            });
+        });
+
+        $('#deleteSelected').click(function () {
+            $('.productCheckbox:checked').each(function () {
+                const productId = $(this).closest('tr').data('id');
+                $.ajax({
+                    url: apiBaseUrl + '/' + productId,
+                    type: 'DELETE',
+                    success: function () {
+                        loadProducts(currentPage);
+                    }
+                });
+            });
+        });
+
+        $('#selectAll').click(function () {
+            $('.productCheckbox').prop('checked', this.checked);
+        });
+
+        $('#searchProduct').click(function () {
+            const productId = $('#searchProductId').val();
+            if (productId) {
+                $.ajax({
+                    url: apiBaseUrl + '/' + productId,
+                    type: 'GET',
+                    success: function (response) {
+                        const $productTableBody = $('#productTableBody');
+                        $productTableBody.empty();
+                        const product = response.data;
+                        $productTableBody.append(`
+                            <tr data-id="${product.id}">
+                                <td><input type="checkbox" class="productCheckbox"></td>
+                                <td>${product.name.value}</td>
+                                <td>${product.price.value}</td>
+                                <td>${product.imageUrl.value}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm editProduct">✏️</button>
+                                    <button class="btn btn-danger btn-sm deleteProduct">🗑️</button>
+                                </td>
+                            </tr>
+                        `);
+                    },
+                    error: function (xhr) {
+                        if (xhr.responseJSON && xhr.responseJSON.code === 'EP001') {
+                            alert(xhr.responseJSON.message);
+                            return;
+                        }
+                        alert('An error occurred while fetching the product.');
+                    }
+                });
+            } else {
+                loadProducts(currentPage);
+            }
+        });
+
+        loadProducts(currentPage);
+    });
+</script>
+</body>
+</html>

@@ -1,7 +1,8 @@
 package boomerang.board.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
+@Getter
 public enum BoardType {
     ENTIRE("ENTIRE"), SECRETE("SECRETE"), LOCATION("LOCATION"), STEP("STEP");
 
@@ -10,10 +11,4 @@ public enum BoardType {
     BoardType(String name) {
         this.name = name;
     }
-
-    @JsonValue
-    public String getName() {
-        return name;
-    }
 }
-

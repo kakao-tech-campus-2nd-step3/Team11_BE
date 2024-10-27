@@ -1,33 +1,21 @@
 package boomerang.comment.controller;
 
-import boomerang.comment.domain.Comment;
-import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.comment.dto.CommentResponseDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
-import boomerang.global.response.PageResponseDto;
 import boomerang.global.utils.ResponseHelper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -37,36 +25,35 @@ public class CommentController {
 
     //댓글 조회
     @GetMapping("/board/{board_id}/comments")
-    public ResponseEntity<PageResponseDto<CommentResponseDto>> getAllComment(@PathVariable("board_id") Long boardId, CommentListRequestDto commentListRequestDto) {
-        Page<Comment> commentPage = commentService.getAllComment(boardId, commentListRequestDto);
-        Page<CommentResponseDto> commentResponsePage = commentPage.map(CommentResponseDto::new);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new PageResponseDto<>(commentResponsePage));
+    public ResponseEntity<?> getAllComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("board_id") Long boardId,
+                                           Pageable pageable) {
+        Page<CommentResponseDto> commentResponsePage = commentService.getAllComment(principalDetails, boardId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(commentResponsePage);
     }
 
     //댓글 생성
     @PostMapping("/board/{board_id}/comments")
-    public ResponseEntity<Void> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("board_id") Long boardId,
-                                              @Valid @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<?> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("board_id") Long boardId,
+                                           @RequestBody CommentRequestDto commentRequestDto) {
         commentService.createComment(principalDetails.getMemberEmail(), boardId, commentRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //댓글 수정
     @PutMapping("/board/comments/{comment_id}")
-    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("comment_id") Long commentId,
-                                              @Valid @RequestBody CommentRequestDto commentRequestDto) {
+    public ResponseEntity<?> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("comment_id") Long commentId,
+                                           @RequestBody CommentRequestDto commentRequestDto) {
         commentService.updateComment(principalDetails.getMemberEmail(), commentId, commentRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //댓글 삭제
     @DeleteMapping("/board/comments/{comment_id}")
-    public ResponseEntity<Void> deleteComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("comment_id") Long commentId) {
+    public ResponseEntity<?> deleteComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("comment_id") Long commentId) {
         commentService.deleteComment(principalDetails.getMemberEmail(), commentId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -74,7 +61,7 @@ public class CommentController {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseDto> handleOptionValidException(BusinessException e) {
-        log.error(e.toString());
+        System.out.println(e);
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
 

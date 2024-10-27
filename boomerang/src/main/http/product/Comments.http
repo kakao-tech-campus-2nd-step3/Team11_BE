@@ -1,0 +1,27 @@
+### get comments
+GET http://localhost:8080/api/v1/board/1/comments
+
+### create comments
+POST http://localhost:8080/api/v1/board/1/comments
+Content-Type: application/json
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzI4MzA2NTU3LCJleHAiOjI0MTcyODMwNjU1N30.kJspGPoUS2HbpgvYh6hNpaC2FQp9SX76-hJ_CvBr__8
+
+{
+  "text": "댓글o"
+}
+
+
+
+### update comments
+PUT http://localhost:8080/api/v1/board/comments/{{comment_id}}
+Content-Type: application/json
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+
+{
+    "text": "댓글수정!"
+}
+
+### delete comments
+DELETE http://localhost:8080/api/v1/board/comments/{{comment_id}}
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
+

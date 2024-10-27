@@ -1,23 +1,17 @@
 package boomerang.board.domain;
 
-import boomerang.IsDeleted;
 import boomerang.board.dto.BoardRequestDto;
-import boomerang.comment.domain.Comment;
-import boomerang.like.domain.Like;
 import boomerang.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Entity
+@Builder
 @Table(name = "board")
 public class Board {
     @Id
@@ -26,9 +20,9 @@ public class Board {
 
     private String title;
 
-    private String content;
+    private String subtitle;
 
-    private String writerEmail;
+    private String content;
 
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
@@ -39,37 +33,32 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private AnonymousStatus anonymousStatus;
 
-    private Long likeCount = 0L;
-
-    private Long commentCount = 0L;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Board 데이터를 들고 올 때마다 작성자가 누구인지 가져오는 것은 필수이다
+    // 그렇다면, Member 를 Lazy 로 하고 작성자를 따로 저장하는 것이 좋을까
+    // 아니면, 매번 EAGER 로 가져오는 것이 좋을까?
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    public Board() {
+    }
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private IsDeleted isDeleted;
-
-    protected Board() {
+    public Board(Long id, String title, String subtitle, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus, Member member) {
+        this.id = id;
+        this.title = title;
+        this.subtitle = subtitle;
+        this.content = content;
+        this.boardType = boardType;
+        this.location = location;
+        this.anonymousStatus = anonymousStatus;
+        this.member = member;
     }
 
     // DTO를 사용하는 생성자
     public Board(BoardRequestDto boardRequestDto, Member member) {
         this.title = boardRequestDto.getTitle();
+        this.subtitle = boardRequestDto.getSubtitle();
         this.content = boardRequestDto.getContent();
-        this.writerEmail = member.getEmail();
         this.boardType = boardRequestDto.getBoardType();
         this.location = boardRequestDto.getLocation();
         this.anonymousStatus = boardRequestDto.getAnonymousStatus();
@@ -80,28 +69,12 @@ public class Board {
     public Board(Long id, BoardRequestDto boardRequestDto, Member member) {
         this.id = id;
         this.title = boardRequestDto.getTitle();
-        this.writerEmail = member.getEmail();
+        this.subtitle = boardRequestDto.getSubtitle();
         this.content = boardRequestDto.getContent();
         this.boardType = boardRequestDto.getBoardType();
         this.location = boardRequestDto.getLocation();
         this.anonymousStatus = boardRequestDto.getAnonymousStatus();
         this.member = member;
-    }
-
-    public void increaseLikeCount() {
-        likeCount += 1;
-    }
-
-    public void increaseCommentCount() {
-        commentCount += 1;
-    }
-
-    public void decreaseLikeCount() {
-        likeCount -= 1;
-    }
-
-    public void decreaseCommentCount() {
-        commentCount -= 1;
     }
 
 
@@ -117,9 +90,5 @@ public class Board {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public String getWriterName() {
-        return this.member.getNickname();
     }
 }

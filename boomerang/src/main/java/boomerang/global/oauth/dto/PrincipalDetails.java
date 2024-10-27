@@ -1,7 +1,6 @@
 package boomerang.global.oauth.dto;
 
 import boomerang.member.domain.Member;
-import boomerang.member.domain.MemberRole;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;
@@ -12,9 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class PrincipalDetails implements UserDetails {
     private Member member;
 
-    public MemberRole getMemberRole() {
-        return member.getMemberRole();
-    }
     public void setMember(Member member) {
         this.member = member;
     }
@@ -65,7 +61,7 @@ public class PrincipalDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { //타입이 특이하군용..?!
         Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(()-> "ROLE_"+ member.getMemberRole());
+        collection.add(()-> "ROLE_"+ member.getMemberType());
         return collection;
     }
 }
