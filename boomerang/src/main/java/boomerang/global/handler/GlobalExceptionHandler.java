@@ -30,11 +30,19 @@ public class GlobalExceptionHandler {
         return ResponseHelper.createErrorResponse(errorCode);
     }
 
-    @Order(2)
+    @Order(3)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error(Arrays.toString(e.getStackTrace()));
         ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
         return ResponseHelper.createErrorResponse(errorCode);
+    }
+
+    @Order(2)
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(IllegalStateException e) {
+        log.error(Arrays.toString(e.getStackTrace()));
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        return ResponseHelper.createErrorResponse(errorCode,e.getMessage());
     }
 }
