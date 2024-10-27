@@ -1,11 +1,9 @@
 package boomerang.board.controller;
 
 import boomerang.board.domain.Board;
-import boomerang.board.dto.BoardBestListRequestDto;
-import boomerang.board.dto.BoardListRequestDto;
-import boomerang.board.dto.BoardRequestDto;
-import boomerang.board.dto.BoardResponseDto;
+import boomerang.board.dto.*;
 import boomerang.board.service.BoardService;
+import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.DomainValidationException;
@@ -44,30 +42,30 @@ public class BoardController {
     }
 
     @GetMapping("/best")
-    public ResponseEntity<PageResponseDto> getBestBoards(
+    public ResponseEntity<PageResponseDto<BoardResponseDto>> getBestBoards(
             @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
-        Page<Board> boradPage = boardService.getBestBoards(boardBestListRequestDto);
-
+        Page<Board> boardPage = boardService.getBestBoards(boardBestListRequestDto);
+        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new PageResponseDto(boradPage));
+                .body(new PageResponseDto<>(boardResponsePage));
     }
 
     @GetMapping
-    public ResponseEntity<PageResponseDto> getAllBoards(
+    public ResponseEntity<PageResponseDto<BoardResponseDto>> getAllBoards(
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
-        Page<Board> boradPage = boardService.getAllBoards(boardListRequestDto);
-
+        Page<Board> boardPage = boardService.getAllBoards(boardListRequestDto);
+        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new PageResponseDto(boradPage));
+                .body(new PageResponseDto<>(boardResponsePage));
     }
 
     @GetMapping("/{board_id}")
-    public ResponseEntity<BoardResponseDto> getBoardById(
+    public ResponseEntity<BoardDetailResponseDto> getBoardById(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "board_id") Long boardId) {
         Board board = boardService.getBoard(boardId);
-        PageResponseDto commentListResponseDto =
-                new PageResponseDto(commentService.getAllComment(boardId, new CommentListRequestDto()));
+        PageResponseDto<Comment> commentListResponseDto =
+                new PageResponseDto<>(commentService.getAllComment(boardId, new CommentListRequestDto()));
 
         boolean isLiked = false;
 
@@ -77,7 +75,7 @@ public class BoardController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new BoardResponseDto(board, commentListResponseDto, isLiked));
+                .body(new BoardDetailResponseDto(board, commentListResponseDto, isLiked));
     }
 
     @PostMapping
