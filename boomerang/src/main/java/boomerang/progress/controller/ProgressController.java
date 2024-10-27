@@ -1,6 +1,8 @@
 package boomerang.progress.controller;
 
+import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
+import boomerang.global.response.ErrorCode;
 import boomerang.progress.domain.MainStepEnum;
 import boomerang.progress.domain.ProgressType;
 import boomerang.progress.domain.SubStepEnum;
@@ -55,6 +57,7 @@ public class ProgressController {
     public ResponseEntity<?> getSubStepStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum){
+        validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
         SubStepResponseDto subStepResponseDto = progressService.getSubStepStatus(principalDetails, mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
@@ -63,6 +66,7 @@ public class ProgressController {
     public ResponseEntity<?> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
+        validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
         SubStepResponseDto subStepResponseDto = progressService.completeProgress(principalDetails, mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
@@ -71,7 +75,15 @@ public class ProgressController {
     public ResponseEntity<?> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
+        validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
         SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(principalDetails, mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
+
+    private void validMatchingOfMainStepAndSubStep(MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+        if (!mainStepEnum.isMatchingMainAndSub(subStepEnum)) {
+            throw new BusinessException(ErrorCode.PROGRESS_SUB_MAIN_DO_NOT_MATCH);
+        }
+    }
+
 }
