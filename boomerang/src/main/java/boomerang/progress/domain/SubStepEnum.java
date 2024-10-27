@@ -6,15 +6,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SubStepEnum {
-    SUB_STEP_1("sub_step1", MainStepEnum.MAIN_STEP_1),
-    SUB_STEP_2("sub_step2", MainStepEnum.MAIN_STEP_1);
+    SUB_STEP_1("서브단계1"),
+    SUB_STEP_2("서브단계2");
 
     private final String subStepName;
-    private final MainStepEnum mainStepEnum;
 
-    SubStepEnum(String subStepName, MainStepEnum mainStepEnum) {
+    SubStepEnum(String subStepName) {
         this.subStepName = subStepName;
-        this.mainStepEnum = mainStepEnum;
     }
 
     @JsonValue
@@ -31,10 +29,4 @@ public enum SubStepEnum {
         }
         throw new BusinessException(ErrorCode.PROGRESS_SUB_INVALID_NAME);
     }
-
-
-    public boolean isMatchingMainStep(MainStepEnum mainStepEnum) {
-        return this.mainStepEnum == mainStepEnum;
-    }
-
 }
