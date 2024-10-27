@@ -6,4 +6,5 @@ import boomerang.progress.domain.*;
 
 public interface ProgressStrategy {
     Progress makeProgress(Member member);
+    void isValidMainStepForProgressType(MainStepEnum mainStepEnum);
 }

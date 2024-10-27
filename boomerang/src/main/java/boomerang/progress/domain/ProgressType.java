@@ -7,20 +7,18 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 
 public enum ProgressType {
-    A("A타입", "보험 미가입 / 계약 미해지", List.of(MainStepEnum.MAIN_STEP_1, MainStepEnum.MAIN_STEP_3)),
-    B("B타입", "보험 가입 / 계약 미해지", List.of(MainStepEnum.MAIN_STEP_2)),
-    C("C타입", "보험 미가입 / 계약 해지", List.of(MainStepEnum.MAIN_STEP_1)),
-    D("D타입", "보험 가입 / 계약 해지", List.of(MainStepEnum.MAIN_STEP_3));
+    A("A타입", "보험 미가입 / 계약 미해지"),
+    B("B타입", "보험 가입 / 계약 미해지"),
+    C("C타입", "보험 미가입 / 계약 해지"),
+    D("D타입", "보험 가입 / 계약 해지");
 
 
     private final String typeName;
     private final String description;
-    private final List<MainStepEnum> mainStepEnums;
 
-    ProgressType(String typeName, String description,  List<MainStepEnum> mainStepEnums) {
+    ProgressType(String typeName, String description) {
         this.typeName = typeName;
         this.description = description;
-        this.mainStepEnums = mainStepEnums;
     }
 
     public String getTypeName() {
@@ -31,9 +29,7 @@ public enum ProgressType {
         return description;
     }
 
-    public List<MainStepEnum> getMainStepEnums() {
-        return mainStepEnums;
-    }
+
 
     //DB에는 타입명만 올라갈 수 있도록 오버라이딩
     @Override
