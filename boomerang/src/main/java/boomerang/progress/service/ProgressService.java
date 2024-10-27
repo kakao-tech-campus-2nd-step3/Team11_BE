@@ -65,9 +65,11 @@ public class ProgressService {
     //특정 메인 단계만 조회
     @Transactional(readOnly = true)
     public MainStepResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
-        System.out.println("mainStepEnum = " + mainStepEnum.getMainStepName());
+
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
+        ProgressStrategy progressStrategy = ProgressStrategyFactory.getStrategy(progress.getProgressType());
+        progressStrategy.isValidMainStepForProgressType(mainStepEnum);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
 
@@ -81,6 +83,8 @@ public class ProgressService {
                                                SubStepEnum subStepEnum) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
+        ProgressStrategy progressStrategy = ProgressStrategyFactory.getStrategy(progress.getProgressType());
+        progressStrategy.isValidMainStepForProgressType(mainStepEnum);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
@@ -94,6 +98,9 @@ public class ProgressService {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
+        ProgressStrategy progressStrategy = ProgressStrategyFactory.getStrategy(progress.getProgressType());
+        progressStrategy.isValidMainStepForProgressType(mainStepEnum);
+
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
@@ -107,6 +114,9 @@ public class ProgressService {
     public SubStepResponseDto revertProgressToIncomplete(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
+        ProgressStrategy progressStrategy = ProgressStrategyFactory.getStrategy(progress.getProgressType());
+        progressStrategy.isValidMainStepForProgressType(mainStepEnum);
+
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
