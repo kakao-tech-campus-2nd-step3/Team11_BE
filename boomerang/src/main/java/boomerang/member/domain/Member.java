@@ -90,5 +90,9 @@ public class Member {
         return Objects.hash(id, email);
     }
 
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package boomerang.member.service;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
 import boomerang.member.domain.RandonNickname;
@@ -82,6 +84,17 @@ public class MemberService {
 //        String uniqueNickname = (maxSuffix == null) ? baseNickname : baseNickname + (maxSuffix + 1);
 
         return baseNickname;
+    }
+
+    public void updateNickname(Long id, String newNickname) {
+        Member member = getMember(id);
+
+        if(memberRepository.existsByNickname(newNickname)) {
+            throw new BusinessException(ErrorCode.DUPLICATE_NICKNAME_ERROR);
+        }
+
+        member.updateNickname(newNickname);
+        memberRepository.save(member);
     }
 
 }

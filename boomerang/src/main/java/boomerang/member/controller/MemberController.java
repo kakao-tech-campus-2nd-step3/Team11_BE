@@ -3,6 +3,9 @@ package boomerang.member.controller;
 import boomerang.global.utils.CookieUtil;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
+import boomerang.member.dto.MemberCreateResponseDto;
+import boomerang.member.dto.NicknameUpdateRequestDto;
+import boomerang.member.dto.RandomNicknameCreateResponseDTO;
 import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
@@ -81,6 +84,14 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new RandomNicknameCreateResponseDTO(nickname));
     }
+
+    @PutMapping("/random_nickname/update")
+    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        memberService.updateNickname(member.getId(), requestDto.getNewNickname());
+        MemberCreateResponseDto response = new MemberCreateResponseDto(member.getEmail(),member.getNickname());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,
