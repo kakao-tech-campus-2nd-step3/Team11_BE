@@ -7,8 +7,9 @@ import boomerang.member.domain.RandonNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MemberService {
@@ -34,23 +35,23 @@ public class MemberService {
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     public String createMember(MemberServiceDto memberCreateServiceDto) {
         Member member = memberRepository.save(memberCreateServiceDto.toMemberDomain());
-        return jwtUtil.generateToken(member.getId(),member.getEmail());
+        return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
     public String loginKakaoMember(KakaoMember kakaoMember) {
-        String email= kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
+        String email = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         String nickname = generateUniqueNickname();// 카카오 닉네임이 아닌 랜덤 닉네임 생성기로부터 닉네임 받기
         System.out.println("email = " + email);
         MemberServiceDto memberCreateServiceDto = new MemberServiceDto(email, nickname);
 
         Member member = memberRepository.findByEmail(email)
-            .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));
-        return jwtUtil.generateToken(member.getId(),member.getEmail());
+                .orElseGet(() -> memberRepository.save(memberCreateServiceDto.toMemberDomain()));
+        return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
     public Member updateMember(MemberServiceDto memberCreateServiceDto) {

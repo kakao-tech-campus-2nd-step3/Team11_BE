@@ -28,6 +28,11 @@ public class MainStep {
     @OneToMany(mappedBy = "mainStep", cascade = CascadeType.ALL)
     private List<SubStep> subStepList;
 
+    public MainStep(MainStepEnum name, Progress progress) {
+        this.name = name;
+        this.progress = progress;
+    }
+
     public String getName() {
         return this.name.getMainStepName();
     }
@@ -35,12 +40,6 @@ public class MainStep {
     public MainStepEnum getMainStepEnum() {
         return this.name;
     }
-
-    public MainStep(MainStepEnum name, Progress progress) {
-        this.name = name;
-        this.progress = progress;
-    }
-
 
     public void registerSubStepList(List<SubStep> subStepList) {
         this.subStepList = subStepList;

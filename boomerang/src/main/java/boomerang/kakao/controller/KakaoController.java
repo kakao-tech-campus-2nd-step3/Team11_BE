@@ -10,17 +10,13 @@ import boomerang.kakao.dto.KakaoTokenResponseDto;
 import boomerang.kakao.service.KakaoService;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -29,27 +25,24 @@ public class KakaoController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
+    @Value("${client_id}")
+    private String clientId;
+    @Value("${app.server.ip}")
+    private String serverIp;
 
     public KakaoController(KakaoService kakaoService, MemberService memberService,
-        JwtUtil jwtUtil) {
+                           JwtUtil jwtUtil) {
         this.kakaoService = kakaoService;
         this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
-
-    @Value("${client_id}")
-    private String clientId;
-
-    @Value("${app.server.ip}")
-    private String serverIp;
-
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
         String redirectUri = String.format("http://%s:8080/api/v1/auth/login/callback", serverIp);
         String authorizationUrl = String.format(
-            "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s",
-            clientId, redirectUri
+                "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s",
+                clientId, redirectUri
         );
         response.sendRedirect(authorizationUrl);
     }
@@ -63,7 +56,7 @@ public class KakaoController {
         response.addCookie(CookieUtil.createCookies(token));
         System.out.println("token = " + token);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                .build();
     }
 
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProgressDetailsResponseDto  {
+public class ProgressDetailsResponseDto {
     private ProgressType progressType; //유저의 타입
     private List<MainStepResponseDto> mainStepList;
 

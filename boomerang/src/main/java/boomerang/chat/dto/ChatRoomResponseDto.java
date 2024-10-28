@@ -2,6 +2,7 @@ package boomerang.chat.dto;
 
 import boomerang.chat.domain.ChatRoom;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter

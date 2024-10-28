@@ -25,7 +25,7 @@ public class PrincipalService implements UserDetailsService {
 
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
         return new PrincipalDetails(member);
     }    // 필수 메서드 구현 (UserDetailsService 인터페이스의 메서드)
 

@@ -5,12 +5,13 @@ import boomerang.global.response.ErrorCode;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import io.jsonwebtoken.JwtException;
-import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
@@ -43,6 +44,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleException(IllegalStateException e) {
         log.error(Arrays.toString(e.getStackTrace()));
         ErrorCode errorCode = ErrorCode.BAD_REQUEST;
-        return ResponseHelper.createErrorResponse(errorCode,e.getMessage());
+        return ResponseHelper.createErrorResponse(errorCode, e.getMessage());
     }
 }

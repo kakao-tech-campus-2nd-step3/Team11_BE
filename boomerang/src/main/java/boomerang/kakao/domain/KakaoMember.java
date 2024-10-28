@@ -14,10 +14,12 @@ public record KakaoMember(KakaoProfile kakaoProfile) {
     }
 
 
-    public Long id() { return kakaoProfile.id(); }
+    public Long id() {
+        return kakaoProfile.id();
+    }
 
     public MemberCreateRequestDto toMember() {
-        return new MemberCreateRequestDto(this.email(),this.nickname());
+        return new MemberCreateRequestDto(this.email(), this.nickname());
     }
 
 }

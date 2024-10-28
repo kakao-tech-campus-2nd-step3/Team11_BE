@@ -38,7 +38,7 @@ public class ProgressService {
 
         ProgressType progressType = ProgressTypeResolver.checkType(progressTypeRequestDto);
 
-        Progress savedProgress = progressRepository.save(ProgressFactory.makeProgress(progressType,member));
+        Progress savedProgress = progressRepository.save(ProgressFactory.makeProgress(progressType, member));
         member.registerProgress(savedProgress);
 
         return progressType;

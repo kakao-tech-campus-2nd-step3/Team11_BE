@@ -2,9 +2,10 @@ package boomerang.chat.domain;
 
 import boomerang.member.domain.Member;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Entity

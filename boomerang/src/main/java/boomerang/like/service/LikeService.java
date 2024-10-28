@@ -59,14 +59,14 @@ public class LikeService {
         Board board = boardService.getBoard(boardId);
 
         Like like = likeRepository.findByMemberAndBoardAndIsDeletedFalse(loginMember, board)
-            .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.LIKE_NOT_FOUND));
 
         like.delete();
         board.decreaseLikeCount();
     }
 
     private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn,
-        Member loginMember) {
+                                                  Member loginMember) {
         if (!isUserLoggedIn) {
             return new LikeResponseDto(like, false);
         }

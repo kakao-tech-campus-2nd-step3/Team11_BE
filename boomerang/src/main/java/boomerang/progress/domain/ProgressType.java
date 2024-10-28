@@ -17,7 +17,7 @@ public enum ProgressType {
     private final String description;
     private final List<MainStepEnum> mainStepEnums;
 
-    ProgressType(String typeName, String description,  List<MainStepEnum> mainStepEnums) {
+    ProgressType(String typeName, String description, List<MainStepEnum> mainStepEnums) {
         this.typeName = typeName;
         this.description = description;
         this.mainStepEnums = mainStepEnums;

@@ -24,18 +24,18 @@ public class SubStep {
 
     private boolean completion;
 
+    public SubStep(MainStep mainStep, SubStepEnum name) {
+        this.name = name;
+        this.mainStep = mainStep;
+        this.completion = false;
+    }
+
     public String getName() {
         return this.name.getSubStepName();
     }
 
     public SubStepEnum getSubStepEnum() {
         return this.name;
-    }
-
-    public SubStep(MainStep mainStep, SubStepEnum name) {
-        this.name = name;
-        this.mainStep = mainStep;
-        this.completion = false;
     }
 
     public void markAsComplete() {

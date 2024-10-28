@@ -4,13 +4,13 @@ import boomerang.IsDeleted;
 import boomerang.progress.domain.Progress;
 import boomerang.progress.domain.ProgressType;
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "member")

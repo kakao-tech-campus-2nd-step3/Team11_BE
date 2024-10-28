@@ -17,7 +17,7 @@ public enum ErrorCode {
     // Like
     DUPLICATE_LIKE_ERROR(HttpStatus.BAD_REQUEST, "LK001", "Duplicate Like Error"),
     NOT_MEMBERS_LIKE_ERROR(HttpStatus.FORBIDDEN, "LK002", "Not Members Like Error"),
-    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT,"LK003" ,"이미 좋아요한 게시물입니다." ),
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "LK003", "이미 좋아요한 게시물입니다."),
     LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "LK004", "해당 좋아요를 찾을 수 없습니다."),
 
     // Board

@@ -9,21 +9,14 @@ import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -45,7 +38,7 @@ public class MemberController {
     // 시큐리티 필터 테스트 컨트롤러
     @GetMapping
     public ResponseEntity<Member> getMember(
-        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(member);
@@ -75,12 +68,12 @@ public class MemberController {
     }
 
     @PostMapping("/random_nickname")
-    public ResponseEntity<Map> generateRandomNickname(){
+    public ResponseEntity<Map> generateRandomNickname() {
         String nickname = memberService.generateUniqueNickname();
         Map<String, Object> response = new HashMap<>();
         response.put("랜덤 닉네임", nickname);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+                .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,
