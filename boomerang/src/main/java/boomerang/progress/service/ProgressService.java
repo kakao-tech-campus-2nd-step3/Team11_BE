@@ -95,6 +95,10 @@ public class ProgressService {
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
 
+        if (subStep.isCompletion()) {
+            throw new BusinessException(ErrorCode.PROGRESS_ALREADY_COMPLETED);
+        }
+
         subStep.markAsComplete();
         return new SubStepResponseDto(subStep);
     }
@@ -108,6 +112,9 @@ public class ProgressService {
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
 
+        if (!subStep.isCompletion()) {
+            throw new BusinessException(ErrorCode.PROGRESS_ALREADY_INCOMPLETE);
+        }
         subStep.markAsIncomplete();
         return new SubStepResponseDto(subStep);
 

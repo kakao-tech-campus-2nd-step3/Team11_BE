@@ -49,6 +49,10 @@ public enum ErrorCode {
     PROGRESS_SUB_MAIN_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "PG008", "서브단계와 메인 단계가 적절하게 매칭되지 않습니다."),
     PROGRESS_NOT_INCLUDED_SUB(HttpStatus.NOT_FOUND, "PG009", "유저의 피해타입은 해당 세부단계를 가지고 있지 않습니다."),
     PROGRESS_NOT_INCLUDED_MAIN(HttpStatus.NOT_FOUND, "PG010", "유저의 피해타입은 해당 메인단계를 가지고 있지 않습니다."),
+    PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 미완료 단계입니다"),
+    PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
+
+
     // Chat
     CHATROOM_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.FORBIDDEN, "CH001", "채팅방에 대한 소유 권한이 없습니다."),
     CHATROOM_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CH002", "해당 채팅방을 찾을 수 없습니다."),
