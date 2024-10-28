@@ -24,14 +24,14 @@ public class ProgressController {
 
     private final ProgressService progressService;
 
-    @PostMapping("/progress/type")
+    @PostMapping("/progress/type")//타입 검사
     public ResponseEntity<?> checkUserType(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @RequestBody ProgressTypeRequestDto progressTypeRequestDto) {
         ProgressType progressTypeOfMember = progressService.checkUserType(principalDetails, progressTypeRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(progressTypeOfMember);
     }
 
-    @GetMapping("/progress/type")
+    @GetMapping("/progress/type")//유저의 타입 정보
     public ResponseEntity<?> getUserType(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         ProgressType progressTypeOfMember = progressService.getUserType(principalDetails);
         return ResponseEntity.status(HttpStatus.OK).body(progressTypeOfMember);
@@ -62,7 +62,7 @@ public class ProgressController {
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
-    @PostMapping("/progress/{main}/{sub}")
+    @PostMapping("/progress/{main}/{sub}")//특정 서브단계 완료로 변경
     public ResponseEntity<?> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
@@ -71,7 +71,7 @@ public class ProgressController {
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
-    @DeleteMapping("/progress/{main}/{sub}")
+    @DeleteMapping("/progress/{main}/{sub}")//특정 서브단계 미완료로 변경
     public ResponseEntity<?> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                         @PathVariable("main") MainStepEnum mainStepEnum,
                                                         @PathVariable("sub") SubStepEnum subStepEnum) {
