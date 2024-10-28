@@ -2,6 +2,8 @@ package boomerang.global.utils;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.oauth.service.PrincipalService;
+import boomerang.global.properties.ClientServerProperties;
+import boomerang.member.domain.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,10 +19,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
+    private final ClientServerProperties clientServerProperties;
 
-    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService) {
+    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService, ClientServerProperties clientServerProperties) {
         this.jwtUtil = jwtUtil;
         this.principalService = principalService;
+        this.clientServerProperties = clientServerProperties;
     }
 
     @Override
@@ -78,9 +82,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
-//        if (memberDetail.getMemberRole() == MemberRole.INCOMPLETE_USER) {
-//            filterChain.doFilter(request, response);
-//        }
+        if (memberDetail.getMemberRole() == MemberRole.INCOMPLETE_USER) {
+            response.sendRedirect(clientServerProperties.getWelcome());
+            filterChain.doFilter(request, response);
+        }
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.getAuthorities());
