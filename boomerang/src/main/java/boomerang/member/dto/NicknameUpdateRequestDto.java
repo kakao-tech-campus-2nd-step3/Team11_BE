@@ -3,6 +3,7 @@ package boomerang.member.dto;
 import lombok.Getter;
 
 @Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)    
 public class NicknameUpdateRequestDto {
     private String newNickname;
 
