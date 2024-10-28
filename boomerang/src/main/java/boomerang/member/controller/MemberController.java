@@ -1,17 +1,18 @@
 package boomerang.member.controller;
 
+import boomerang.global.utils.CookieUtil;
+import boomerang.member.domain.Member;
+import boomerang.member.dto.MemberCreateRequestDto;
+import boomerang.member.dto.MemberCreateResponseDto;
+import boomerang.member.dto.NicknameUpdateRequestDto;
+import boomerang.member.dto.RandomNicknameCreateResponseDTO;
+import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
-import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
-import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.service.MemberService;
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -74,13 +75,20 @@ public class MemberController {
                 .build();
     }
 
-    @PostMapping("/random_nickname")
-    public ResponseEntity<Map> generateRandomNickname(){
+    @GetMapping("/random-nickname")
+    public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname(){
         String nickname = memberService.generateUniqueNickname();
-        Map<String, Object> response = new HashMap<>();
-        response.put("랜덤 닉네임", nickname);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(response);
+            .body(new RandomNicknameCreateResponseDTO(nickname));
+    }
+
+    @PutMapping("/nickname")
+    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        memberService.updateNickname(member.getId(), requestDto.getNewNickname());
+        MemberCreateResponseDto response = new MemberCreateResponseDto(member.getEmail(),member.getNickname());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,

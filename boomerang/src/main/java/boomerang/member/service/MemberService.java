@@ -1,9 +1,11 @@
 package boomerang.member.service;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.global.utils.JwtUtil;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
-import boomerang.member.domain.RandonNickname;
+import boomerang.member.domain.RandomNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
@@ -14,9 +16,9 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-    private final RandonNickname randomNicknameGenerator;
+    private final RandomNickname randomNicknameGenerator;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandonNickname randomNicknameGenerator) {
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandomNickname randomNicknameGenerator) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.randomNicknameGenerator = randomNicknameGenerator;
@@ -81,6 +83,17 @@ public class MemberService {
 //        String uniqueNickname = (maxSuffix == null) ? baseNickname : baseNickname + (maxSuffix + 1);
 
         return baseNickname;
+    }
+
+    public void updateNickname(Long id, String newNickname) {
+        Member member = getMember(id);
+
+        if(memberRepository.existsByNickname(newNickname)) {
+            throw new BusinessException(ErrorCode.DUPLICATE_NICKNAME_ERROR);
+        }
+
+        member.updateNickname(newNickname);
+        memberRepository.save(member);
     }
 
 }
