@@ -75,7 +75,7 @@ public class MemberController {
                 .build();
     }
 
-    @GetMapping("/random_nickname")
+    @GetMapping("/random-nickname")
     public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname(){
         String nickname = memberService.generateUniqueNickname();
         return ResponseEntity.status(HttpStatus.CREATED)
