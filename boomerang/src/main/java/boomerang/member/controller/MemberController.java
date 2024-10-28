@@ -75,14 +75,14 @@ public class MemberController {
                 .build();
     }
 
-    @PostMapping("/random_nickname")
+    @GetMapping("/random_nickname")
     public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname(){
         String nickname = memberService.generateUniqueNickname();
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new RandomNicknameCreateResponseDTO(nickname));
     }
 
-    @PutMapping("/random_nickname/update")
+    @PutMapping("/nickname")
     public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         memberService.updateNickname(member.getId(), requestDto.getNewNickname());
