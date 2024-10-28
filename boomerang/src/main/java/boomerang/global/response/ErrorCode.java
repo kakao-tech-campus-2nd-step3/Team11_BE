@@ -7,6 +7,7 @@ public enum ErrorCode {
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EG001", "Unexpected Error"),
     ACCESS_TOKEN_NOT_EXISTS_ERROR(HttpStatus.BAD_REQUEST, "EG002", "Access Token Not Exists Error"),
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
+    COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG004", "닉네임 쿠키 생성중 오류가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
