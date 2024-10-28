@@ -2,6 +2,7 @@ package boomerang.global.config;
 
 import boomerang.global.handler.SecurityAuthenticationEntryPoint;
 import boomerang.global.oauth.service.PrincipalService;
+import boomerang.global.properties.ClientServerProperties;
 import boomerang.global.utils.JwtFilter;
 import boomerang.global.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
+    private final ClientServerProperties clientServerProperties;
 
 
     @Bean
@@ -81,7 +83,7 @@ public class SecurityConfig {
 
         //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
         http
-                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil, principalService, clientServerProperties), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(handeler -> handeler.authenticationEntryPoint(new SecurityAuthenticationEntryPoint()));
 
         //경로별 인가 작업
