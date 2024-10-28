@@ -3,13 +3,14 @@ package boomerang.progress.util;
 
 import boomerang.member.domain.Member;
 import boomerang.progress.domain.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-public class ProgressAStrategy implements ProgressStrategy {
-    @Override
-    public Progress makeProgress(Member member) {
-        ProgressType progressType = ProgressType.A;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ProgressFactory {
+    public static Progress makeProgress(ProgressType progressType, Member member) {
         List<MainStepEnum> mainStepEnumList = progressType.getMainStepEnums();
 
         Progress progress = new Progress(member, progressType);
@@ -17,7 +18,7 @@ public class ProgressAStrategy implements ProgressStrategy {
                 .map(
                         mainStepEnum ->
                         {
-                            MainStep mainStep = new MainStep(mainStepEnum,progress);
+                            MainStep mainStep = new MainStep(mainStepEnum, progress);
                             List<SubStep> subStepList = mainStepEnum.getSubStepEnumList()
                                     .stream()
                                     .map(subStepEnum -> new SubStep(mainStep, subStepEnum)).toList();

@@ -11,8 +11,7 @@ import boomerang.progress.dto.ProgressDetailsResponseDto;
 import boomerang.progress.dto.ProgressTypeRequestDto;
 import boomerang.progress.dto.SubStepResponseDto;
 import boomerang.progress.repository.ProgressRepository;
-import boomerang.progress.util.ProgressStrategy;
-import boomerang.progress.util.ProgressStrategyFactory;
+import boomerang.progress.util.ProgressFactory;
 import boomerang.progress.util.ProgressTypeResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,8 +38,7 @@ public class ProgressService {
 
         ProgressType progressType = ProgressTypeResolver.checkType(progressTypeRequestDto);
 
-        ProgressStrategy progressStrategy = ProgressStrategyFactory.getStrategy(progressType);
-        Progress savedProgress = progressRepository.save(progressStrategy.makeProgress(member));
+        Progress savedProgress = progressRepository.save(ProgressFactory.makeProgress(progressType,member));
         member.registerProgress(savedProgress);
 
         return progressType;
@@ -65,7 +63,6 @@ public class ProgressService {
     //특정 메인 단계만 조회
     @Transactional(readOnly = true)
     public MainStepResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
-        System.out.println("mainStepEnum = " + mainStepEnum.getMainStepName());
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
