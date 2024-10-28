@@ -60,6 +60,11 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Progress progress;
 
+
+    protected Member() {
+    }
+
+
     public Member(MemberServiceDto memberServiceDto) {
         this.email = memberServiceDto.getEmail();
         this.nickname = memberServiceDto.getNickname();
