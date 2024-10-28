@@ -87,8 +87,8 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/v1/board/comments/**","/api/v1/progress/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
-                        .requestMatchers("/api/v1/board/comments/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
                         .requestMatchers("/api/v1/chat/**").permitAll()  // 채팅 경로 모두 허용
