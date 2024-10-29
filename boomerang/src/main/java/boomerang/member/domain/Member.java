@@ -60,6 +60,8 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Progress progress;
 
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
 
     protected Member() {
     }
@@ -117,5 +119,7 @@ public class Member {
         this.memberRole = MemberRole.COMPLETE_USER;
     }
 
-
+    public void verifyEmail() {
+        this.emailVerified = true;
+    }
 }
