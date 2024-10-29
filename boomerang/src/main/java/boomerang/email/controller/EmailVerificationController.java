@@ -5,9 +5,7 @@ import boomerang.email.dto.EmailVerificationRequestDto;
 import boomerang.email.dto.EmailVerificationResponseDto;
 import boomerang.email.service.EmailVerificationService;
 import boomerang.global.oauth.dto.PrincipalDetails;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +25,9 @@ public class EmailVerificationController {
     // 이메일 인증 코드 발송
     @PostMapping
     public ResponseEntity<EmailVerificationResponseDto> sendVerificationEmail(
-        @Valid @RequestBody EmailSendRequestDto requestDto){
-        EmailVerificationResponseDto responseDto = emailVerificationService.sendVerificationEmail(requestDto.getEmail());
+        @Valid @RequestBody EmailSendRequestDto requestDto) {
+        EmailVerificationResponseDto responseDto = emailVerificationService.sendVerificationEmail(
+            requestDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
