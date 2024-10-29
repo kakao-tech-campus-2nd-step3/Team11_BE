@@ -26,12 +26,7 @@ public class LikeController {
     public ResponseEntity<LikeSummaryResponseDto> getLikesByBoardId(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        String email = null;
-        if (principalDetails != null) {
-            email = principalDetails.getMemberEmail();
-        }
-
-        LikeSummaryResponseDto summary = likeService.getLikeSummary(email, boardId);
+        LikeSummaryResponseDto summary = likeService.getLikeSummary(principalDetails, boardId);
         return ResponseEntity.ok(summary);
     }
 
@@ -39,7 +34,7 @@ public class LikeController {
     public ResponseEntity<LikeResponseDto> createLike(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        LikeResponseDto likeResponseDto = likeService.createLike(principalDetails.getMemberEmail(), boardId);
+        LikeResponseDto likeResponseDto = likeService.createLike(principalDetails, boardId);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeResponseDto);
     }
 
@@ -47,7 +42,7 @@ public class LikeController {
     public ResponseEntity<Void> deleteLike(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
-        likeService.deleteLike(principalDetails.getMemberEmail(), boardId);
+        likeService.deleteLike(principalDetails, boardId);
         return ResponseEntity.noContent().build();
     }
 }

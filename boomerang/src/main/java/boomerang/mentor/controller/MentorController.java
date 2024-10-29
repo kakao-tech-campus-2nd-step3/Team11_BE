@@ -1,7 +1,6 @@
 package boomerang.mentor.controller;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
-import boomerang.global.response.PageResponseDto;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorResponseDto;
 import boomerang.mentor.dto.MentorUpdateRequestDto;
@@ -33,10 +32,10 @@ public class MentorController {
 
     // 멘토 조회
     @GetMapping
-    public ResponseEntity<PageResponseDto> getAllMentors(
+    public ResponseEntity<Page<MentorResponseDto>> getAllMentors(
         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<MentorResponseDto> mentors = mentorService.getAllMentors(pageable);
-        return ResponseEntity.ok(new PageResponseDto(mentors));
+        return ResponseEntity.ok(mentors);
     }
 
     // 멘토 상세 조회

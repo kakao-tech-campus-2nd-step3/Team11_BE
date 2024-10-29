@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Shopping Mall</title>
@@ -22,7 +22,7 @@
                 <a class="nav-link" th:href="@{/TemplateDomains}">Wishlist</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile}">Profile</a>
+                <a class="nav-link" th:href="@{/members}">Profile</a>
             </li>
         </ul>
         <ul class="navbar-nav">
@@ -35,5 +35,8 @@
         </ul>
     </div>
 </nav>
+<div class="container mt-4">
+    <div th:replace="~{::content}"></div>
+</div>
 </body>
 </html>

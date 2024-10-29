@@ -7,16 +7,23 @@ import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
 import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.dto.MemberCreateResponseDto;
-import boomerang.member.dto.NicknameUpdateRequestDto;
-import boomerang.member.dto.RandomNicknameCreateResponseDTO;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -38,7 +45,7 @@ public class MemberController {
     // 시큐리티 필터 테스트 컨트롤러
     @GetMapping
     public ResponseEntity<Member> getMember(
-            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(member);
@@ -47,40 +54,33 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addCookie(CookieUtil.createCookies(token));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
-//    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
-//        memberService.updateMember(id,memberCreateRequestDTO);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .build();
-//    }
-//
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
-//        memberService.deleteMember(id);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .build();
-//    }
-
-    @GetMapping("/random-nickname")
-    public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname() {
-        String nickname = memberService.generateUniqueNickname();
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
+        memberService.updateMember(memberCreateRequestDTO.toMemberCreateServiceDto(id));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new RandomNicknameCreateResponseDTO(nickname));
+                .build();
     }
 
-    @PutMapping("/nickname")
-    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,HttpServletResponse response, @RequestBody NicknameUpdateRequestDto requestDto) {
-        Member member =  memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
-        response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable(name = "id") Long id) {
+        memberService.deleteMember(id);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @PostMapping("/random_nickname")
+    public ResponseEntity<Map> generateRandomNickname(){
+        String nickname = memberService.generateUniqueNickname();
+        Map<String, Object> response = new HashMap<>();
+        response.put("랜덤 닉네임", nickname);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(response);
     }
 
     // GlobalException Handler 에서 처리할 경우,

@@ -2,12 +2,9 @@ package boomerang.mentor.dto;
 
 import boomerang.mentor.domain.Mentor;
 import boomerang.mentor.domain.MentorType;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 
 @Getter
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MentorResponseDto {
 
     private final Long id;

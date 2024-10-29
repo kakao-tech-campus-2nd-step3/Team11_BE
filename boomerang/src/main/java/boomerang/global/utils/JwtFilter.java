@@ -2,30 +2,25 @@ package boomerang.global.utils;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.oauth.service.PrincipalService;
-import boomerang.global.properties.ClientServerProperties;
-import boomerang.member.domain.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
-    private final ClientServerProperties clientServerProperties;
 
-    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService, ClientServerProperties clientServerProperties) {
+    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService) {
         this.jwtUtil = jwtUtil;
         this.principalService = principalService;
-        this.clientServerProperties = clientServerProperties;
     }
 
     @Override
@@ -81,23 +76,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String path = request.getRequestURI();
-        String method = request.getMethod();
-
-        // 'welcome' 페이지와 /api/v1/member/random-nickname요청은 필터링하지 않음
-        if ("/welcome".equals(path) || ("/api/v1/member/random-nickname".equals(path))) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
-
-        if (memberDetail.getMemberRole().equals(MemberRole.INCOMPLETE_USER)
-                && !("/api/v1/member/nickname".equals(path) && "PUT".equalsIgnoreCase(method))) {
-            response.sendRedirect(clientServerProperties.getWelcome());
-            filterChain.doFilter(request, response);
-        }
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.getAuthorities());

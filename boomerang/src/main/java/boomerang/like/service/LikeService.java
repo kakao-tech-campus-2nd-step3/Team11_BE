@@ -3,6 +3,7 @@ package boomerang.like.service;
 import boomerang.board.domain.Board;
 import boomerang.board.service.BoardService;
 import boomerang.global.exception.BusinessException;
+import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.like.domain.Like;
 import boomerang.like.dto.LikeResponseDto;
@@ -22,14 +23,15 @@ public class LikeService {
     private final MemberService memberService;
     private final BoardService boardService;
 
+
     @Transactional(readOnly = true)
-    public LikeSummaryResponseDto getLikeSummary(String email, Long boardId) {
+    public LikeSummaryResponseDto getLikeSummary(PrincipalDetails principalDetails, Long boardId) {
         Board board = boardService.getBoard(boardId);
         int likeCount = likeRepository.countByBoardIdAndIsDeletedFalse(board.getId());
 
         boolean isLiked = false;
-        if (email != null) {
-            Member loginMember = memberService.getMemberByEmail(email);
+        if (principalDetails != null) {
+            Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
             isLiked = likeRepository.existsByMemberAndBoardAndIsDeletedFalse(loginMember, board);
         }
 
@@ -37,8 +39,8 @@ public class LikeService {
     }
 
     @Transactional
-    public LikeResponseDto createLike(String email, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(email);
+    public LikeResponseDto createLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Board board = boardService.getBoard(boardId);
 
         // 이미 좋아요를 눌렀는지 확인
@@ -54,8 +56,8 @@ public class LikeService {
     }
 
     @Transactional
-    public void deleteLike(String email, Long boardId) {
-        Member loginMember = memberService.getMemberByEmail(email);
+    public void deleteLike(PrincipalDetails principalDetails, Long boardId) {
+        Member loginMember = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Board board = boardService.getBoard(boardId);
 
         Like like = likeRepository.findByMemberAndBoardAndIsDeletedFalse(loginMember, board)
@@ -65,8 +67,7 @@ public class LikeService {
         board.decreaseLikeCount();
     }
 
-    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn,
-        Member loginMember) {
+    private LikeResponseDto createLikeResponseDto(Like like, boolean isUserLoggedIn, Member loginMember) {
         if (!isUserLoggedIn) {
             return new LikeResponseDto(like, false);
         }
