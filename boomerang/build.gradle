@@ -39,6 +39,7 @@ dependencies {
 	//시큐리티 설정
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 	//테스트를 위한 시큐리티 설정
 	testImplementation 'org.springframework.security:spring-security-test'
 
@@ -50,6 +51,15 @@ dependencies {
 
 	// websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.4'
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// Thymeleaf (이메일 템플릿용)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 configurations {
