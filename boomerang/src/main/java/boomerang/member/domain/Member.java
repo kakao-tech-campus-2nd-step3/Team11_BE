@@ -1,6 +1,8 @@
 package boomerang.member.domain;
 
 import boomerang.IsDeleted;
+import boomerang.kakao.domain.KakaoMember;
+import boomerang.member.dto.MemberServiceDto;
 import boomerang.progress.domain.Progress;
 import boomerang.progress.domain.ProgressType;
 import jakarta.persistence.*;
@@ -58,12 +60,19 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Progress progress;
 
+
     protected Member() {
     }
 
-    public Member(String email, String nickname) {
-        this.email = email;
-        this.nickname = nickname;
+
+    public Member(MemberServiceDto memberServiceDto) {
+        this.email = memberServiceDto.getEmail();
+        this.nickname = memberServiceDto.getNickname();
+        this.memberRole = MemberRole.COMPLETE_USER;
+    }
+
+    public Member(KakaoMember kakaoMember) {
+        this.email = kakaoMember.email();
         this.memberRole = MemberRole.INCOMPLETE_USER;
     }
 
@@ -78,6 +87,9 @@ public class Member {
         this.progress = progress;
     }
 
+    public boolean isComplete() {
+        return MemberRole.COMPLETE_USER.equals(this.memberRole);
+    }
 
     public boolean hasProgress() {
         return this.progress != null;
@@ -98,6 +110,11 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id, email);
+    }
+
+    public void updateNickname(String nickname){
+        this.nickname = nickname;
+        this.memberRole = MemberRole.COMPLETE_USER;
     }
 
 

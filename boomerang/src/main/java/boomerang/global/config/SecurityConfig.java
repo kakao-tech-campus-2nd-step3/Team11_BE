@@ -2,6 +2,7 @@ package boomerang.global.config;
 
 import boomerang.global.handler.SecurityAuthenticationEntryPoint;
 import boomerang.global.oauth.service.PrincipalService;
+import boomerang.global.properties.ClientServerProperties;
 import boomerang.global.utils.JwtFilter;
 import boomerang.global.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +34,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
+    private final ClientServerProperties clientServerProperties;
 
 
     @Bean
@@ -81,16 +83,17 @@ public class SecurityConfig {
 
         //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
         http
-                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil, principalService, clientServerProperties), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(handeler -> handeler.authenticationEntryPoint(new SecurityAuthenticationEntryPoint()));
 
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/v1/board/comments/**","/api/v1/progress/**").authenticated()
+                        .requestMatchers("/api/v1/board/comments/**", "/api/v1/progress/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
+                        .requestMatchers(HttpMethod.POST, "/api/v1/board", "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/board", "/api/v1/board/*/comments").authenticated() // POST 요청 추가
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/board", "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
                         .requestMatchers("/api/v1/chat/**").permitAll()  // 채팅 경로 모두 허용
                         .anyRequest().permitAll());
 
