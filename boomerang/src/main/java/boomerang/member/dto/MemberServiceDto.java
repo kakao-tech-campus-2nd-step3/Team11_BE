@@ -26,9 +26,4 @@ public class MemberServiceDto {
         this.nickname = nickname;
 
     }
-
-    // MemberCreateServiceDto로 변환하는 메서드
-    public Member toMemberDomain() {
-        return new Member(email, nickname);
-    }
 }

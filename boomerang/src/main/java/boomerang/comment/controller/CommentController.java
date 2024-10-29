@@ -2,7 +2,6 @@ package boomerang.comment.controller;
 
 import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
-import boomerang.comment.dto.CommentListResponseDto;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.BusinessException;
