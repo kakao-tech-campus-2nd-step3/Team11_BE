@@ -9,20 +9,16 @@ import boomerang.member.service.MemberService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StreamUtils;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -38,7 +34,15 @@ public class EmailVerificationService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    private static final long VERIFICATION_TTL = 5L; // 5분
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucketName;
+
+    @Value("${cloud.aws.region.static}")
+    private String region;
+
+    private static final long VERIFICATION_TTL = 5L;
+    private static final String LOGO_IMAGE_KEY = "email/logo.png";
+    private static final String FOOTER_IMAGE_KEY = "email/footer.png";
 
     @Async
     public EmailVerificationResponseDto sendVerificationEmail(String email) {
@@ -63,6 +67,11 @@ public class EmailVerificationService {
         }
     }
 
+    private String getS3Url(String imageKey) {
+        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+            bucketName, region, imageKey);
+    }
+
     private MimeMessage createEmailMessage(String email, String code)
         throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -74,21 +83,18 @@ public class EmailVerificationService {
 
         Context context = new Context();
         context.setVariable("code", code);
-        String logoBase64 = getBase64Image("logo.png");
-        String footerBase64 = getBase64Image("footer.png");
-        context.setVariable("logoImage", "data:image/png;base64," + logoBase64);
-        context.setVariable("footerImage", "data:image/png;base64," + footerBase64);
-        String htmlContent = templateEngine.process("email/verification", context);
 
+        // S3 URL 구성
+        String logoUrl = getS3Url(LOGO_IMAGE_KEY);
+        String footerUrl = getS3Url(FOOTER_IMAGE_KEY);
+
+        context.setVariable("logoImage", logoUrl);
+        context.setVariable("footerImage", footerUrl);
+
+        String htmlContent = templateEngine.process("email/verification", context);
         helper.setText(htmlContent, true);
 
         return message;
-    }
-
-    private String getBase64Image(String imagePath) throws IOException {
-        Resource resource = new ClassPathResource("static/esset/" + imagePath);
-        byte[] bytes = StreamUtils.copyToByteArray(resource.getInputStream());
-        return Base64.getEncoder().encodeToString(bytes);
     }
 
     @Transactional
