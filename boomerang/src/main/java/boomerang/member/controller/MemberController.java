@@ -78,8 +78,10 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,HttpServletResponse response, @RequestBody NicknameUpdateRequestDto requestDto) {
-        Member member =  memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
+    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                                        HttpServletResponse response,
+                                                                        @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
         MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
         response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
         return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
