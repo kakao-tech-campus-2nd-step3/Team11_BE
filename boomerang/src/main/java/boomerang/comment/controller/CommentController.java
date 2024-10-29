@@ -2,12 +2,12 @@ package boomerang.comment.controller;
 
 import boomerang.comment.domain.Comment;
 import boomerang.comment.dto.CommentListRequestDto;
-import boomerang.comment.dto.CommentListResponseDto;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
+import boomerang.global.response.PageResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +36,10 @@ public class CommentController {
 
     //댓글 조회
     @GetMapping("/board/{board_id}/comments")
-    public ResponseEntity<CommentListResponseDto> getAllComment(@PathVariable("board_id") Long boardId, CommentListRequestDto commentListRequestDto) {
+    public ResponseEntity<PageResponseDto> getAllComment(@PathVariable("board_id") Long boardId, CommentListRequestDto commentListRequestDto) {
         Page<Comment> commentPage = commentService.getAllComment(boardId, commentListRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommentListResponseDto(commentPage));
+                .body(new PageResponseDto(commentPage));
     }
 
     //댓글 생성
