@@ -1,6 +1,7 @@
 package boomerang.email.service;
 
 import boomerang.email.dto.EmailVerificationRequestDto;
+import boomerang.email.dto.EmailVerificationResponseDto;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
@@ -40,7 +41,7 @@ public class EmailVerificationService {
     private static final long VERIFICATION_TTL = 5L; // 5분
 
     @Async
-    public void sendVerificationEmail(String email) throws MessagingException, IOException {
+    public EmailVerificationResponseDto sendVerificationEmail(String email) throws MessagingException, IOException {
         String verificationCode = generateVerificationCode();
         String redisKey = "email:verification:" + email;
 
@@ -51,6 +52,8 @@ public class EmailVerificationService {
         // 이메일 발송
         MimeMessage message = createEmailMessage(email, verificationCode);
         mailSender.send(message);
+
+        return new EmailVerificationResponseDto(email, "이메일 전송에 성공했습니다.");
     }
 
     private MimeMessage createEmailMessage(String email, String code)
@@ -82,7 +85,7 @@ public class EmailVerificationService {
     }
 
     @Transactional
-    public boolean verifyEmail(String email, EmailVerificationRequestDto requestDto) {
+    public EmailVerificationResponseDto verifyEmail(String email, EmailVerificationRequestDto requestDto) {
         String redisKey = "email:verification:" + requestDto.getEmail();
         String savedCode = redisTemplate.opsForValue().get(redisKey);
 
@@ -101,7 +104,7 @@ public class EmailVerificationService {
         // 인증 성공 시 Redis에서 코드 삭제
         redisTemplate.delete(redisKey);
 
-        return true;
+        return new EmailVerificationResponseDto(requestDto.getEmail(), "이메일 인증에 성공했습니다.");
     }
 
     private String generateVerificationCode() {
