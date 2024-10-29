@@ -73,11 +73,11 @@ public class EmailVerificationService {
         helper.setSubject("멘토 등록 이메일 인증");
 
         Context context = new Context();
-        context.setVariable("code", code);  // template에서 ${code}로 사용
-        String logoBase64 = getBase64Image("logo.svg");
-        String footerBase64 = getBase64Image("footer.svg");
-        context.setVariable("logoImage", "data:image/svg+xml;base64," + logoBase64);
-        context.setVariable("footerImage", "data:image/svg+xml;base64," + footerBase64);
+        context.setVariable("code", code);
+        String logoBase64 = getBase64Image("logo.png");
+        String footerBase64 = getBase64Image("footer.png");
+        context.setVariable("logoImage", "data:image/png;base64," + logoBase64);
+        context.setVariable("footerImage", "data:image/png;base64," + footerBase64);
         String htmlContent = templateEngine.process("email/verification", context);
 
         helper.setText(htmlContent, true);
