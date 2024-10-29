@@ -3,7 +3,9 @@ package boomerang.email.controller;
 import boomerang.email.dto.EmailSendRequestDto;
 import boomerang.email.dto.EmailVerificationRequestDto;
 import boomerang.email.service.EmailVerificationService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +23,7 @@ public class EmailVerificationController {
     // 이메일 인증 코드 발송
     @PostMapping
     public ResponseEntity<Void> sendVerificationEmail(
-        @Valid @RequestBody EmailSendRequestDto requestDto) {
+        @Valid @RequestBody EmailSendRequestDto requestDto) throws MessagingException, IOException {
         emailVerificationService.sendVerificationEmail(requestDto.getEmail());
         return ResponseEntity.ok().build();
     }
