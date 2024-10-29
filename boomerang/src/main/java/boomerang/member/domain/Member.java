@@ -5,14 +5,22 @@ import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.progress.domain.Progress;
 import boomerang.progress.domain.ProgressType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "member")
@@ -114,7 +122,7 @@ public class Member {
         return Objects.hash(id, email);
     }
 
-    public void updateNickname(String nickname){
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
         this.memberRole = MemberRole.COMPLETE_USER;
     }

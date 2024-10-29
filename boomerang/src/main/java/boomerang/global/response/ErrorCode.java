@@ -42,8 +42,10 @@ public enum ErrorCode {
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),
-    PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG003", "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
-    PROGRESS_NON_EXISTENT(HttpStatus.NOT_FOUND, "PG004", "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
+    PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG003",
+        "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
+    PROGRESS_NON_EXISTENT(HttpStatus.NOT_FOUND, "PG004",
+        "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
     PROGRESS_REQUEST_ERROR(HttpStatus.NOT_FOUND, "PG005", "해당 세부 단계를 찾을 수 없습니다."),
     PROGRESS_SUB_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG006", "세부 단계의 이름이 잘못되었습니다."),
     PROGRESS_MAIN_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG007", "메인 단계의 이름이 잘못되었습니다."),
@@ -64,8 +66,7 @@ public enum ErrorCode {
     // Mail
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
-
-
+    EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
 
     ;
 
