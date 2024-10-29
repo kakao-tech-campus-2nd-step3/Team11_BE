@@ -3,11 +3,13 @@ package boomerang.email.controller;
 import boomerang.email.dto.EmailSendRequestDto;
 import boomerang.email.dto.EmailVerificationRequestDto;
 import boomerang.email.service.EmailVerificationService;
+import boomerang.global.oauth.dto.PrincipalDetails;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,11 +33,10 @@ public class EmailVerificationController {
     // 이메일 인증 코드 확인
     @PostMapping("/validation")
     public ResponseEntity<Boolean> verifyEmail(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
         @Valid @RequestBody EmailVerificationRequestDto requestDto) {
         boolean isVerified = emailVerificationService.verifyEmail(
-            requestDto.getEmail(),
-            requestDto.getVerificationCode()
-        );
+            principalDetails.getMemberEmail(), requestDto);
         return ResponseEntity.ok(isVerified);
     }
 }

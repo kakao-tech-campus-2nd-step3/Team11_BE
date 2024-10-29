@@ -1,31 +1,35 @@
 package boomerang.email.service;
 
+import boomerang.email.dto.EmailVerificationRequestDto;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
+import boomerang.member.domain.Member;
+import boomerang.member.service.MemberService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import org.thymeleaf.context.Context;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.util.StreamUtils;
-import java.util.Base64;
-import java.io.IOException;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
+    private final MemberService memberService;
     private final JavaMailSender mailSender;
     private final RedisTemplate<String, String> redisTemplate;
     private final SpringTemplateEngine templateEngine; // Thymeleaf 템플릿 엔진
@@ -77,18 +81,22 @@ public class EmailVerificationService {
         return Base64.getEncoder().encodeToString(bytes);
     }
 
-    @Transactional(readOnly = true)
-    public boolean verifyEmail(String email, String code) {
-        String redisKey = "email:verification:" + email;
+    @Transactional
+    public boolean verifyEmail(String email, EmailVerificationRequestDto requestDto) {
+        String redisKey = "email:verification:" + requestDto.getEmail();
         String savedCode = redisTemplate.opsForValue().get(redisKey);
 
         if (savedCode == null) {
             throw new BusinessException(ErrorCode.VERIFICATION_CODE_EXPIRED);
         }
 
-        if (!savedCode.equals(code)) {
+        if (!savedCode.equals(requestDto.getVerificationCode())) {
             throw new BusinessException(ErrorCode.VERIFICATION_CODE_INVALID);
         }
+
+        // 인증 성공시 Member 엔티티 업데이트
+        Member member = memberService.getMemberByEmail(email);
+        member.verifyEmail();
 
         // 인증 성공 시 Redis에서 코드 삭제
         redisTemplate.delete(redisKey);
