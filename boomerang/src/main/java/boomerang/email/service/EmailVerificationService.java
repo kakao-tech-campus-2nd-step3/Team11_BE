@@ -41,19 +41,26 @@ public class EmailVerificationService {
     private static final long VERIFICATION_TTL = 5L; // 5분
 
     @Async
-    public EmailVerificationResponseDto sendVerificationEmail(String email) throws MessagingException, IOException {
+    public EmailVerificationResponseDto sendVerificationEmail(String email) {
         String verificationCode = generateVerificationCode();
         String redisKey = "email:verification:" + email;
+        try {
+            // Redis에 인증 코드 저장
+            redisTemplate.opsForValue()
+                .set(redisKey, verificationCode, VERIFICATION_TTL, TimeUnit.MINUTES);
 
-        // Redis에 인증 코드 저장
-        redisTemplate.opsForValue()
-            .set(redisKey, verificationCode, VERIFICATION_TTL, TimeUnit.MINUTES);
+            // 이메일 발송
+            MimeMessage message = createEmailMessage(email, verificationCode);
+            mailSender.send(message);
 
-        // 이메일 발송
-        MimeMessage message = createEmailMessage(email, verificationCode);
-        mailSender.send(message);
-
-        return new EmailVerificationResponseDto(email, "이메일 전송에 성공했습니다.");
+            return new EmailVerificationResponseDto(email, "이메일 전송에 성공했습니다.");
+        } catch (MessagingException e) {
+            throw new BusinessException(ErrorCode.MAIL_SEND_ERROR);
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.MAIL_RESOURCE_ERROR);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.UNEXPECTED_ERROR);
+        }
     }
 
     private MimeMessage createEmailMessage(String email, String code)
@@ -85,7 +92,8 @@ public class EmailVerificationService {
     }
 
     @Transactional
-    public EmailVerificationResponseDto verifyEmail(String email, EmailVerificationRequestDto requestDto) {
+    public EmailVerificationResponseDto verifyEmail(String email,
+        EmailVerificationRequestDto requestDto) {
         String redisKey = "email:verification:" + requestDto.getEmail();
         String savedCode = redisTemplate.opsForValue().get(redisKey);
 

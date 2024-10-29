@@ -27,7 +27,7 @@ public class EmailVerificationController {
     // 이메일 인증 코드 발송
     @PostMapping
     public ResponseEntity<EmailVerificationResponseDto> sendVerificationEmail(
-        @Valid @RequestBody EmailSendRequestDto requestDto) throws MessagingException, IOException {
+        @Valid @RequestBody EmailSendRequestDto requestDto){
         EmailVerificationResponseDto responseDto = emailVerificationService.sendVerificationEmail(requestDto.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
