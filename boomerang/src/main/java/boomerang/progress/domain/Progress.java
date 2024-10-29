@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.List;
+import java.util.Optional;
+
 
 @Getter
 @Entity
@@ -25,26 +28,22 @@ public class Progress {
     @Enumerated(value = EnumType.STRING)
     private ProgressType progressType;
 
-    @Embedded
-    private MainStepEx mainStepEx;
-
-    //임차권 등기 명령 - C,D
-
-    //보증 이행 청구
-
-    //지급 명령 신청
-
-    //보증 이행 청구
-
-    //전세 보증금 반환 소송
+    @OneToMany(mappedBy = "progress", cascade = CascadeType.ALL)
+    private List<MainStep> mainStepList;
 
     public Progress(Member member, ProgressType progressType) {
         this.member = member;
         this.progressType = progressType;
-        //이후에 타입별로 구분해서 생성하는게 필요할 것 같음
-        if (progressType.equals(ProgressType.A)) {
-            this.mainStepEx = new MainStepEx();
-        }
+    }
+
+    public void registerMainStepList(List<MainStep> mainStepList) {
+        this.mainStepList = mainStepList;
+    }
+
+    public Optional<MainStep> getMainStepByEnum(MainStepEnum mainStepEnum) {
+        return this.mainStepList.stream()
+                .filter(mainStep -> mainStep.getMainStepEnum().equals(mainStepEnum))
+                .findFirst();
     }
 
 }

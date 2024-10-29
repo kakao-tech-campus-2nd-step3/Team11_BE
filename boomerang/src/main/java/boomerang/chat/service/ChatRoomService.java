@@ -1,12 +1,12 @@
 package boomerang.chat.service;
 
-import boomerang.chat.domain.ChatRoom;
 import boomerang.chat.domain.ChatMessage;
-import boomerang.chat.dto.ChatRoomRequestDto;
+import boomerang.chat.domain.ChatRoom;
 import boomerang.chat.dto.ChatMessageListRequestDto;
 import boomerang.chat.dto.ChatMessageRequestDto;
-import boomerang.chat.repository.ChatRoomRepository;
+import boomerang.chat.dto.ChatRoomRequestDto;
 import boomerang.chat.repository.ChatMessageRepository;
+import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;

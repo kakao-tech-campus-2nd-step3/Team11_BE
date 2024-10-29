@@ -27,6 +27,10 @@ public class KakaoController {
     private final KakaoService kakaoService;
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
+    @Value("${client_id}")
+    private String clientId;
+    @Value("${app.server.ip}")
+    private String serverIp;
     private final ClientServerProperties clientServerProperties;
 
     public KakaoController(KakaoService kakaoService,
@@ -38,13 +42,6 @@ public class KakaoController {
         this.jwtUtil = jwtUtil;
         this.clientServerProperties = clientServerProperties;
     }
-
-
-    @Value("${client_id}")
-    private String clientId;
-
-    @Value("${app.server.ip}")
-    private String serverIp;
 
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {

@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/member")
@@ -67,6 +68,7 @@ public class MemberController {
 //        return ResponseEntity.status(HttpStatus.CREATED)
 //                .build();
 //    }
+
 
     @GetMapping("/random-nickname")
     public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname() {

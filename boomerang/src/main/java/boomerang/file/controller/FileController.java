@@ -24,7 +24,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping( value = "/upload", consumes = "multipart/form-data")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
     public ResponseEntity<FileResponseDto> upload(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam("file") MultipartFile multipartFile) {

@@ -9,13 +9,13 @@ import java.util.List;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PageResponseDto {
+public class PageResponseDto<T> {
     private int totalPage;
     private int currentPage;
-    private List<?> content;
+    private List<T> content;
 
 
-    public PageResponseDto(Page<?> page) {
+    public PageResponseDto(Page<T> page) {
         this.totalPage = page.getTotalPages();
         this.currentPage = page.getNumber();
         this.content = page.getContent();

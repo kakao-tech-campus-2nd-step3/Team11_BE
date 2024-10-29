@@ -10,6 +10,7 @@ public record KakaoMember(KakaoProfile kakaoProfile) {
         return kakaoProfile.email();
     }
 
+
     public Long id() {
         return kakaoProfile.id();
     }
