@@ -29,7 +29,7 @@ public enum ProgressType {
         return description;
     }
 
-    public List<MainStepEnum> getMainStepEnums() {
+    public List<MainStepEnum> getMainStepEnumList() {
         return mainStepEnums;
     }
 
