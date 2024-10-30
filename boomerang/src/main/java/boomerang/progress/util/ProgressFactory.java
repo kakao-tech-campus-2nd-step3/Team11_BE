@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProgressFactory {
     public static Progress makeProgress(ProgressType progressType, Member member) {
-        List<MainStepEnum> mainStepEnumList = progressType.getMainStepEnums();
+        List<MainStepEnum> mainStepEnumList = progressType.getMainStepEnumList();
 
         Progress progress = new Progress(member, progressType);
         List<MainStep> mainStepList = mainStepEnumList.stream()

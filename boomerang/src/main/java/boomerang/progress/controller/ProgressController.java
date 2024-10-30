@@ -6,8 +6,7 @@ import boomerang.global.response.ErrorCode;
 import boomerang.progress.domain.MainStepEnum;
 import boomerang.progress.domain.ProgressType;
 import boomerang.progress.domain.SubStepEnum;
-import boomerang.progress.dto.MainStepResponseDto;
-import boomerang.progress.dto.ProgressDetailsResponseDto;
+import boomerang.progress.dto.ProgressByMainResponseDto;
 import boomerang.progress.dto.ProgressTypeRequestDto;
 import boomerang.progress.dto.SubStepResponseDto;
 import boomerang.progress.service.ProgressService;
@@ -40,16 +39,16 @@ public class ProgressController {
     //유저의 메인 단계 목록 조회
     @GetMapping("/progress")
     public ResponseEntity<?> getProgressDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressDetailsResponseDto progressDetailsResponseDto = progressService.getProgressDetails(principalDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(progressDetailsResponseDto);
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(principalDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 특정 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}")
     public ResponseEntity<?> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    @PathVariable("main") MainStepEnum mainStepEnum) {
-        MainStepResponseDto mainStepResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
-        return ResponseEntity.status(HttpStatus.OK).body(mainStepResponseDto);
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
+        return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 메인 단계의 서브 단계 목록 조회
