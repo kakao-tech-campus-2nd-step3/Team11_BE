@@ -1,5 +1,7 @@
 package boomerang.kakao.service;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.exception.KakaoException;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.kakao.domain.KakaoProfile;
 import boomerang.kakao.dto.KakaoTokenDto;
@@ -9,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -59,9 +62,20 @@ public class KakaoService {
     }
 
     public KakaoMember getKakaoProfile(KakaoTokenDto kakaoTokenDto) {
-        KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
-                .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + kakaoTokenDto.getAccessToken())
-                .retrieve().toEntity(KakaoProfile.class).getBody();
+        KakaoProfile kakaoProfile = null;
+
+        try {
+            kakaoProfile = restClient.post()
+                    .uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
+                    .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + kakaoTokenDto.getAccessToken())
+                    .retrieve().
+                    toEntity(KakaoProfile.class).getBody();
+        }catch (HttpClientErrorException e) {
+            // 카카오 API에서 반환한 상태 코드와 응답 본문을 출력
+            System.out.println("HTTP Status Code: " + e.getStatusCode());
+            System.out.println("Error Response Body: " + e.getResponseBodyAsString());
+            throw new KakaoException(e.getStatusCode(),e.getResponseBodyAsString());
+        }
 
         KakaoMember kakaoMember = new KakaoMember(kakaoProfile);
         return kakaoMember;

@@ -6,10 +6,7 @@ import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.dto.MemberCreateResponseDto;
-import boomerang.member.dto.NicknameUpdateRequestDto;
-import boomerang.member.dto.RandomNicknameCreateResponseDTO;
+import boomerang.member.dto.*;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +52,7 @@ public class MemberController {
                 .build();
     }
 
-//    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
+//    안쓰는 로직 : 팀=원들과 상의 후 삭제 예정
 //    @PutMapping("/{id}")
 //    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
 //        memberService.updateMember(id,memberCreateRequestDTO);
@@ -80,11 +77,12 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,HttpServletResponse response, @RequestBody NicknameUpdateRequestDto requestDto) {
-        Member member =  memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
-        response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
+    public ResponseEntity<MemberLoginDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                                        HttpServletResponse response,
+                                                                        @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
+        response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
     }
 
     // GlobalException Handler 에서 처리할 경우,
