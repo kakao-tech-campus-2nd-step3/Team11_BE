@@ -1,16 +1,13 @@
 package boomerang.progress.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.util.List;
 
 public enum ProgressType {
-    A("A타입", "보험 미가입 / 계약 미해지", List.of(MainStepEnum.MAIN_STEP_1, MainStepEnum.MAIN_STEP_3)),
-    B("B타입", "보험 가입 / 계약 미해지", List.of(MainStepEnum.MAIN_STEP_2)),
-    C("C타입", "보험 미가입 / 계약 해지", List.of(MainStepEnum.MAIN_STEP_1)),
-    D("D타입", "보험 가입 / 계약 해지", List.of(MainStepEnum.MAIN_STEP_3));
+    A("A타입", "임대차 계약 / 보증 보험 X", List.of(MainStepEnum.AB1, MainStepEnum.AB2, MainStepEnum.AB3, MainStepEnum.A4, MainStepEnum.A5)),
+    B("B타입", "임대차 계약 / 보증 보험 O", List.of(MainStepEnum.AB1, MainStepEnum.AB2, MainStepEnum.AB3, MainStepEnum.B4, MainStepEnum.B5)),
+    C("C타입", "전세권 계약", List.of(MainStepEnum.C1, MainStepEnum.C2, MainStepEnum.C3, MainStepEnum.C4, MainStepEnum.C5));
 
 
     private final String typeName;
@@ -23,6 +20,7 @@ public enum ProgressType {
         this.mainStepEnums = mainStepEnums;
     }
 
+    @JsonValue
     public String getTypeName() {
         return typeName;
     }
@@ -41,30 +39,6 @@ public enum ProgressType {
         return typeName;
     }
 
-    //JSON 반환시 전체 정보가 갈 수 있도록 제공
-    @JsonValue
-    public ProgressTypeJson getJson() {
-        return new ProgressTypeJson(typeName, description);
-    }
 
 
-    // 내부 클래스로 JSON에서 사용할 객체 정의
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ProgressTypeJson {
-        private final String typeName;
-        private final String description;
-
-        public ProgressTypeJson(String typeName, String description) {
-            this.typeName = typeName;
-            this.description = description;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
 }

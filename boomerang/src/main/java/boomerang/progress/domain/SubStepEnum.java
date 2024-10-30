@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SubStepEnum {
-    SUB_STEP_1("서브단계1"),
-    SUB_STEP_2("서브단계2");
+    SUB_1("서브단계1"),
+    SUB_2("서브단계2");
 
     private final String subStepName;
 
