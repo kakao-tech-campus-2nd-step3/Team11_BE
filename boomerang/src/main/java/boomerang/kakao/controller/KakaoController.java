@@ -58,7 +58,6 @@ public class KakaoController {
     }
 
 
-
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
         String redirectUri = String.format("http://%s:8080/api/v1/auth/login/callback", serverIp);
@@ -71,16 +70,13 @@ public class KakaoController {
 
     @GetMapping("/login/callback")
     @ResponseBody
-    public ResponseEntity<?> token(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> token(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoService.getAccessTokenFromKakao(code);
-        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
-        Member member = memberService.loginKakaoMember(kakaoMember);
-
-        setCookies(response, member);
-        response.sendRedirect(getRedirectUtil(member));
+//        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
+//        Member member = memberService.loginKakaoMember(kakaoMember);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .build();
+                .body(kakaoTokenResponseDto.accessToken);
     }
 
 
