@@ -6,8 +6,7 @@ import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.progress.domain.*;
-import boomerang.progress.dto.MainStepResponseDto;
-import boomerang.progress.dto.ProgressDetailsResponseDto;
+import boomerang.progress.dto.ProgressByMainResponseDto;
 import boomerang.progress.dto.ProgressTypeRequestDto;
 import boomerang.progress.dto.SubStepResponseDto;
 import boomerang.progress.repository.ProgressRepository;
@@ -53,22 +52,33 @@ public class ProgressService {
 
     //유저의 진행도 전체 조회
     @Transactional(readOnly = true)
-    public ProgressDetailsResponseDto getProgressDetails(PrincipalDetails principalDetails) {
+    public ProgressByMainResponseDto getProgressDetails(PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Progress progress = getProgressByMember(member);
 
-        return new ProgressDetailsResponseDto(progress);
+        Progress progress = getProgressByMember(member);
+        MainStep mainStep = getMainStepByEnum(progress, progress.getProgressType().getMainStepEnumList().getFirst());
+        //유저의 현재 메인 단계
+        for (MainStepEnum mainStepEnum : progress.getProgressType().getMainStepEnumList()) {
+            if (getMainStepByEnum(progress, mainStepEnum).isCompletion()) {
+                mainStep = getMainStepByEnum(progress, mainStepEnum);
+            } else {
+                break;
+            }
+
+        }
+
+        return new ProgressByMainResponseDto(progress, mainStep);
     }
 
     //특정 메인 단계만 조회
     @Transactional(readOnly = true)
-    public MainStepResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
+    public ProgressByMainResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Progress progress = getProgressByMember(member);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
 
-        return new MainStepResponseDto(mainStep);
+        return new ProgressByMainResponseDto(progress, mainStep);
     }
 
     //특정 서브단계만 조회
