@@ -2,6 +2,7 @@ package boomerang.kakao.service;
 
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.kakao.domain.KakaoProfile;
+import boomerang.kakao.dto.KakaoTokenDto;
 import boomerang.kakao.dto.KakaoTokenResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -50,6 +51,16 @@ public class KakaoService {
     public KakaoMember getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
         KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
                 .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + tokenResponse.accessToken)
+                .retrieve().toEntity(KakaoProfile.class).getBody();
+
+        KakaoMember kakaoMember = new KakaoMember(kakaoProfile);
+        return kakaoMember;
+
+    }
+
+    public KakaoMember getKakaoProfile(KakaoTokenDto kakaoTokenDto) {
+        KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
+                .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + kakaoTokenDto.getAccessToken())
                 .retrieve().toEntity(KakaoProfile.class).getBody();
 
         KakaoMember kakaoMember = new KakaoMember(kakaoProfile);

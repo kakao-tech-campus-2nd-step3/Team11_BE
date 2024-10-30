@@ -27,7 +27,7 @@ public class CookieUtil {
             // 공백과 특수 문자를 인코딩
             String encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8);
 
-            Cookie cookie = new Cookie("Nickname", encodedValue);
+            Cookie cookie = new Cookie(Nickname, encodedValue);
             cookie.setPath("/");
             cookie.setHttpOnly(false);
             cookie.setMaxAge(60 * 60 * 60);
