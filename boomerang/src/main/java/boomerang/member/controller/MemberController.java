@@ -48,7 +48,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addHeader("Set-Cookie", CookieUtil.createAuthorizationCookie(token).toString());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
@@ -83,7 +83,7 @@ public class MemberController {
                                                                         @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
         MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
-        response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
+        response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
     }
 

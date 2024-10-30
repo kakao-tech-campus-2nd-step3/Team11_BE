@@ -79,9 +79,9 @@ public class KakaoController {
 
     private void setCookies(HttpServletResponse response, Member member) {
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addHeader("Set-Cookie", CookieUtil.createAuthorizationCookie(token).toString());
         if (member.isComplete()) {
-            response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
+            response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
         }
     }
 
