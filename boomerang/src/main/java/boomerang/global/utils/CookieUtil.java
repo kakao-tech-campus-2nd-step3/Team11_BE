@@ -21,7 +21,7 @@ public class CookieUtil {
                 .path("/")
                 .httpOnly(true)
                 .secure(false)         // HTTPS 전송을 위한 설정
-                .sameSite("None")     // 크로스 도메인 요청에서도 쿠키 전송
+                .sameSite("Lax")     // 크로스 도메인 요청에서도 쿠키 전송
                 .maxAge(60 * 60 * 60) // 쿠키 수명 설정
                 .build();
     }
@@ -35,7 +35,7 @@ public class CookieUtil {
                     .path("/")
                     .httpOnly(false)         // HTTP 전용 아님
                     .secure(false)         // HTTPS 전송을 위한 설정
-                    .sameSite("None")        // 크로스 도메인 요청에서도 쿠키 전송 가능
+                    .sameSite("Lax")        // 크로스 도메인 요청에서도 쿠키 전송 가능
                     .maxAge(60 * 60 * 60)    // 쿠키 수명 설정
                     .build();
         } catch (Exception e) {
