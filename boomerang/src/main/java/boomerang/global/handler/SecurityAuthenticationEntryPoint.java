@@ -27,5 +27,6 @@ public class SecurityAuthenticationEntryPoint implements AuthenticationEntryPoin
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ErrorCode.LOGIN_REQUIRED);
         String jsonResponse = objectMapper.writeValueAsString(errorResponseDto);
 
-        response.getWriter().write(jsonResponse);    }
+        response.getWriter().write(jsonResponse);
+    }
 }

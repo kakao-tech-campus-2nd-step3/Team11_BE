@@ -5,7 +5,9 @@ import boomerang.board.domain.Board;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,16 +36,25 @@ public class Comment {
 
     @Enumerated(EnumType.STRING)
     private IsDeleted isDeleted = IsDeleted.NOT_DELETED;
+    @CreatedDate
+    private LocalDateTime createdAt; //기본 업데이트 됨
+    @LastModifiedDate
+    private LocalDateTime updatedAt; //기본 업데이트 됨
+
+    public Comment(Member author, Board board, CommentRequestDto commentRequestDto) {
+        this.author = author;
+        this.board = board;
+        this.text = commentRequestDto.getText();
+        this.isDeleted = IsDeleted.NOT_DELETED;
+    }
 
     public String getAuthorName() {
         return author.getNickname();
     }
 
-    @CreatedDate
-    private LocalDateTime createdAt; //기본 업데이트 됨
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt; //기본 업데이트 됨
+    public String getAuthorEmail() {
+        return author.getEmail();
+    }
 
     public void softDelete() {
         this.isDeleted = IsDeleted.DELETED;
@@ -51,13 +62,6 @@ public class Comment {
 
     public void updateCommentText(String text) {
         this.text = text;
-    }
-
-    public Comment(Member author, Board board, CommentRequestDto commentRequestDto) {
-        this.author = author;
-        this.board = board;
-        this.text = commentRequestDto.getText();
-        this.isDeleted = IsDeleted.NOT_DELETED;
     }
 
     public boolean isMemberCommentAuthor(Member loginUser) {

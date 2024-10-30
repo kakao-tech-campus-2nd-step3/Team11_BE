@@ -60,3 +60,5 @@ out/
 
 logs
 .DS_STORE
+
+boomerang/src/main/http/product/http-client.private.env.json

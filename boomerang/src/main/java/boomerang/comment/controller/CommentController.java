@@ -1,17 +1,19 @@
 package boomerang.comment.controller;
 
+import boomerang.comment.domain.Comment;
+import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentRequestDto;
 import boomerang.comment.dto.CommentResponseDto;
 import boomerang.comment.service.CommentService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
+import boomerang.global.response.PageResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,11 +29,12 @@ public class CommentController {
 
     //댓글 조회
     @GetMapping("/board/{board_id}/comments")
-    public ResponseEntity<Page<CommentResponseDto>> getAllComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                  @PathVariable("board_id") Long boardId,
-                                                                  Pageable pageable) {
-        Page<CommentResponseDto> commentResponsePage = commentService.getAllComment(principalDetails, boardId, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(commentResponsePage);
+    public ResponseEntity<PageResponseDto<CommentResponseDto>> getAllComment(@PathVariable("board_id") Long boardId, CommentListRequestDto commentListRequestDto) {
+        Page<Comment> commentPage = commentService.getAllComment(boardId, commentListRequestDto);
+        Page<CommentResponseDto> commentResponsePage = commentPage.map(CommentResponseDto::new);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new PageResponseDto<>(commentResponsePage));
     }
 
     //댓글 생성

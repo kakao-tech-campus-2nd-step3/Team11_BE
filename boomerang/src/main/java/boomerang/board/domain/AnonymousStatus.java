@@ -1,5 +1,7 @@
 package boomerang.board.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum AnonymousStatus {
     PRIVATE("PRIVATE"), PUBLIC("PUBLIC");
 
@@ -9,7 +11,9 @@ public enum AnonymousStatus {
         this.name = name;
     }
 
+    @JsonValue
     public String getName() {
         return name;
     }
 }
+

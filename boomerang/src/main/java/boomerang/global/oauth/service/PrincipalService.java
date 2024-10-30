@@ -1,9 +1,9 @@
 package boomerang.global.oauth.service;
 
+import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.member.domain.Member;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
-import boomerang.global.oauth.dto.PrincipalDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,7 +25,7 @@ public class PrincipalService implements UserDetailsService {
 
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
         return new PrincipalDetails(member);
     }    // 필수 메서드 구현 (UserDetailsService 인터페이스의 메서드)
 

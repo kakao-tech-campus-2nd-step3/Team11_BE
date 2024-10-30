@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<div th:replace="layout :: header"></div>
+<div class="container mt-4">
+    <h1>Chat Room</h1>
+    <div id="messageArea" class="border p-3" style="height: 400px; overflow-y: scroll;">
+        <!-- 메시지들이 여기에 추가됩니다. -->
+    </div>
+    <div class="input-group mt-3">
+        <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
+        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    let socket;
+    const roomId = /*[[${roomId}]]*/ 1;
+
+    $(document).ready(function () {
+        connectWebSocket();
+    });
+
+    function connectWebSocket() {
+        socket = new WebSocket("ws://localhost:8080/ws/chat/" + roomId);
+
+        socket.onmessage = function (event) {
+            const message = JSON.parse(event.data);
+            $('#messageArea').append('<div><strong>' + message.senderName + ':</strong> ' + message.content + '</div>');
+            $('#messageArea').scrollTop($('#messageArea')[0].scrollHeight);
+        };
+
+        socket.onclose = function () {
+            alert("Disconnected from chat room.");
+        };
+    }
+
+    function sendMessage() {
+        const messageContent = $('#messageInput').val();
+        if (messageContent) {
+            const message = { content: messageContent };
+            socket.send(JSON.stringify(message));
+            $('#messageInput').val('');
+        }
+    }
+</script>
+</body>
+</html>
