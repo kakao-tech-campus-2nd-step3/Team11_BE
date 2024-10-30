@@ -20,7 +20,6 @@ public class CookieUtil {
         return ResponseCookie.from(Authorization, value)
                 .path("/")
                 .httpOnly(true)
-                .domain(serverIp)
                 .secure(false)         // HTTPS 전송을 위한 설정
                 .sameSite("None")     // 크로스 도메인 요청에서도 쿠키 전송
                 .maxAge(60 * 60 * 60) // 쿠키 수명 설정
@@ -35,7 +34,6 @@ public class CookieUtil {
             return ResponseCookie.from(Nickname, encodedValue)
                     .path("/")
                     .httpOnly(false)         // HTTP 전용 아님
-                    .domain(serverIp)
                     .secure(false)         // HTTPS 전송을 위한 설정
                     .sameSite("None")        // 크로스 도메인 요청에서도 쿠키 전송 가능
                     .maxAge(60 * 60 * 60)    // 쿠키 수명 설정
