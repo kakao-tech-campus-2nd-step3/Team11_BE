@@ -46,7 +46,7 @@ public class KakaoController {
         this.clientServerProperties = clientServerProperties;
     }
 
-    @GetMapping("/login/kakao")
+    @PostMapping("/login/kakao")
     public ResponseEntity<?> loginKakao(HttpServletResponse response,@RequestBody KakaoTokenDto kakaoTokenDto) throws IOException {
         KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenDto);
         Member member = memberService.loginKakaoMember(kakaoMember);
