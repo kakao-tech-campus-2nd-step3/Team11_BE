@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/member")
 public class MemberController {
     private final MemberService memberService;
+    public static String Authorization = "Authorization";
+
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
@@ -48,7 +50,7 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addHeader(Authorization,token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
