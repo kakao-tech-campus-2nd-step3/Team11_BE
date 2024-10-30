@@ -19,10 +19,10 @@ public class CookieUtil {
     public static ResponseCookie createAuthorizationCookie(String value) {
         return ResponseCookie.from(Authorization, value)
                 .path("/")
-                .httpOnly(true)
-                .secure(false)         // HTTPS 전송을 위한 설정
-                .sameSite("Lax")
-                .domain(serverIp) // 크로스 도메인 요청에서도 쿠키 전송
+                .httpOnly(false)
+                .secure(true)
+                .sameSite("None")
+                .domain(serverIp)
                 .maxAge(60 * 60 * 60) // 쿠키 수명 설정
                 .build();
 
@@ -35,10 +35,10 @@ public class CookieUtil {
 
             return ResponseCookie.from(Nickname, encodedValue)
                     .path("/")
-                    .httpOnly(false)         // HTTP 전용 아님
-                    .secure(false)         // HTTPS 전송을 위한 설정
-                    .sameSite("Lax")
-                    .domain(serverIp)// 크로스 도메인 요청에서도 쿠키 전송 가능
+                    .httpOnly(false)    // HTTP 전용 아님
+                    .secure(true)      // HTTPS 전송을 위한 설정
+                    .sameSite("None")   // 크로스 도메인 요청에서도 쿠키 전송 가능
+                    .domain(serverIp)
                     .maxAge(60 * 60 * 60)    // 쿠키 수명 설정
                     .build();
         } catch (Exception e) {
