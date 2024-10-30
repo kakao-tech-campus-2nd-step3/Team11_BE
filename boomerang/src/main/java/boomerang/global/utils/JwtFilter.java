@@ -49,7 +49,10 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
+        System.out.println("authorization = " + authorization);
         //Authorization 헤더 검증
+
+
         if (authorization == null) {
 
             System.out.println("token null");
