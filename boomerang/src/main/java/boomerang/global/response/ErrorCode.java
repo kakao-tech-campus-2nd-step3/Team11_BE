@@ -52,6 +52,7 @@ public enum ErrorCode {
     PROGRESS_NOT_INCLUDED_MAIN(HttpStatus.NOT_FOUND, "PG010", "유저의 피해타입은 해당 메인단계를 가지고 있지 않습니다."),
     PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 미완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
+    PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
 
 
     // Chat

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProgressFactory {
+public class ProgressUtil {
     public static Progress makeProgress(ProgressType progressType, Member member) {
         List<MainStepEnum> mainStepEnumList = progressType.getMainStepEnumList();
 
@@ -33,4 +33,5 @@ public class ProgressFactory {
 
         return progress;
     }
+
 }
