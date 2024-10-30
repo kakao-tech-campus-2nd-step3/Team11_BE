@@ -83,7 +83,7 @@ public class SecurityConfig {
 
         //JWTFilter 추가 (이후 JWT 필터 구현 후 추가)
         http
-                .addFilterBefore(new JwtFilter(jwtUtil, principalService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(jwtUtil, principalService, clientServerProperties), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(handeler -> handeler.authenticationEntryPoint(new SecurityAuthenticationEntryPoint()));
 
         //경로별 인가 작업

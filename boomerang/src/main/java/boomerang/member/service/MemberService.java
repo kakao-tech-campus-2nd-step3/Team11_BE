@@ -11,13 +11,15 @@ import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final RandomNickname randomNicknameGenerator;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandomNickname randomNicknameGenerator) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.randomNicknameGenerator = randomNicknameGenerator;
