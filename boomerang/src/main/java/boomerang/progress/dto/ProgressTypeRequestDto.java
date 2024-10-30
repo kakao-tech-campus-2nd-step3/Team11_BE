@@ -1,5 +1,6 @@
 package boomerang.progress.dto;
 
+import boomerang.progress.domain.LeaseTypeEnum;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;

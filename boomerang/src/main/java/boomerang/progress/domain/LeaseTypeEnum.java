@@ -1,4 +1,4 @@
-package boomerang.progress.dto;
+package boomerang.progress.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

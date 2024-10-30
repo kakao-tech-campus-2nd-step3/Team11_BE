@@ -3,7 +3,7 @@ package boomerang.progress.util;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.progress.domain.ProgressType;
-import boomerang.progress.dto.LeaseTypeEnum;
+import boomerang.progress.domain.LeaseTypeEnum;
 import boomerang.progress.dto.ProgressTypeRequestDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
