@@ -81,7 +81,6 @@ public class MemberController {
                                                                         HttpServletResponse response,
                                                                         @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
         return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
     }
 

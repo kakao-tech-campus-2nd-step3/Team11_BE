@@ -1,7 +1,5 @@
 package boomerang.progress.domain;
 
-import boomerang.global.response.ErrorCode;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SubStepEnum {
@@ -16,15 +14,15 @@ public enum SubStepEnum {
         this.content = content;
     }
 
-    @JsonCreator
-    public static SubStepEnum fromStepName(String stepName) {
-        for (SubStepEnum subStepEnum : SubStepEnum.values()) {
-            if (subStepEnum.subStepName.equals(stepName)) {
-                return subStepEnum;
-            }
-        }
-        throw new IllegalStateException(ErrorCode.PROGRESS_SUB_INVALID_NAME.getMessage());
-    }
+//    @JsonCreator
+//    public static SubStepEnum fromStepName(String stepName) {
+//        for (SubStepEnum subStepEnum : SubStepEnum.values()) {
+//            if (subStepEnum.subStepName.equals(stepName)) {
+//                return subStepEnum;
+//            }
+//        }
+//        throw new IllegalStateException(ErrorCode.PROGRESS_SUB_INVALID_NAME.getMessage());
+//    }
 
     @JsonValue
     public String getSubStepName() {
