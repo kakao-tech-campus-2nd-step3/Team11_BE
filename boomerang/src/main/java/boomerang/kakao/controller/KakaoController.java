@@ -12,6 +12,7 @@ import boomerang.kakao.dto.KakaoTokenResponseDto;
 import boomerang.kakao.dto.MemberStatusDto;
 import boomerang.kakao.service.KakaoService;
 import boomerang.member.domain.Member;
+import boomerang.member.dto.MemberLoginDto;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +49,14 @@ public class KakaoController {
     }
 
     @PostMapping("/login/kakao")
-    public ResponseEntity<MemberStatusDto> loginKakao(HttpServletResponse response,@RequestBody KakaoTokenDto kakaoTokenDto) throws IOException {
+    public ResponseEntity<MemberLoginDto> loginKakao(HttpServletResponse response,@RequestBody KakaoTokenDto kakaoTokenDto) throws IOException {
         KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenDto);
         Member member = memberService.loginKakaoMember(kakaoMember);
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
         response.addHeader(Authorization,token);
         System.out.println("member = " + member);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new MemberStatusDto(member));
+                .body(new MemberLoginDto(member));
     }
 
 

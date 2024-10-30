@@ -6,10 +6,7 @@ import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.dto.MemberCreateResponseDto;
-import boomerang.member.dto.NicknameUpdateRequestDto;
-import boomerang.member.dto.RandomNicknameCreateResponseDTO;
+import boomerang.member.dto.*;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -80,13 +77,12 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<MemberLoginDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                                         HttpServletResponse response,
                                                                         @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
         response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
     }
 
     // GlobalException Handler 에서 처리할 경우,
