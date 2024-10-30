@@ -56,15 +56,16 @@ public class ProgressService {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
         Progress progress = getProgressByMember(member);
-        MainStep mainStep = getMainStepByEnum(progress, progress.getProgressType().getMainStepEnumList().getFirst());
-        //유저의 현재 메인 단계
+        MainStep mainStep = null;
+
+        // 유저의 현재 메인 단계 설정
         for (MainStepEnum mainStepEnum : progress.getProgressType().getMainStepEnumList()) {
-            if (getMainStepByEnum(progress, mainStepEnum).isCompletion()) {
-                mainStep = getMainStepByEnum(progress, mainStepEnum);
-            } else {
+            MainStep step = getMainStepByEnum(progress, mainStepEnum);
+            if (!step.isCompletion()) {
+                mainStep = step;
                 break;
             }
-
+            mainStep = step; // 모든 단계가 완료되었을 때 마지막 단계로 설정
         }
 
         return new ProgressByMainResponseDto(progress, mainStep);
