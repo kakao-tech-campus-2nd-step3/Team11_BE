@@ -53,6 +53,7 @@ public class KakaoController {
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
         response.addHeader(Authorization,token);
         response.sendRedirect(getRedirectUtil(member));
+        System.out.println("member = " + member);
         return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
