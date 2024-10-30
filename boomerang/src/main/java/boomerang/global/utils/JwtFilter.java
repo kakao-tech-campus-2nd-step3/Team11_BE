@@ -33,31 +33,29 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
+        String authorization = request.getHeader("Authorization");
+//        //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
+//        String authorization = null;
+//        Cookie[] cookies = request.getCookies();
+//
+//        if (cookies == null) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        for (Cookie cookie : cookies) {
+//
+//            System.out.println(cookie.getName());
+//            if (cookie.getName().equals("Authorization")) {
+//
+//                authorization = cookie.getValue();
+//            }
+//        }
+//
+//        System.out.println("authorization = " + authorization);
+//        //Authorization 헤더 검증
 
-        if (cookies == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        for (Cookie cookie : cookies) {
-
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-
-                authorization = cookie.getValue();
-            }
-        }
-
-        System.out.println("authorization = " + authorization);
-        //Authorization 헤더 검증
-
-        log.debug(authorization.toString());
-
-        if (authorization == null) {
-
+        if (authorization == null || authorization.isBlank()) {
             System.out.println("token null");
             filterChain.doFilter(request, response);
 
