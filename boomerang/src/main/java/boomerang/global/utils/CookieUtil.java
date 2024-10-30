@@ -41,6 +41,7 @@ public class CookieUtil {
                     .domain(serverIp)
                     .maxAge(60 * 60 * 60)    // 쿠키 수명 설정
                     .build();
+
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.COOKIES_ERROR);
         }

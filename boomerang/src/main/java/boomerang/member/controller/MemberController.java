@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/member")
 public class MemberController {
     private final MemberService memberService;
+    public static String Authorization = "Authorization";
+
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
@@ -48,12 +50,12 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addHeader("Set-Cookie", CookieUtil.createAuthorizationCookie(token).toString());
+        response.addHeader(Authorization,token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
-//    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
+//    안쓰는 로직 : 팀=원들과 상의 후 삭제 예정
 //    @PutMapping("/{id}")
 //    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
 //        memberService.updateMember(id,memberCreateRequestDTO);

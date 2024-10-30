@@ -26,7 +26,7 @@ public class MentorController {
 
     // 멘토 조회
     @GetMapping
-    public ResponseEntity<PageResponseDto> getAllMentors(
+    public ResponseEntity<PageResponseDto<MentorResponseDto>> getAllMentors(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<MentorResponseDto> mentors = mentorService.getAllMentors(pageable);
         return ResponseEntity.ok(new PageResponseDto(mentors));

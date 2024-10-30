@@ -7,6 +7,7 @@ import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.kakao.domain.KakaoMember;
+import boomerang.kakao.dto.KakaoTokenDto;
 import boomerang.kakao.dto.KakaoTokenResponseDto;
 import boomerang.kakao.service.KakaoService;
 import boomerang.member.domain.Member;
@@ -31,6 +32,8 @@ public class KakaoController {
     private String clientId;
     @Value("${app.server.ip}")
     private String serverIp;
+    public static String Authorization = "Authorization";
+
     private final ClientServerProperties clientServerProperties;
 
     public KakaoController(KakaoService kakaoService,
@@ -42,6 +45,19 @@ public class KakaoController {
         this.jwtUtil = jwtUtil;
         this.clientServerProperties = clientServerProperties;
     }
+
+    @GetMapping("/login/kakao")
+    public ResponseEntity<?> loginKakao(HttpServletResponse response,@RequestBody KakaoTokenDto kakaoTokenDto) throws IOException {
+        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenDto);
+        Member member = memberService.loginKakaoMember(kakaoMember);
+        String token = jwtUtil.generateToken(member.getId(), member.getEmail());
+        response.addHeader(Authorization,token);
+        response.sendRedirect(getRedirectUtil(member));
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+
 
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
