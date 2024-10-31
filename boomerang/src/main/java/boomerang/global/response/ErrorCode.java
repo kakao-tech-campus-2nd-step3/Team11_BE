@@ -31,6 +31,7 @@ public enum ErrorCode {
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
     COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "CM002", "댓글에 수정 권한이 없습니다."),
     COMMENT_NON_EXISTENT(HttpStatus.NOT_FOUND, "CM003", "댓글을 찾을 수 없습니다."),
+    COMMENT_CONTAINS_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "CM004", "전화번호를 올릴 수 없습니다."),
 
     // Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),

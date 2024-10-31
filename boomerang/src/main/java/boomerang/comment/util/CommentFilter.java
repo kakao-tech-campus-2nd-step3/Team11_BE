@@ -26,6 +26,12 @@ public class CommentFilter {
     @Value("${resources.path.bad-words-file}")
     private String badWordsFilePath;
 
+    private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile(
+            "(\\d{2,4}[-.\\s]?\\d{3,4}[-.\\s]?\\d{4})|" + // 일반 전화번호 형식
+                    "(\\(\\d{2,3}\\)[-\\s]?\\d{3,4}[-\\s]?\\d{4})" // 지역번호가 괄호로 묶인 형식
+    );
+
+
     @PostConstruct
     public void init() {
         ClassPathResource resource = new ClassPathResource(badWordsFilePath);
@@ -35,7 +41,7 @@ public class CommentFilter {
 
         try (InputStream inputStream = resource.getInputStream()) {
             String[] profanities = mapper.readValue(inputStream, String[].class);
-            this.profanityFilter = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8),200, 0.01);
+            this.profanityFilter = BloomFilter.create(Funnels.stringFunnel(StandardCharsets.UTF_8), 200, 0.01);
 
             Arrays.sort(profanities, Comparator.comparingInt(String::length).reversed());
 
@@ -65,5 +71,11 @@ public class CommentFilter {
             return profanityPattern.matcher(text).replaceAll("***");
         }
         return text;
+    }
+
+
+    // 전화번호 형식 포함 여부를 검사하는 메서드
+    public boolean containsPhoneNumber(String input) {
+        return PHONE_NUMBER_PATTERN.matcher(input).find();
     }
 }

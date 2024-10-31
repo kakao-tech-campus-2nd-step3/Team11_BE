@@ -32,6 +32,9 @@ public class CommentService {
         board.increaseCommentCount();
         Member author = memberService.getMemberByEmail(email);
 
+        if (commentFilter.containsPhoneNumber(commentRequestDto.getText())) {
+            throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
+        }
         String filteredText = commentFilter.filterProfanity(commentRequestDto.getText());
 
         CommentRequestDto filteredCommentRequestDto = new CommentRequestDto(filteredText);
@@ -73,6 +76,9 @@ public class CommentService {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
+        if (commentFilter.containsPhoneNumber(commentRequestDto.getText())) {
+            throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
+        }
         String filteredText = commentFilter.filterProfanity(commentRequestDto.getText());
         comment.updateCommentText(filteredText);
 
