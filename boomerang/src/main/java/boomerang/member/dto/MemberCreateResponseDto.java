@@ -7,7 +7,6 @@ public class MemberCreateResponseDto {
     private String email;
     private String nickname;
 
-
     public MemberCreateResponseDto() {
     }
 

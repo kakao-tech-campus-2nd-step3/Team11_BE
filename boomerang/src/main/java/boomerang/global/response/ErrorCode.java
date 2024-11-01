@@ -11,6 +11,7 @@ public enum ErrorCode {
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "EG004", "잘못된 요청입니다."),
     COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
+    KAKAO_ERROR(HttpStatus.UNAUTHORIZED, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
@@ -54,8 +55,9 @@ public enum ErrorCode {
     PROGRESS_SUB_MAIN_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "PG008", "서브단계와 메인 단계가 적절하게 매칭되지 않습니다."),
     PROGRESS_NOT_INCLUDED_SUB(HttpStatus.NOT_FOUND, "PG009", "유저의 피해타입은 해당 세부단계를 가지고 있지 않습니다."),
     PROGRESS_NOT_INCLUDED_MAIN(HttpStatus.NOT_FOUND, "PG010", "유저의 피해타입은 해당 메인단계를 가지고 있지 않습니다."),
-    PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 미완료 단계입니다"),
+    PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
+    PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
 
 
     // Chat

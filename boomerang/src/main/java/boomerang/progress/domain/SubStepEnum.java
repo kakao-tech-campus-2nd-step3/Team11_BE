@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SubStepEnum {
-    SUB_STEP_1("서브단계1"),
-    SUB_STEP_2("서브단계2");
+    SUB_1("서브단계1","content"),
+    SUB_2("서브단계2","content");
 
     private final String subStepName;
+    private final String content;
 
-    SubStepEnum(String subStepName) {
+    SubStepEnum(String subStepName,String content) {
         this.subStepName = subStepName;
+        this.content = content;
     }
 
     @JsonCreator
@@ -27,5 +29,9 @@ public enum SubStepEnum {
     @JsonValue
     public String getSubStepName() {
         return subStepName;
+    }
+
+    public String getContent() {
+        return content;
     }
 }

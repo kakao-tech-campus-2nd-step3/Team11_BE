@@ -1,6 +1,7 @@
 package boomerang.global.handler;
 
 import boomerang.global.exception.BusinessException;
+import boomerang.global.exception.KakaoException;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
@@ -81,7 +82,7 @@ public class GlobalExceptionHandler {
         return ResponseHelper.createErrorResponse(ErrorCode.BAD_REQUEST, errorMessage);
     }
 
-    @Order(2)
+    @Order(3)
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponseDto> handleException(IllegalStateException e) {
         log.error(Arrays.toString(e.getStackTrace()));
@@ -89,7 +90,15 @@ public class GlobalExceptionHandler {
         return ResponseHelper.createErrorResponse(errorCode, e.getMessage());
     }
 
-    @Order(3)
+    
+    @Order(2)
+    @ExceptionHandler(KakaoException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(KakaoException e) {
+        log.error(Arrays.toString(e.getStackTrace()));
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        return ResponseHelper.createErrorResponse(errorCode,e.getStatus(), e.getMessage());
+
+  @Order(4)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error(Arrays.toString(e.getStackTrace()));

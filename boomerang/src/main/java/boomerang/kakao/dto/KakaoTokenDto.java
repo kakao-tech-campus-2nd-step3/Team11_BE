@@ -1,6 +1,5 @@
-package boomerang.progress.dto;
+package boomerang.kakao.dto;
 
-import boomerang.progress.domain.LeaseTypeEnum;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProgressTypeRequestDto {
-    private Boolean isInsured;                  //보험 가입 여부
-    private LeaseTypeEnum leaseType;        //계약 종류
+public class KakaoTokenDto {
+    public String accessToken;
 }
