@@ -39,6 +39,10 @@ public class MentorService {
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(email);
 
+        if (!member.isEmailVerified()) {
+            throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+
         // 기존에 기록이 있으면 재생성, 없다면 신규 생성
         return mentorRepository.findByMember(member)
                 .map(existingMentor -> reactivateExistingMentor(existingMentor, requestDto))
