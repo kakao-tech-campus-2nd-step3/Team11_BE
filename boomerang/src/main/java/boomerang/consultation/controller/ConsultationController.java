@@ -1,8 +1,6 @@
 package boomerang.consultation.controller;
 
-import boomerang.consultation.dto.ConsultationRequestDto;
-import boomerang.consultation.dto.ConsultationResponseDto;
-import boomerang.consultation.dto.ConsultationResponseListDto;
+import boomerang.consultation.dto.*;
 import boomerang.consultation.service.ConsultationService;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import jakarta.validation.Valid;
@@ -26,6 +24,13 @@ public class ConsultationController {
                                                                        @Valid @RequestBody ConsultationRequestDto consultationRequestDto) {
         ConsultationResponseDto consultationResponseDto = consultationService.requestConsultation(principalDetails, consultationRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
+    }
+
+    //일정등록
+    @PostMapping("/consultation/schedule")
+    public ResponseEntity<ScheduleResponseDto> registerSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ScheduleRequestDto scheduleRequestDto) {
+        ScheduleResponseDto scheduleresponseDto = consultationService.registerSchedule(principalDetails, scheduleRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleresponseDto);
     }
 
     //상담완료

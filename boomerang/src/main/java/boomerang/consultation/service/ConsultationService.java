@@ -1,10 +1,14 @@
 package boomerang.consultation.service;
 
 import boomerang.consultation.domain.Consultation;
-import boomerang.consultation.dto.ConsultationRequestDto;
-import boomerang.consultation.dto.ConsultationResponseDto;
-import boomerang.consultation.dto.ConsultationResponseListDto;
+import boomerang.consultation.domain.DaySchedule;
+import boomerang.consultation.domain.MonthSchedule;
+import boomerang.consultation.domain.TimeSchedule;
+import boomerang.consultation.dto.*;
 import boomerang.consultation.repository.ConsultationRepository;
+import boomerang.consultation.repository.DayScheduleRepository;
+import boomerang.consultation.repository.MonthScheduleRepository;
+import boomerang.consultation.repository.TimeScheduleRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
@@ -12,18 +16,26 @@ import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.mentor.domain.Mentor;
 import boomerang.mentor.service.MentorService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConsultationService {
 
     private final ConsultationRepository consultationRepository;
+    private final MonthScheduleRepository monthScheduleRepository;
+    private final DayScheduleRepository dayScheduleRepository;
+    private final TimeScheduleRepository timeScheduleRepository;
     private final MemberService memberService;
     private final MentorService mentorService;
 
@@ -87,6 +99,36 @@ public class ConsultationService {
     public Consultation getConsultation(long id) {
         return consultationRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
+    }
+
+    @Transactional
+    public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+        MonthSchedule monthSchedule = new MonthSchedule(scheduleRequestDto.getMonth());
+        List<DaySchedule> dayScheduleList = new ArrayList<>();
+
+        for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()) {
+            for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()) {
+                DaySchedule daySchedule = new DaySchedule(Integer.parseInt(entry.getKey()),monthSchedule);
+
+                List<TimeSchedule> timeSlots = entry.getValue().stream()
+                        .map(hour -> {
+                            TimeSchedule timeSlot = new TimeSchedule(hour, daySchedule);
+                            System.out.println(timeSlot);
+                            timeScheduleRepository.save(timeSlot);
+                            return timeSlot;
+                        }).collect(Collectors.toList());
+
+                daySchedule.setTimeScheduless(timeSlots);
+                System.out.println(daySchedule);
+                dayScheduleRepository.save(daySchedule);
+                dayScheduleList.add(daySchedule);
+            }
+        }
+
+        monthSchedule.setDaySchedules(dayScheduleList);
+
+        monthScheduleRepository.save(monthSchedule);
+        return new ScheduleResponseDto(monthSchedule.getMonth(), dayScheduleList);
     }
 
 }
