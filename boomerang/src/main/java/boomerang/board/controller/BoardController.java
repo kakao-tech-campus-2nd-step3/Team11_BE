@@ -45,7 +45,8 @@ public class BoardController {
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getBestBoards(
             @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
         Page<Board> boardPage = boardService.getBestBoards(boardBestListRequestDto);
-        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
+        Page<BoardResponseDto> boardResponsePage
+                = boardPage.map(board -> new BoardResponseDto(board, boardBestListRequestDto.getContent_length()));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponseDto<>(boardResponsePage));
     }
@@ -54,7 +55,8 @@ public class BoardController {
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getAllBoards(
             @ModelAttribute BoardListRequestDto boardListRequestDto) {
         Page<Board> boardPage = boardService.getAllBoards(boardListRequestDto);
-        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
+        Page<BoardResponseDto> boardResponsePage
+                = boardPage.map(board -> new BoardResponseDto(board, boardListRequestDto.getContent_length()));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponseDto<>(boardResponsePage));
     }
