@@ -128,7 +128,7 @@ public class ConsultationService {
         monthSchedule.setDaySchedules(dayScheduleList);
 
         monthScheduleRepository.save(monthSchedule);
-        return new ScheduleResponseDto(monthSchedule.getMonth(), dayScheduleList);
+        return new ScheduleResponseDto(monthSchedule.getMonthValue(), dayScheduleList);
     }
 
 }

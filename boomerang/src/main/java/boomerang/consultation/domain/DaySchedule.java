@@ -12,17 +12,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "day_schedule")
 public class DaySchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int day;
+    private int dayValue;
 
     @ManyToOne
-    @JoinColumn(name = "month_schedule_id")
+    @JoinColumn(name = "monthSchedule_id")
     private MonthSchedule monthSchedule;
 
     @JsonIgnore
@@ -30,7 +29,7 @@ public class DaySchedule {
     private List<TimeSchedule> timeScheduless = new ArrayList<>();
 
     public DaySchedule(int day, MonthSchedule monthSchedule) {
-        this.day = day;
+        this.dayValue = day;
         this.monthSchedule = monthSchedule;
     }
 

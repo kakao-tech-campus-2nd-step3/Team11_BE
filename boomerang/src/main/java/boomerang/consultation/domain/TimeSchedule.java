@@ -8,21 +8,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "time_schedule")
 public class TimeSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int hour;
+    private int hourValue;
 
     @ManyToOne
-    @JoinColumn(name = "day_schedule")
+    @JoinColumn(name = "daySchedule_id")
     private DaySchedule daySchedule;
 
     public TimeSchedule(int hour, DaySchedule daySchedule) {
-        this.hour = hour;
+        this.hourValue = hour;
         this.daySchedule = daySchedule;
     }
 
