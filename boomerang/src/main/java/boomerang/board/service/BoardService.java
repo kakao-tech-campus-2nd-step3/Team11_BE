@@ -13,9 +13,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final Double weight = 0.7;
+    private final int minDate = 7;
 
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -23,9 +27,15 @@ public class BoardService {
 
     // 베스트 게시물 가져오기
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
-        PageRequest pageRequest = getBestPageRequest(boardBestListRequestDto);
-        Page<Board> boardPage = boardRepository.findAll(pageRequest);
-        return boardPage;
+        // x일 이내의 시작 날짜 계산
+        LocalDate startDate = LocalDate.now().minusDays(minDate);
+
+        // PageRequest 생성
+        PageRequest pageRequest = PageRequest.of(
+                0, boardBestListRequestDto.getSize(), Sort.unsorted());
+
+        // 수정된 쿼리 호출
+        return boardRepository.findBestBoardsByDateAndScore(startDate, weight, pageRequest);
     }
 
     // 모든 게시물 가져오기
