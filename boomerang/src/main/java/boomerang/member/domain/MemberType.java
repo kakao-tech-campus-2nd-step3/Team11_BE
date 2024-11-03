@@ -5,6 +5,7 @@ import boomerang.member.exception.MemberValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
 import java.util.Objects;
 
 @Embeddable

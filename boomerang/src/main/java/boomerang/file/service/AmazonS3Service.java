@@ -18,9 +18,9 @@ import java.time.format.DateTimeFormatter;
 public class AmazonS3Service implements FileService {
 
 
+    private final S3Client amazonS3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    private final S3Client amazonS3Client;
 
     public AmazonS3Service(S3Client amazonS3Client) {
         this.amazonS3Client = amazonS3Client;

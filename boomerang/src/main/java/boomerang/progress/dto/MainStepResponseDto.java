@@ -15,14 +15,9 @@ import java.util.List;
 public class MainStepResponseDto {
     private String mainStepName;
     private Boolean completion;
-    private List<SubStepResponseDto> subStepList;
 
     public MainStepResponseDto(MainStep mainStep) {
-        this.mainStepName = mainStep.getMainName();
-        this.completion = mainStep.getCompletion();
-        this.subStepList = mainStep.getSubStepAll()
-                .stream().
-                map(SubStepResponseDto::new).
-                toList();
+        this.mainStepName = mainStep.getName();
+        this.completion = mainStep.isCompletion();
     }
 }
