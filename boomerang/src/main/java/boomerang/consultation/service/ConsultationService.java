@@ -135,7 +135,7 @@ public class ConsultationService {
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
                 LocalDate date = LocalDate.of(2024, scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey())); // DTO의 월, 일로 LocalDate 생성
-                Schedule schedule = scheduleRepository.findByDate(date)
+                Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
                         .orElse(new Schedule(mentor,date)); // 해당 날짜의 Schedule이 없으면 새로 생성
                 List<Integer> hours = entry.getValue();
                 for (int hour : hours) {
@@ -158,10 +158,15 @@ public class ConsultationService {
 
     @Transactional
     public void deleteSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Mentor mentor = mentorService.getMentor(scheduleRequestDto.getMentorId());
+        if (!mentor.getMember().equals(member)) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
+        }
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
                 LocalDate date = LocalDate.of(2024, scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey()));
-                Schedule schedule = scheduleRepository.findByDate(date)
+                Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
                         .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
                 List<Integer> hours = entry.getValue();
                 for (int hour : hours) {
