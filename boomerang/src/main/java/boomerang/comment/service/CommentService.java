@@ -32,10 +32,7 @@ public class CommentService {
         board.increaseCommentCount();
         Member author = memberService.getMemberByEmail(email);
 
-        if (commentFilter.containsPhoneNumber(commentRequestDto.getText())) {
-            throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
-        }
-        String filteredText = commentFilter.filterProfanity(commentRequestDto.getText());
+        String filteredText = validateCommentText(commentRequestDto.getText());
 
         CommentRequestDto filteredCommentRequestDto = new CommentRequestDto(filteredText);
         commentRepository.save(new Comment(author, board, filteredCommentRequestDto));
@@ -76,10 +73,7 @@ public class CommentService {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
-        if (commentFilter.containsPhoneNumber(commentRequestDto.getText())) {
-            throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
-        }
-        String filteredText = commentFilter.filterProfanity(commentRequestDto.getText());
+        String filteredText = validateCommentText(commentRequestDto.getText());
         comment.updateCommentText(filteredText);
 
         commentRepository.save(comment);
@@ -96,6 +90,14 @@ public class CommentService {
                 commentListRequestDto.getSize(),
                 Sort.by(commentListRequestDto.getSortDirection(), commentListRequestDto.getSortBy())
         );
+    }
+
+    //
+    private String validateCommentText(String text) {
+        if (commentFilter.containsPhoneNumber(text)) {
+            throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
+        }
+        return commentFilter.filterProfanity(text);
     }
 
 }
