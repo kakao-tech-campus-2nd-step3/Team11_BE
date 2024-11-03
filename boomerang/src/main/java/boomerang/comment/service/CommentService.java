@@ -27,7 +27,7 @@ public class CommentService {
     private final CommentFilter commentFilter;
 
     //댓글 생성
-    public void createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
+    public Comment createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
         Board board = boardService.getBoard(boardId);
         board.increaseCommentCount();
         Member author = memberService.getMemberByEmail(email);
@@ -35,7 +35,7 @@ public class CommentService {
         String filteredText = validateCommentText(commentRequestDto.getText());
 
         CommentRequestDto filteredCommentRequestDto = new CommentRequestDto(filteredText);
-        commentRepository.save(new Comment(author, board, filteredCommentRequestDto));
+        return commentRepository.save(new Comment(author, board, filteredCommentRequestDto));
     }
 
     //댓글 조회
@@ -66,7 +66,7 @@ public class CommentService {
 
 
     //댓글 수정
-    public void updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
+    public Comment updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
         Comment comment = getComment(commentId);
 
         if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
@@ -76,7 +76,7 @@ public class CommentService {
         String filteredText = validateCommentText(commentRequestDto.getText());
         comment.updateCommentText(filteredText);
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     public Comment getComment(Long commentId) {
