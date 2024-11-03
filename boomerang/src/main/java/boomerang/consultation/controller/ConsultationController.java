@@ -29,8 +29,16 @@ public class ConsultationController {
     //일정등록
     @PostMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseDto> registerSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ScheduleRequestDto scheduleRequestDto) {
-        ScheduleResponseDto scheduleresponseDto = consultationService.registerSchedule(principalDetails, scheduleRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleresponseDto);
+//        ScheduleResponseDto scheduleresponseDto = consultationService.registerSchedule(principalDetails, scheduleRequestDto);
+        ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule2(principalDetails, scheduleRequestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponseDto);
+    }
+
+    @DeleteMapping("/consultation/schedule")
+    public ResponseEntity<Void>  deleteSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails,@RequestBody ScheduleRequestDto scheduleRequestDto) {
+        consultationService.deleteSchedule(principalDetails, scheduleRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //상담완료

@@ -44,6 +44,9 @@ public enum ErrorCode {
     CONSULTATION_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS002", "해당 상담은 존재하지 않습니다."),
     CONSULTATION_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "CS003", "같은날짜에 동일한 상담이 존재합니다."),
     CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
+    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005", "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
+    CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
+    SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),

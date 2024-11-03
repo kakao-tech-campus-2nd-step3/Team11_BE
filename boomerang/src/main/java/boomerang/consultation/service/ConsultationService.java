@@ -1,14 +1,8 @@
 package boomerang.consultation.service;
 
-import boomerang.consultation.domain.Consultation;
-import boomerang.consultation.domain.DaySchedule;
-import boomerang.consultation.domain.MonthSchedule;
-import boomerang.consultation.domain.TimeSchedule;
+import boomerang.consultation.domain.*;
 import boomerang.consultation.dto.*;
-import boomerang.consultation.repository.ConsultationRepository;
-import boomerang.consultation.repository.DayScheduleRepository;
-import boomerang.consultation.repository.MonthScheduleRepository;
-import boomerang.consultation.repository.TimeScheduleRepository;
+import boomerang.consultation.repository.*;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
@@ -36,6 +30,7 @@ public class ConsultationService {
     private final MonthScheduleRepository monthScheduleRepository;
     private final DayScheduleRepository dayScheduleRepository;
     private final TimeScheduleRepository timeScheduleRepository;
+    private final ScheduleRepository scheduleRepository;
     private final MemberService memberService;
     private final MentorService mentorService;
 
@@ -102,7 +97,7 @@ public class ConsultationService {
     }
 
     @Transactional
-    public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+    public void registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
         MonthSchedule monthSchedule = new MonthSchedule(scheduleRequestDto.getMonth());
         List<DaySchedule> dayScheduleList = new ArrayList<>();
 
@@ -113,8 +108,6 @@ public class ConsultationService {
                 List<TimeSchedule> timeSlots = entry.getValue().stream()
                         .map(hour -> {
                             TimeSchedule timeSlot = new TimeSchedule(hour, daySchedule);
-                            System.out.println(timeSlot);
-                            timeScheduleRepository.save(timeSlot);
                             return timeSlot;
                         }).collect(Collectors.toList());
 
@@ -128,7 +121,38 @@ public class ConsultationService {
         monthSchedule.setDaySchedules(dayScheduleList);
 
         monthScheduleRepository.save(monthSchedule);
-        return new ScheduleResponseDto(monthSchedule.getMonth(), dayScheduleList);
+    }
+
+    @Transactional
+    public ScheduleResponseDto registerSchedule2(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Mentor mentor = mentorService.getMentor(scheduleRequestDto.getMentorId());
+        if (!mentor.getMember().equals(member)) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
+        }
+        List<Schedule> scheduleList = new ArrayList<>();
+        for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
+            for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
+                LocalDate date = LocalDate.of(2024, scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey())); // DTO의 월, 일로 LocalDate 생성
+                Schedule schedule = scheduleRepository.findByDate(date)
+                        .orElse(new Schedule(mentor,date)); // 해당 날짜의 Schedule이 없으면 새로 생성
+                List<Integer> hours = entry.getValue();
+                for (int hour : hours) {
+                    if (hour < 0 || hour >= 24) {
+                        throw new BusinessException(ErrorCode.CONSULTATION_TIME_REQUEST_ERROR); // 0 ~ 23 범위에 벗어나는 시간 예외 처리
+                    }
+                    if (schedule.getHourlySlots().get(hour)) {
+                        throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS); // 중복된 시간 예외 처리
+                    }
+                    schedule.reserveSlot(hour); // 시간대 예약
+                    scheduleRepository.save(schedule);
+                    if (schedule.getHourlySlots().get(hour) == Boolean.TRUE) {
+                        scheduleList.add(schedule);
+                    }
+                }
+            }
+        }
+        return new ScheduleResponseDto(scheduleList);
     }
 
 }
