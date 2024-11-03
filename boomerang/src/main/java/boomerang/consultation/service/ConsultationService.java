@@ -9,6 +9,7 @@ import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.mentor.domain.Mentor;
+import boomerang.mentor.repository.MentorRepository;
 import boomerang.mentor.service.MentorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -154,5 +155,27 @@ public class ConsultationService {
         }
         return new ScheduleResponseDto(scheduleList);
     }
+
+    @Transactional
+    public void deleteSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+        for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
+            for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
+                LocalDate date = LocalDate.of(2024, scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey()));
+                Schedule schedule = scheduleRepository.findByDate(date)
+                        .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
+                List<Integer> hours = entry.getValue();
+                for (int hour : hours) {
+                    if (hour < 0 || hour >= 24) {
+                        throw new BusinessException(ErrorCode.CONSULTATION_TIME_REQUEST_ERROR);
+                    }
+                    schedule.unreserveSlot(hour);
+                    scheduleRepository.save(schedule);
+                }
+            }
+        }
+    }
+
+
+
 
 }
