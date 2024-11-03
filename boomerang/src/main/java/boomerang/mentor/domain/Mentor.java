@@ -1,5 +1,6 @@
 package boomerang.mentor.domain;
 
+import boomerang.consultation.domain.Schedule;
 import boomerang.member.domain.Member;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorUpdateRequestDto;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -43,6 +46,10 @@ public class Mentor {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "mentor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> scheduleList = new ArrayList<>();
+
 
     protected Mentor() {
     }
@@ -92,4 +99,6 @@ public class Mentor {
     public void delete() {
         this.isDeleted = true;
     }
+
+    public void registerSchedule(List<Schedule> scheduleList) {this.scheduleList = scheduleList;}
 }
