@@ -96,7 +96,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleException(KakaoException e) {
         log.error(Arrays.toString(e.getStackTrace()));
         ErrorCode errorCode = ErrorCode.BAD_REQUEST;
-        return ResponseHelper.createErrorResponse(errorCode,e.getStatus(), e.getMessage());
+        return ResponseHelper.createErrorResponse(errorCode, e.getStatus(), e.getMessage());
+    }
 
   @Order(4)
     @ExceptionHandler(Exception.class)
