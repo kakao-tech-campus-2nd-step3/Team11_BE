@@ -34,15 +34,13 @@ public class BoardService {
         PageRequest pageRequest = PageRequest.of(
                 0, boardBestListRequestDto.getSize(), Sort.unsorted());
 
-        // 수정된 쿼리 호출
-        return boardRepository.findBestBoardsByDateAndScore(startDate, weight, pageRequest);
+        return boardRepository.findBestBoardsByDateAndScore(startDate, weight, boardBestListRequestDto.getBoard_type(), pageRequest);
     }
 
     // 모든 게시물 가져오기
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
-        Page<Board> boardPage = boardRepository.findAll(pageRequest);
-        return boardPage;
+        return boardRepository.findByBoardType(boardListRequestDto.getBoard_type(), pageRequest);
     }
 
     // ID로 게시물 가져오기
@@ -81,14 +79,6 @@ public class BoardService {
         if (!board.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.BOARD_DONT_HAS_OWNERSHIP_ERROR);
         }
-    }
-
-    private PageRequest getBestPageRequest(BoardBestListRequestDto boardBestListRequestDto) {
-        return PageRequest.of(
-                0,
-                boardBestListRequestDto.getSize(),
-                Sort.by(Sort.Direction.DESC, "likeCount")
-        );
     }
 
     private PageRequest getPageRequest(BoardListRequestDto boardListRequestDto) {
