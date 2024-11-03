@@ -1,6 +1,5 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.AnonymousStatus;
 import boomerang.board.domain.BoardType;
 import boomerang.board.domain.Location;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -16,14 +15,12 @@ public class BoardRequestDto {
     private String content;
     private BoardType boardType;
     private Location location;
-    private AnonymousStatus anonymousStatus;
 
     // 생성자
-    public BoardRequestDto(String title, String content, BoardType boardType, Location location, AnonymousStatus anonymousStatus) {
+    public BoardRequestDto(String title, String content, BoardType boardType, Location location) {
         this.title = title;
         this.content = content;
         this.boardType = boardType;
         this.location = location;
-        this.anonymousStatus = anonymousStatus;
     }
 }

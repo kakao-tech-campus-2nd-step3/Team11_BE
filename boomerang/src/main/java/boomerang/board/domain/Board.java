@@ -36,9 +36,6 @@ public class Board {
     @Embedded
     private Location location;
 
-    @Enumerated(EnumType.STRING)
-    private AnonymousStatus anonymousStatus;
-
     private Long likeCount = 0L;
 
     private Long commentCount = 0L;
@@ -72,7 +69,6 @@ public class Board {
         this.writerEmail = member.getEmail();
         this.boardType = boardRequestDto.getBoardType();
         this.location = boardRequestDto.getLocation();
-        this.anonymousStatus = boardRequestDto.getAnonymousStatus();
         this.member = member;
     }
 
@@ -84,7 +80,6 @@ public class Board {
         this.content = boardRequestDto.getContent();
         this.boardType = boardRequestDto.getBoardType();
         this.location = boardRequestDto.getLocation();
-        this.anonymousStatus = boardRequestDto.getAnonymousStatus();
         this.member = member;
     }
 
