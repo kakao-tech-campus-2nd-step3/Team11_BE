@@ -66,7 +66,7 @@ public class CommentFilter {
         return false;
     }
 
-    public String filterProfanity(String text) {
+    public String filterAndReplaceProfanity(String text) {
         if (containsProfanity(text)) {
             return profanityPattern.matcher(text).replaceAll("***");
         }

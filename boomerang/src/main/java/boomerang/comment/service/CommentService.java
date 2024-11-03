@@ -94,10 +94,13 @@ public class CommentService {
 
     //
     private String validateCommentText(String text) {
+        //전화번호를 포함하고 있는 지를 검사
         if (commentFilter.containsPhoneNumber(text)) {
             throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
         }
-        return commentFilter.filterProfanity(text);
+
+        //욕설을 포함한 경우 필터링
+        return commentFilter.filterAndReplaceProfanity(text);
     }
 
 }
