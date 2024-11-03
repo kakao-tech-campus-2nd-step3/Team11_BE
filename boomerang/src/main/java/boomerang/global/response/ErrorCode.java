@@ -12,6 +12,7 @@ public enum ErrorCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "EG004", "잘못된 요청입니다."),
     COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
     KAKAO_ERROR(HttpStatus.UNAUTHORIZED, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
+    FILE_ERROR(HttpStatus.UNAUTHORIZED, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
@@ -32,6 +33,7 @@ public enum ErrorCode {
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
     COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "CM002", "댓글에 수정 권한이 없습니다."),
     COMMENT_NON_EXISTENT(HttpStatus.NOT_FOUND, "CM003", "댓글을 찾을 수 없습니다."),
+    COMMENT_CONTAINS_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "CM004", "전화번호를 올릴 수 없습니다."),
 
     // Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),
