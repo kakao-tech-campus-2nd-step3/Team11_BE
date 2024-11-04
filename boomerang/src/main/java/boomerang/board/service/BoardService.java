@@ -42,8 +42,10 @@ public class BoardService {
         PageRequest pageRequest = PageRequest.of(
                 0, boardBestListRequestDto.getSize(), Sort.unsorted());
 
-        return boardRepository.findBestBoardsByDateAndScore(startDate, WEIGHT, boardBestListRequestDto.getBoard_type(), pageRequest);
+        Page<Board> boardPage =  boardRepository.findBestBoardsByDateAndScore(startDate.atStartOfDay(), WEIGHT, boardBestListRequestDto.getBoard_type(), pageRequest);
+        return boardPage;
     }
+
 
     // 모든 게시물 가져오기
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {

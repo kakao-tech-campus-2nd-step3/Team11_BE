@@ -1,12 +1,15 @@
 ### get best boards
-GET http://localhost:8080/api/v1/board/best?
-    size=5&board_type=ENTIRE&content_length=10
-Cookie: Authorization={{Authorization}}
+GET http://localhost:8080/api/v1/board/best?size=3&board_type=ENTIRE&content_length=20
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
+#재빈님이 하셨던 기존
+#http://localhost:8080/api/v1/board/best?size=5&board_type=ENTIRE&content_length=10
+#Cookie: Authorization={{Authorization}}
+
 
 ### get boards
 GET http://localhost:8080/api/v1/board?
     page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
-Cookie: Authorization={{Authorization}}
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
 
 ### get board
 GET http://localhost:8080/api/v1/board/1
@@ -14,7 +17,7 @@ GET http://localhost:8080/api/v1/board/1
 ### create board
 POST http://localhost:8080/api/v1/board
 Content-Type: multipart/form-data; boundary=boundary
-Cookie: Authorization={{Authorization}}
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
 
 --boundary
 Content-Disposition: form-data; name="data"
@@ -44,7 +47,7 @@ Content-Type: image/png
 ### update board
 PUT http://localhost:8080/api/v1/board/1
 Content-Type: application/json
-Cookie: Authorization={{Authorization}}
+Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
 
 {
   "title": "Example Title",
@@ -56,4 +59,4 @@ Cookie: Authorization={{Authorization}}
 
 ### delete board
 DELETE http://localhost:8080/api/v1/board/1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NjE2NjUsImV4cCI6MTcyNzg2NDA2NX0.Lc3gVOdsj_D3Zn_y6bvMRipYMCr_IenbLm1XVPi8Rr4
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
