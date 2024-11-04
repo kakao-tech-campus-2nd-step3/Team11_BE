@@ -1,25 +1,19 @@
 package boomerang.progress.domain;
 
-import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum SubStepEnum {
-    SUB_STEP_1("sub_step1", MainStepEnum.MAIN_STEP_1),
-    SUB_STEP_2("sub_step2", MainStepEnum.MAIN_STEP_1);
+    SUB_1("서브단계1","content"),
+    SUB_2("서브단계2","content");
 
     private final String subStepName;
-    private final MainStepEnum mainStepEnum;
+    private final String content;
 
-    SubStepEnum(String subStepName, MainStepEnum mainStepEnum) {
+    SubStepEnum(String subStepName,String content) {
         this.subStepName = subStepName;
-        this.mainStepEnum = mainStepEnum;
-    }
-
-    @JsonValue
-    public String getSubStepName() {
-        return subStepName;
+        this.content = content;
     }
 
     @JsonCreator
@@ -29,12 +23,15 @@ public enum SubStepEnum {
                 return subStepEnum;
             }
         }
-        throw new BusinessException(ErrorCode.PROGRESS_SUB_INVALID_NAME);
+        throw new IllegalStateException(ErrorCode.PROGRESS_SUB_INVALID_NAME.getMessage());
     }
 
-
-    public boolean isMatchingMainStep(MainStepEnum mainStepEnum) {
-        return this.mainStepEnum == mainStepEnum;
+    @JsonValue
+    public String getSubStepName() {
+        return subStepName;
     }
 
+    public String getContent() {
+        return content;
+    }
 }

@@ -4,11 +4,12 @@ import boomerang.comment.domain.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -26,7 +27,7 @@ public class CommentResponseDto {
     private boolean isEdited;               //수정여부
 
     //도메인을 기준으로 응답 객체를 만드는 부분
-    public CommentResponseDto (Comment comment) {
+    public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.writerEmail = comment.getAuthorEmail();
         this.writerName = comment.getAuthorName();

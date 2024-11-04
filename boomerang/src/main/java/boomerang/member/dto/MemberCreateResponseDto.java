@@ -7,8 +7,8 @@ public class MemberCreateResponseDto {
     private String email;
     private String nickname;
 
-
-    public MemberCreateResponseDto() {}
+    public MemberCreateResponseDto() {
+    }
 
     // 생성자
     public MemberCreateResponseDto(String email, String nickname) {

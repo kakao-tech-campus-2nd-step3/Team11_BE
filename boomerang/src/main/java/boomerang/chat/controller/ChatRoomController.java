@@ -6,7 +6,6 @@ import boomerang.chat.service.ChatRoomService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

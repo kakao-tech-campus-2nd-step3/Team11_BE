@@ -2,60 +2,43 @@ package boomerang.global.utils;
 
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.oauth.service.PrincipalService;
+import boomerang.global.properties.ClientServerProperties;
+import boomerang.member.domain.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
+
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final PrincipalService principalService;
+    private final ClientServerProperties clientServerProperties;
 
-    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService) {
+    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService, ClientServerProperties clientServerProperties) {
         this.jwtUtil = jwtUtil;
         this.principalService = principalService;
+        this.clientServerProperties = clientServerProperties;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
-        String authorization = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        for (Cookie cookie : cookies) {
-
-            System.out.println(cookie.getName());
-            if (cookie.getName().equals("Authorization")) {
-
-                authorization = cookie.getValue();
-            }
-        }
-
-        //Authorization 헤더 검증
-        if (authorization == null) {
-
+        String token = request.getHeader("Authorization");
+        if (token == null || token.isBlank()) {
             System.out.println("token null");
             filterChain.doFilter(request, response);
-
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
-
-        //토큰
-        String token = authorization;
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isTokenExpired(token)) {
@@ -76,8 +59,23 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        // 'welcome' 페이지와 /api/v1/member/random-nickname요청은 필터링하지 않음
+        if ("/welcome".equals(path) || ("/api/v1/member/random-nickname".equals(path))) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //MemberDetails에 회원 정보 객체 담기
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
+
+        if (memberDetail.getMemberRole().equals(MemberRole.INCOMPLETE_USER)
+                && !("/api/v1/member/nickname".equals(path) && "PUT".equalsIgnoreCase(method))) {
+            response.sendRedirect(clientServerProperties.getWelcome());
+            filterChain.doFilter(request, response);
+        }
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.getAuthorities());

@@ -65,8 +65,8 @@ public class BoardController {
             @PathVariable(name = "board_id") Long boardId) {
         Board board = boardService.getBoard(boardId);
         PageResponseDto<CommentResponseDto> commentListResponseDto = new PageResponseDto<>(
-                        commentService.getAllComment(boardId, new CommentListRequestDto())
-                                .map(CommentResponseDto::new));
+                commentService.getAllComment(boardId, new CommentListRequestDto())
+                        .map(CommentResponseDto::new));
 
         boolean isLiked = false;
 

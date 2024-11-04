@@ -2,6 +2,7 @@ package boomerang.global.utils;
 
 import boomerang.global.response.ErrorCode;
 import boomerang.global.response.ErrorResponseDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
@@ -13,6 +14,19 @@ public class ResponseHelper {
 
     public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode);
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(errorResponseDto);
+    }
+
+    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode, String errorMessage) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode, errorMessage);
+        return ResponseEntity.status(errorCode.getStatus())
+                .body(errorResponseDto);
+    }
+
+
+    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode,HttpStatus status, String errorMessage) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode, errorMessage);
         return ResponseEntity.status(errorCode.getStatus())
                 .body(errorResponseDto);
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PageResponseDto<T>{
+public class PageResponseDto<T> {
     private int totalPage;
     private int currentPage;
     private List<T> content;
