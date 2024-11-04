@@ -13,16 +13,32 @@ GET http://localhost:8080/api/v1/board/1
 
 ### create board
 POST http://localhost:8080/api/v1/board
-Content-Type: application/json
+Content-Type: multipart/form-data; boundary=boundary
 Cookie: Authorization={{Authorization}}
+
+--boundary
+Content-Disposition: form-data;
 
 {
   "title": "Example Title",
   "content": "This is an example content for the board.",
   "board_type": "ENTIRE",
-  "location": "BUSAN",
-  "anonymous_status": "PRIVATE"
+  "location": "BUSAN"
 }
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test1.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test1.png
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test2.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test2.png
+
+--boundary--
 
 
 ### update board
