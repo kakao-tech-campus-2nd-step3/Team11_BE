@@ -89,7 +89,7 @@ public class BoardController {
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestPart("data") BoardRequestDto boardRequestDto,
-            @RequestPart("images") List<MultipartFile> images) {  // 여러 파일을 MultipartFile로 수신
+            @RequestPart("images") List<MultipartFile> images) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
