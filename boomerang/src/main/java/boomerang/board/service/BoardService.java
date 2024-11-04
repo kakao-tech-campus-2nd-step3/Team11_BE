@@ -70,7 +70,12 @@ public class BoardService {
     }
 
     // 게시물 업데이트
-    public Board updateBoard(Long id, BoardRequestDto boardRequestDto, Member member) {
+    public Board updateBoard(Long id, BoardRequestDto boardRequestDto, Member member, List<MultipartFile> images) {
+        // S3에 이미지 업로드 및 URL 리스트 생성
+        List<URL> imageUrls = uploadImages(member, images);
+
+        insertImageUrlsIntoContent(boardRequestDto, imageUrls);
+
         Board board = new Board(id, boardRequestDto, member);
         validateBoardOwnership(board.getMember(), board.getId());
         return boardRepository.save(board);

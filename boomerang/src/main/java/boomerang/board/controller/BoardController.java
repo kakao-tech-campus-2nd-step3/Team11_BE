@@ -109,10 +109,16 @@ public class BoardController {
     public ResponseEntity<Void> updateBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "board_id") Long boardId,
-            @RequestBody BoardRequestDto boardRequestDto) {
+            @RequestParam("data") String data,
+            @RequestParam("images") List<MultipartFile> images
+    ) throws JsonProcessingException {
+
+        // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        BoardRequestDto boardRequestDto = objectMapper.readValue(data, BoardRequestDto.class);
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.updateBoard(boardId, boardRequestDto, member);
+        boardService.updateBoard(boardId, boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
