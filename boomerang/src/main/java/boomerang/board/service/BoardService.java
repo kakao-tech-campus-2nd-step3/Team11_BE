@@ -108,7 +108,7 @@ public class BoardService {
 
         return images.stream()
                 .map(image -> fileService.upload(member.getEmail(), image))  // 업로드 후 URL 반환
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private void insertImageUrlsIntoContent(BoardRequestDto boardRequestDto, List<URL> imageUrls) {
