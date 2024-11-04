@@ -18,16 +18,6 @@ Content-Type: multipart/form-data; boundary=boundary
 Authorization: {{Authorization}}
 
 --boundary
-Content-Disposition: form-data; name="data"
-
-{
-  "title": "Example Title",
-  "content": "This is an example content for the board.",
-  "board_type": "ENTIRE",
-  "location": "BUSAN"
-}
-
---boundary
 Content-Disposition: form-data; name="images"; filename="test1.png"
 Content-Type: image/png
 

@@ -88,12 +88,14 @@ public class BoardController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestPart("data") BoardRequestDto boardRequestDto,
-            @RequestPart("images") List<MultipartFile> images) {
+//            @RequestPart("data") BoardRequestDto boardRequestDto
+            @RequestParam("images") List<MultipartFile> images
+
+    ) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
-        boardService.createBoard(boardRequestDto, member, images);
+//        boardService.createBoard(boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
