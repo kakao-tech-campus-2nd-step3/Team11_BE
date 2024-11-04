@@ -6,6 +6,7 @@ import boomerang.email.dto.EmailVerificationResponseDto;
 import boomerang.email.service.EmailVerificationService;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import jakarta.validation.Valid;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
