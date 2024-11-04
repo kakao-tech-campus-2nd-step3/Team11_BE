@@ -6,7 +6,7 @@ Authorization: {{Authorization}}
 
 ### get boards
 GET http://localhost:8080/api/v1/board?
-    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
+    page=0&size=10&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
 Authorization: {{Authorization}}
 
 ### get board
@@ -16,6 +16,17 @@ GET http://localhost:8080/api/v1/board/1
 POST http://localhost:8080/api/v1/board
 Content-Type: multipart/form-data; boundary=boundary
 Authorization: {{Authorization}}
+
+--boundary
+Content-Disposition: form-data; name="data";
+Content-Type: application/json
+
+{
+  "title": "Example Title",
+  "content": "content <img src=? />  <img src=? />",
+  "board_type": "ENTIRE",
+  "location": "BUSAN"
+}
 
 --boundary
 Content-Disposition: form-data; name="images"; filename="test1.png"
@@ -33,18 +44,35 @@ Content-Type: image/png
 
 
 ### update board
-PUT http://localhost:8080/api/v1/board/1
+PUT http://localhost:8080/api/v1/board/9
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: {{Authorization}}
+
+--boundary
+Content-Disposition: form-data; name="data";
 Content-Type: application/json
-Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
 
 {
   "title": "Example Title",
-  "content": "a.",
+  "content": "content <img src=? />  <img src=? />",
   "board_type": "ENTIRE",
-  "location": "BUSAN",
-  "anonymous_status": "PRIVATE"
+  "location": "BUSAN"
 }
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test1.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test1.png
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test2.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test2.png
+
+--boundary--
 
 ### delete board
 DELETE http://localhost:8080/api/v1/board/1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5IiwiZW1haWwiOiJqaW4wMTEyMjhAbmF2ZXIuY29tIiwiaWF0IjoxNzMwNzE1MDYwLCJleHAiOjI0MTczMDcxNTA2MH0.9dGtao-8IvUSIVXKj9EqDDSKxQbRgn2qvBs4OfvWXxA
+Authorization: {{Authorization}}
