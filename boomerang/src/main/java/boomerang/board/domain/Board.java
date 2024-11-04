@@ -67,7 +67,7 @@ public class Board {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.writerEmail = member.getEmail();
-        this.boardType = boardRequestDto.getBoardType();
+        this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
     }
@@ -78,7 +78,7 @@ public class Board {
         this.title = boardRequestDto.getTitle();
         this.writerEmail = member.getEmail();
         this.content = boardRequestDto.getContent();
-        this.boardType = boardRequestDto.getBoardType();
+        this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
     }

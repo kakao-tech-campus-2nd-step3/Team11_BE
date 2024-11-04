@@ -116,12 +116,13 @@ public class BoardService {
     private void insertImageUrlsIntoContent(BoardRequestDto boardRequestDto, List<URL> imageUrls) {
         String content = boardRequestDto.getContent();
 
-        // <img src="?" /> 의 ? 를 imageUrl로 대체
+        // <img src=?> 부분을 imageUrls의 URL로 순서대로 대체
         for (URL imageUrl : imageUrls) {
-            content = content.replaceFirst("<img src=\"\\?\" />", "<img src=\"" + imageUrl.toString() + "\" />");
+            content = content.replaceFirst("<img src=\\? />", "<img src='" + imageUrl.toString() + "' />");
         }
 
         boardRequestDto.setContentWithImageUrl(content);
     }
+
 }
 

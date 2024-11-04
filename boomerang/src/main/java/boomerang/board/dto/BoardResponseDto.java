@@ -17,16 +17,9 @@ public class BoardResponseDto {
     private Long commentCount;
 
     public BoardResponseDto(Board board, int contentLength) {
-
-        // content 길이를 제한하고, contentLength보다 길 경우 '...'을 추가
-        String content = board.getContent();
-        if (content.length() > contentLength) {
-            content = content.substring(0, contentLength) + "...";
-        }
-
         this.id = board.getId();
         this.title = board.getTitle();
-        this.content = content;
+        this.content = board.getContent();
         this.writerEmail = board.getWriterEmail();
         this.writerName = board.getWriterName();
         this.likeCount = board.getLikeCount();

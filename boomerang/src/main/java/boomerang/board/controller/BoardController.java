@@ -14,6 +14,8 @@ import boomerang.global.utils.ResponseHelper;
 import boomerang.like.service.LikeService;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -88,14 +90,17 @@ public class BoardController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-//            @RequestPart("data") BoardRequestDto boardRequestDto
+            @RequestParam("data") String data,
             @RequestParam("images") List<MultipartFile> images
+    ) throws JsonProcessingException {
 
-    ) {
+        // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        BoardRequestDto boardRequestDto = objectMapper.readValue(data, BoardRequestDto.class);
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
-//        boardService.createBoard(boardRequestDto, member, images);
+        boardService.createBoard(boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
