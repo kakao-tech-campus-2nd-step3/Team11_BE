@@ -17,9 +17,13 @@ import boomerang.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @Slf4j
@@ -81,16 +85,17 @@ public class BoardController {
                 .body(new BoardDetailResponseDto(board, commentListResponseDto, isLiked));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody BoardRequestDto boardRequestDto) {
+            @RequestPart("data") BoardRequestDto boardRequestDto,
+            @RequestPart("images") List<MultipartFile> images) {  // 여러 파일을 MultipartFile로 수신
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        boardService.createBoard(boardRequestDto, member);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+        boardService.createBoard(boardRequestDto, member, images);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{board_id}")

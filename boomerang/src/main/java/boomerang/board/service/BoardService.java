@@ -5,6 +5,7 @@ import boomerang.board.dto.BoardBestListRequestDto;
 import boomerang.board.dto.BoardListRequestDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.repository.BoardRepository;
+import boomerang.file.service.FileService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
@@ -12,29 +13,36 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final Double weight = 0.7;
-    private final int minDate = 7;
+    private final FileService fileService;
+    private final Double WEIGHT = 0.7;
+    private final int MIN_DATE = 7;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, FileService fileService) {
         this.boardRepository = boardRepository;
+        this.fileService = fileService;
     }
 
     // 베스트 게시물 가져오기
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
         // x일 이내의 시작 날짜 계산
-        LocalDate startDate = LocalDate.now().minusDays(minDate);
+        LocalDate startDate = LocalDate.now().minusDays(MIN_DATE);
 
         // PageRequest 생성
         PageRequest pageRequest = PageRequest.of(
                 0, boardBestListRequestDto.getSize(), Sort.unsorted());
 
-        return boardRepository.findBestBoardsByDateAndScore(startDate, weight, boardBestListRequestDto.getBoard_type(), pageRequest);
+        return boardRepository.findBestBoardsByDateAndScore(startDate, WEIGHT, boardBestListRequestDto.getBoard_type(), pageRequest);
     }
 
     // 모든 게시물 가져오기
@@ -49,7 +57,12 @@ public class BoardService {
     }
 
     // 게시물 생성
-    public Board createBoard(BoardRequestDto boardRequestDto, Member member) {
+    public Board createBoard(BoardRequestDto boardRequestDto, Member member, List<MultipartFile> images) {
+        // S3에 이미지 업로드 및 URL 리스트 생성
+        List<URL> imageUrls = uploadImages(member, images);
+
+        insertImageUrlsIntoContent(boardRequestDto, imageUrls);
+
         Board board = new Board(boardRequestDto, member);
         return boardRepository.save(board);
     }
@@ -87,6 +100,26 @@ public class BoardService {
                 boardListRequestDto.getSize(),
                 Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getSort_by())
         );
+    }
+
+    private List<URL> uploadImages(Member member, List<MultipartFile> images) {
+        if (images.isEmpty())
+            return Collections.emptyList();
+
+        return images.stream()
+                .map(image -> fileService.upload(member.getEmail(), image))  // 업로드 후 URL 반환
+                .collect(Collectors.toList());
+    }
+
+    private void insertImageUrlsIntoContent(BoardRequestDto boardRequestDto, List<URL> imageUrls) {
+        String content = boardRequestDto.getContent();
+
+        // <img src="?" /> 의 ? 를 imageUrl로 대체
+        for (URL imageUrl : imageUrls) {
+            content = content.replaceFirst("<img src=\"\\?\" />", "<img src=\"" + imageUrl.toString() + "\" />");
+        }
+
+        boardRequestDto.setContentWithImageUrl(content);
     }
 }
 

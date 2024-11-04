@@ -23,4 +23,8 @@ public class BoardRequestDto {
         this.boardType = boardType;
         this.location = location;
     }
+
+    public void setContentWithImageUrl(String content) {
+        this.content = content;
+    }
 }
