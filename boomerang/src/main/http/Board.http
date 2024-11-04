@@ -17,7 +17,7 @@ Content-Type: multipart/form-data; boundary=boundary
 Cookie: Authorization={{Authorization}}
 
 --boundary
-Content-Disposition: form-data;
+Content-Disposition: form-data; name="data"
 
 {
   "title": "Example Title",
