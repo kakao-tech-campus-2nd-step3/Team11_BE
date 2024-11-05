@@ -22,10 +22,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.google.guava:guava:33.2.1-jre'
 
-
-    // token 설정
+	// token 설정
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
@@ -34,7 +33,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-	runtimeOnly 'com.h2database:h2'
+	// MySQL 커넥터
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -62,9 +63,6 @@ dependencies {
 
 	// Thymeleaf (이메일 템플릿용)
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-	// property 값에 맞추기 위해 임시로 작성
-	implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
 configurations {
