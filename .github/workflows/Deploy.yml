@@ -30,7 +30,13 @@ jobs:
             if [ ! -d "Team11_BE" ]; then
               git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git
             fi
-            cd Team11_BE/boomerang
+            cd Team11_BE
+
+            # 반영 사항 업데이트
+            git pull origin deploy
+
+            # boomerang 디렉터리로 이동하여 빌드 실행
+            cd boomerang
 
             # 기존 실행 중인 프로세스 종료
             ps -ef | grep java | grep boomerang-0.0.1-SNAPSHOT.jar | awk '{print $2}' | xargs -r kill -9
@@ -39,9 +45,6 @@ jobs:
             source ~/boomerang.env
             mkdir -p src/main/resources
             envsubst < ~/boomerang.env > src/main/resources/application.properties
-
-            # 반영 사항 업데이트
-            git pull origin deploy
 
             # 빌드 재실행 (권한 없으면 chmod 적용)
             chmod +x ./gradlew
