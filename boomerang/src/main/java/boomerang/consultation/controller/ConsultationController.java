@@ -72,7 +72,7 @@ public class ConsultationController {
     }
 
     //개인별 상담 내역조회
-    @GetMapping("memebr/consultation")
+    @GetMapping("member/consultation")
     public ResponseEntity<ConsultationResponseListDto> getConsultationOfUser(@AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
         ConsultationResponseListDto consultation = consultationService.getConsultationOfUser(principalDetails, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(consultation);
