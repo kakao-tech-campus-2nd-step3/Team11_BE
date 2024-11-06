@@ -53,4 +53,9 @@ jobs:
             # 애플리케이션 배포
             screen -dmS boomerang_session bash -c 'java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1'
 
+            # 디버깅을 위한 로그 출력
+            sleep 5  # 애플리케이션이 시작될 시간을 줌
+            ls -l log.txt
+            cat log.txt || echo "log.txt file not found or empty"
+
           EOF
