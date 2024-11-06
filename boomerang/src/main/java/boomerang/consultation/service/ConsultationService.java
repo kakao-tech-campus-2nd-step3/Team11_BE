@@ -28,9 +28,6 @@ import java.util.stream.Collectors;
 public class ConsultationService {
 
     private final ConsultationRepository consultationRepository;
-    private final MonthScheduleRepository monthScheduleRepository;
-    private final DayScheduleRepository dayScheduleRepository;
-    private final TimeScheduleRepository timeScheduleRepository;
     private final ScheduleRepository scheduleRepository;
     private final MemberService memberService;
     private final MentorService mentorService;
@@ -97,35 +94,9 @@ public class ConsultationService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
     }
 
-    @Transactional
-    public void registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
-        MonthSchedule monthSchedule = new MonthSchedule(scheduleRequestDto.getMonth());
-        List<DaySchedule> dayScheduleList = new ArrayList<>();
-
-        for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()) {
-            for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()) {
-                DaySchedule daySchedule = new DaySchedule(Integer.parseInt(entry.getKey()),monthSchedule);
-
-                List<TimeSchedule> timeSlots = entry.getValue().stream()
-                        .map(hour -> {
-                            TimeSchedule timeSlot = new TimeSchedule(hour, daySchedule);
-                            return timeSlot;
-                        }).collect(Collectors.toList());
-
-                daySchedule.setTimeScheduless(timeSlots);
-                System.out.println(daySchedule);
-                dayScheduleRepository.save(daySchedule);
-                dayScheduleList.add(daySchedule);
-            }
-        }
-
-        monthSchedule.setDaySchedules(dayScheduleList);
-
-        monthScheduleRepository.save(monthSchedule);
-    }
 
     @Transactional
-    public ScheduleResponseDto registerSchedule2(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+    public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = mentorService.getMentor(scheduleRequestDto.getMentorId());
         if (!mentor.getMember().equals(member)) {

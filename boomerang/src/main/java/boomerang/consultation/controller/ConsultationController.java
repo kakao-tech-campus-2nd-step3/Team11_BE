@@ -29,8 +29,7 @@ public class ConsultationController {
     //일정등록
     @PostMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseDto> registerSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @RequestBody ScheduleRequestDto scheduleRequestDto) {
-//        ScheduleResponseDto scheduleresponseDto = consultationService.registerSchedule(principalDetails, scheduleRequestDto);
-        ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule2(principalDetails, scheduleRequestDto);
+        ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule(principalDetails, scheduleRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponseDto);
     }
