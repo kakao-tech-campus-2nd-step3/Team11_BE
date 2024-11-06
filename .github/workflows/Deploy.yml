@@ -53,7 +53,4 @@ jobs:
             # 애플리케이션 배포
             screen -dmS boomerang_session bash -c 'java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1'
 
-
-            # 로그 파일 확인
-            tail -f log.txt
           EOF
