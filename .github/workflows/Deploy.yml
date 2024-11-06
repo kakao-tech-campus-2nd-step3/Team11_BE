@@ -25,11 +25,7 @@ jobs:
           echo "$PEM_FILE" > kwy-root.pem
           chmod 600 kwy-root.pem
 
-          ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-43-203-254-19.ap-northeast-2.compute.amazonaws.com << 'EOF'
-            # 디스크 공간 확인 및 정리
-            df -h
-            rm -rf /home/ubuntu/.gradle/caches
-            rm -f /var/log/*.log
+          ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-52-79-80-3.ap-northeast-2.compute.amazonaws.com << 'EOF'
 
             # 프로젝트 클론 또는 업데이트
             if [ ! -d "Team11_BE" ]; then
