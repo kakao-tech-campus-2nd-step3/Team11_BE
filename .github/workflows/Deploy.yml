@@ -27,17 +27,18 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-52-79-80-3.ap-northeast-2.compute.amazonaws.com << 'EOF'
 
+            # JAVA_HOME 및 PATH 설정
+            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+            export PATH=$JAVA_HOME/bin:$PATH
+
             # 프로젝트 클론 또는 업데이트
             if [ ! -d "Team11_BE" ]; then
               git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git
             fi
-            cd Team11_BE
+            cd Team11_BE/boomerang
 
             # 반영 사항 업데이트
             git pull origin deploy
-
-            # boomerang 디렉터리로 이동하여 빌드 실행
-            cd boomerang
 
             # 기존 실행 중인 프로세스 종료
             ps -ef | grep java | grep boomerang-0.0.1-SNAPSHOT.jar | awk '{print $2}' | xargs -r kill -9
@@ -50,14 +51,11 @@ jobs:
             chmod +x ./gradlew
             ./gradlew build -x test
 
-            # .jar 파일이 존재하는지 확인
-            ls -l build/libs/boomerang-0.0.1-SNAPSHOT.jar || echo ".jar 파일이 없습니다."
-
             # 애플리케이션 배포
-            screen -dmS boomerang_session bash -c 'java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1'
+            nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
 
-            # log.txt 파일 확인
-            sleep 5  # 애플리케이션이 시작할 시간을 줌
+            # 로그 파일 확인
+            sleep 5
             ls -l log.txt || echo "log.txt 파일이 없습니다."
             cat log.txt || echo "log.txt가 비어 있습니다."
 
