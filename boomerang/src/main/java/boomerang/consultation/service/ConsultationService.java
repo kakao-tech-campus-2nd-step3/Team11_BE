@@ -131,7 +131,7 @@ public class ConsultationService {
     @Transactional
     public void deleteSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Mentor mentor = mentorService.getMentor(scheduleRequestDto.getMentorId());
+        Mentor mentor = member.getMentor();
         if (!mentor.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
         }
@@ -152,7 +152,43 @@ public class ConsultationService {
         }
     }
 
+    public ScheduleResponseListDto getScheduleByMentor(PrincipalDetails principalDetails){
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Mentor mentor = member.getMentor();
+        if (member.getMentor() == null){
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
+        }
+        List<Schedule> scheduleList = scheduleRepository.findAllByMentor(mentor);
+        if (scheduleList.isEmpty()) {
+            throw new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR);
+        }
 
+        // 월별로 일정을 정리할 맵 생성
+        Map<Integer, List<Map<String, List<Integer>>>> monthToDaysMap = new HashMap<>();
 
+        for (Schedule schedule : scheduleList) {
+            int month = schedule.getDate().getMonthValue();
+            String day = String.valueOf(schedule.getDate().getDayOfMonth());
+            List<Integer> reservedHours = new ArrayList<>();
+
+            // 예약된 시간대만 추출하여 리스트에 추가
+            for (int hour = 0; hour < schedule.getHourlySlots().size(); hour++) {
+                if (schedule.getHourlySlots().get(hour)) {
+                    reservedHours.add(hour);
+                }
+            }
+
+            // 해당 월이 이미 존재하면 해당 일 데이터 추가, 없으면 새로 생성
+            monthToDaysMap.computeIfAbsent(month, k -> new ArrayList<>())
+                    .add(Collections.singletonMap(day, reservedHours));
+        }
+
+        // Map을 ScheduleMonthDto 리스트로 변환
+        List<ScheduleMonthDto> scheduleMonthDtoList = monthToDaysMap.entrySet().stream()
+                .map(entry -> new ScheduleMonthDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return new ScheduleResponseListDto(scheduleMonthDtoList);
+    }
 
 }

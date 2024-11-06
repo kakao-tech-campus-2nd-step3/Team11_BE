@@ -34,10 +34,18 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponseDto);
     }
 
+    //일정 삭제
     @DeleteMapping("/consultation/schedule")
     public ResponseEntity<Void>  deleteSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails,@RequestBody ScheduleRequestDto scheduleRequestDto) {
         consultationService.deleteSchedule(principalDetails, scheduleRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    //일정 조회
+    @GetMapping("/consultation/schedule")
+    public ResponseEntity<ScheduleResponseListDto> getSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentor(principalDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
     }
 
     //상담완료
