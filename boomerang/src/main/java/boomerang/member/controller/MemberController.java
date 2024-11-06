@@ -1,5 +1,8 @@
 package boomerang.member.controller;
 
+import boomerang.member.domain.Member;
+import boomerang.member.dto.MemberCreateRequestDto;
+import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
@@ -47,12 +50,21 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addHeader(Authorization,token);
+        response.addHeader("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
 
-//    안쓰는 로직 : 팀=원들과 상의 후 삭제 예정
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> loginMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.loginMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addHeader("Authorization", "Bearer " + token);
+        return ResponseEntity.status(HttpStatus.OK)
+                .build();
+    }
+
+//    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
 //    @PutMapping("/{id}")
 //    public ResponseEntity<Void> updateMember(@PathVariable(name = "id") Long id, @RequestBody MemberCreateRequestDto memberCreateRequestDTO) {
 //        memberService.updateMember(id,memberCreateRequestDTO);
