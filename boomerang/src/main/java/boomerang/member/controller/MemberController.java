@@ -9,10 +9,7 @@ import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.dto.MemberCreateResponseDto;
-import boomerang.member.dto.NicknameUpdateRequestDto;
-import boomerang.member.dto.RandomNicknameCreateResponseDTO;
+import boomerang.member.dto.*;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/member")
 public class MemberController {
     private final MemberService memberService;
+    public static String Authorization = "Authorization";
+
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
@@ -55,6 +54,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
     }
+
 
     @GetMapping("/login")
     public ResponseEntity<Void> loginMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
@@ -89,11 +89,12 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberCreateResponseDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,HttpServletResponse response, @RequestBody NicknameUpdateRequestDto requestDto) {
-        Member member =  memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        MemberCreateResponseDto memberCreateResponseDto = new MemberCreateResponseDto(member.getEmail(), member.getNickname());
-        response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberCreateResponseDto);
+    public ResponseEntity<MemberLoginDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                                        HttpServletResponse response,
+                                                                        @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
+        response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
     }
 
     // GlobalException Handler 에서 처리할 경우,

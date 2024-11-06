@@ -7,9 +7,12 @@ import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.JwtUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.kakao.domain.KakaoMember;
+import boomerang.kakao.dto.KakaoTokenDto;
 import boomerang.kakao.dto.KakaoTokenResponseDto;
+import boomerang.kakao.dto.MemberStatusDto;
 import boomerang.kakao.service.KakaoService;
 import boomerang.member.domain.Member;
+import boomerang.member.dto.MemberLoginDto;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +34,8 @@ public class KakaoController {
     private String clientId;
     @Value("${app.server.ip}")
     private String serverIp;
+    public static String Authorization = "Authorization";
+
     private final ClientServerProperties clientServerProperties;
 
     public KakaoController(KakaoService kakaoService,
@@ -42,6 +47,18 @@ public class KakaoController {
         this.jwtUtil = jwtUtil;
         this.clientServerProperties = clientServerProperties;
     }
+
+    @PostMapping("/login/kakao")
+    public ResponseEntity<MemberLoginDto> loginKakao(HttpServletResponse response,@RequestBody KakaoTokenDto kakaoTokenDto) throws IOException {
+        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenDto);
+        Member member = memberService.loginKakaoMember(kakaoMember);
+        String token = jwtUtil.generateToken(member.getId(), member.getEmail());
+        response.addHeader(Authorization,token);
+        System.out.println("member = " + member);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new MemberLoginDto(member));
+    }
+
 
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
@@ -55,16 +72,13 @@ public class KakaoController {
 
     @GetMapping("/login/callback")
     @ResponseBody
-    public ResponseEntity<?> token(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> token(@RequestParam("code") String code, HttpServletResponse response) throws IOException {
         KakaoTokenResponseDto kakaoTokenResponseDto = kakaoService.getAccessTokenFromKakao(code);
-        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
-        Member member = memberService.loginKakaoMember(kakaoMember);
-
-        setCookies(response, member);
-        response.sendRedirect(getRedirectUtil(member));
+//        KakaoMember kakaoMember = kakaoService.getKakaoProfile(kakaoTokenResponseDto);
+//        Member member = memberService.loginKakaoMember(kakaoMember);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .build();
+                .body(kakaoTokenResponseDto.accessToken);
     }
 
 
@@ -79,9 +93,9 @@ public class KakaoController {
 
     private void setCookies(HttpServletResponse response, Member member) {
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addHeader("Set-Cookie", CookieUtil.createAuthorizationCookie(token).toString());
         if (member.isComplete()) {
-            response.addCookie(CookieUtil.createNicknameCookies(member.getNickname()));
+            response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
         }
     }
 

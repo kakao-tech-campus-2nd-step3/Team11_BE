@@ -6,9 +6,9 @@ import boomerang.global.response.ErrorCode;
 import boomerang.progress.domain.MainStepEnum;
 import boomerang.progress.domain.ProgressType;
 import boomerang.progress.domain.SubStepEnum;
-import boomerang.progress.dto.MainStepResponseDto;
-import boomerang.progress.dto.ProgressDetailsResponseDto;
+import boomerang.progress.dto.ProgressByMainResponseDto;
 import boomerang.progress.dto.ProgressTypeRequestDto;
+import boomerang.progress.dto.ProgressTypeResponseDto;
 import boomerang.progress.dto.SubStepResponseDto;
 import boomerang.progress.service.ProgressService;
 import lombok.RequiredArgsConstructor;
@@ -25,36 +25,36 @@ public class ProgressController {
     private final ProgressService progressService;
 
     @PostMapping("/progress/type")//타입 검사
-    public ResponseEntity<?> checkUserType(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ProgressTypeResponseDto> checkUserType(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @RequestBody ProgressTypeRequestDto progressTypeRequestDto) {
         ProgressType progressTypeOfMember = progressService.checkUserType(principalDetails, progressTypeRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(progressTypeOfMember);
+        return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     @GetMapping("/progress/type")//유저의 타입 정보
-    public ResponseEntity<?> getUserType(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<ProgressTypeResponseDto> getUserType(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         ProgressType progressTypeOfMember = progressService.getUserType(principalDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(progressTypeOfMember);
+        return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     //유저의 메인 단계 목록 조회
     @GetMapping("/progress")
-    public ResponseEntity<?> getProgressDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressDetailsResponseDto progressDetailsResponseDto = progressService.getProgressDetails(principalDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(progressDetailsResponseDto);
+    public ResponseEntity<ProgressByMainResponseDto > getProgressDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(principalDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 특정 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}")
-    public ResponseEntity<?> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ProgressByMainResponseDto> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    @PathVariable("main") MainStepEnum mainStepEnum) {
-        MainStepResponseDto mainStepResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
-        return ResponseEntity.status(HttpStatus.OK).body(mainStepResponseDto);
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
+        return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}/{sub}")
-    public ResponseEntity<?> getSubStepStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<SubStepResponseDto> getSubStepStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
@@ -63,7 +63,7 @@ public class ProgressController {
     }
 
     @PostMapping("/progress/{main}/{sub}")//특정 서브단계 완료로 변경
-    public ResponseEntity<?> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<SubStepResponseDto> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
@@ -72,7 +72,7 @@ public class ProgressController {
     }
 
     @DeleteMapping("/progress/{main}/{sub}")//특정 서브단계 미완료로 변경
-    public ResponseEntity<?> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<SubStepResponseDto> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                         @PathVariable("main") MainStepEnum mainStepEnum,
                                                         @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);

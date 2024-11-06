@@ -1,7 +1,9 @@
 package boomerang.global.response;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public enum ErrorCode {
     // Global
     UNEXPECTED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EG001", "Unexpected Error"),
@@ -9,6 +11,8 @@ public enum ErrorCode {
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "EG004", "잘못된 요청입니다."),
     COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
+    KAKAO_ERROR(HttpStatus.UNAUTHORIZED, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
+    FILE_ERROR(HttpStatus.UNAUTHORIZED, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
@@ -24,11 +28,13 @@ public enum ErrorCode {
     // Board
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
+    IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003", "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
 
     // Comment
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
     COMMENT_FORBIDDEN(HttpStatus.FORBIDDEN, "CM002", "댓글에 수정 권한이 없습니다."),
     COMMENT_NON_EXISTENT(HttpStatus.NOT_FOUND, "CM003", "댓글을 찾을 수 없습니다."),
+    COMMENT_CONTAINS_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "CM004", "전화번호를 올릴 수 없습니다."),
 
     // Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),
@@ -50,16 +56,19 @@ public enum ErrorCode {
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),
-    PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG003", "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
-    PROGRESS_NON_EXISTENT(HttpStatus.NOT_FOUND, "PG004", "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
+    PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG003",
+        "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
+    PROGRESS_NON_EXISTENT(HttpStatus.NOT_FOUND, "PG004",
+        "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
     PROGRESS_REQUEST_ERROR(HttpStatus.NOT_FOUND, "PG005", "해당 세부 단계를 찾을 수 없습니다."),
     PROGRESS_SUB_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG006", "세부 단계의 이름이 잘못되었습니다."),
     PROGRESS_MAIN_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG007", "메인 단계의 이름이 잘못되었습니다."),
     PROGRESS_SUB_MAIN_DO_NOT_MATCH(HttpStatus.BAD_REQUEST, "PG008", "서브단계와 메인 단계가 적절하게 매칭되지 않습니다."),
     PROGRESS_NOT_INCLUDED_SUB(HttpStatus.NOT_FOUND, "PG009", "유저의 피해타입은 해당 세부단계를 가지고 있지 않습니다."),
     PROGRESS_NOT_INCLUDED_MAIN(HttpStatus.NOT_FOUND, "PG010", "유저의 피해타입은 해당 메인단계를 가지고 있지 않습니다."),
-    PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 미완료 단계입니다"),
+    PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
+    PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
 
 
     // Chat
@@ -68,6 +77,11 @@ public enum ErrorCode {
 
     // File
     S3_UPLOAD_ERROR(HttpStatus.NOT_FOUND, "EF001", "S3와 정상적인 연결이 불가능합니다"),
+
+    // Mail
+    VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
+    VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
+    EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
 
     ;
 
@@ -79,18 +93,6 @@ public enum ErrorCode {
         this.status = status;
         this.code = code;
         this.message = message;
-    }
-
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     @Override

@@ -1,0 +1,19 @@
+### http://localhost:8080/api/v1/auth/login 로 access-token 받아오기
+
+### 로그인
+POST http://localhost:8080/api/v1/auth/login/kakao
+Content-Type: application/json
+
+{
+    "access_token":"qBoATpfGF3gvId2MBWoCm-yJVsrqbaeQAAAAAQoqJQ4AAAGS9mr3NeiSikwhugC4"
+}
+
+
+### set nickname
+PUT http://localhost:8080/api/v1/member/nickname
+Content-Type: application/json
+Authorization: {{Authorization}}
+
+{
+  "new_nickname":"aaa"
+}

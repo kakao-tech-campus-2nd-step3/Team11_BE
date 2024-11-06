@@ -11,10 +11,12 @@ import lombok.Getter;
 public class SubStepResponseDto {
     private String name;                  //보험가입여부
     private boolean completion;
+    private String content;
 
     public SubStepResponseDto(SubStep subStep) {
         this.name = subStep.getName();
         this.completion = subStep.isCompletion();
+        this.content = subStep.getSubStepEnum().getContent();
     }
 
 }
