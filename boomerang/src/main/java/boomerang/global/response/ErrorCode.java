@@ -28,6 +28,7 @@ public enum ErrorCode {
     // Board
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
+    IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003", "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
 
     // Comment
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
@@ -44,6 +45,14 @@ public enum ErrorCode {
     MENTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "MT_002", "해당 멘토를 찾을 수 없습니다."),
     MENTOR_UPDATE_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "MT003", "멘토 정보 수정 권한이 없습니다."),
 
+    //Consultation
+    CONSULTATION_NOT_A_MENTEE(HttpStatus.UNAUTHORIZED, "CS001", "로그인한 멤버가 상담의 멘티가 아닙니다."),
+    CONSULTATION_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS002", "해당 상담은 존재하지 않습니다."),
+    CONSULTATION_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "CS003", "같은날짜에 동일한 상담이 존재합니다."),
+    CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
+    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005", "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
+    CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
+    SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),

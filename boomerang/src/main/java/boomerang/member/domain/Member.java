@@ -3,6 +3,7 @@ package boomerang.member.domain;
 import boomerang.IsDeleted;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.dto.MemberServiceDto;
+import boomerang.mentor.domain.Mentor;
 import boomerang.progress.domain.Progress;
 import boomerang.progress.domain.ProgressType;
 import jakarta.persistence.Column;
@@ -68,8 +69,14 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Progress progress;
 
+
+    @OneToOne(mappedBy = "member")
+    private Mentor mentor;
+
+
     @Column(name = "email_verified")
     private boolean emailVerified = false;
+
 
     protected Member() {
     }
