@@ -73,10 +73,6 @@ public enum ErrorCode {
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
-    MAIL_SEND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EM004", "이메일 발송 중 오류가 발생했습니다"),
-    MAIL_TEMPLATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EM005", "이메일 템플릿 처리 중 오류가 발생했습니다"),
-    MAIL_RESOURCE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EM006", "이메일 리소스 로딩 중 오류가 발생했습니다"),
-
 
     ;
 
