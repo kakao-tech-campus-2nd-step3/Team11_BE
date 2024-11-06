@@ -13,6 +13,7 @@ import boomerang.global.utils.ResponseHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,20 +40,20 @@ public class CommentController {
 
     //댓글 생성
     @PostMapping("/board/{board_id}/comments")
-    public ResponseEntity<Void> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("board_id") Long boardId,
-                                              @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        commentService.createComment(principalDetails.getMemberEmail(), boardId, commentRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<CommentResponseDto> createComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           @PathVariable("board_id") Long boardId,
+                                           @Valid @RequestBody CommentRequestDto commentRequestDto) {
+        Comment comment =  commentService.createComment(principalDetails.getMemberEmail(), boardId, commentRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommentResponseDto(comment));
     }
 
     //댓글 수정
     @PutMapping("/board/comments/{comment_id}")
-    public ResponseEntity<Void> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<CommentResponseDto> updateComment(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                               @PathVariable("comment_id") Long commentId,
                                               @Valid @RequestBody CommentRequestDto commentRequestDto) {
-        commentService.updateComment(principalDetails.getMemberEmail(), commentId, commentRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        Comment comment = commentService.updateComment(principalDetails.getMemberEmail(), commentId, commentRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommentResponseDto(comment));
     }
 
     //댓글 삭제

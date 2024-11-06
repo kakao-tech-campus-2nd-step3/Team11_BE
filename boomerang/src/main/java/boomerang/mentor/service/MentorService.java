@@ -29,9 +29,8 @@ public class MentorService {
     }
 
     @Transactional(readOnly = true)
-    public MentorResponseDto getMentor(Long id) {
-        Mentor mentor = mentorRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+    public MentorResponseDto getMentorProfile(Long id) {
+        Mentor mentor = getMentor(id);
         return new MentorResponseDto(mentor);
     }
 
@@ -39,14 +38,18 @@ public class MentorService {
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(email);
 
+        if (!member.isEmailVerified()) {
+            throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+
         // 기존에 기록이 있으면 재생성, 없다면 신규 생성
         return mentorRepository.findByMember(member)
-                .map(existingMentor -> reactivateExistingMentor(existingMentor, requestDto))
-                .orElseGet(() -> createNewMentor(member, requestDto));
+            .map(existingMentor -> reactivateExistingMentor(existingMentor, requestDto))
+            .orElseGet(() -> createNewMentor(member, requestDto));
     }
 
     private MentorResponseDto reactivateExistingMentor(Mentor mentor,
-                                                       MentorCreateRequestDto requestDto) {
+        MentorCreateRequestDto requestDto) {
         if (!mentor.getIsDeleted()) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
@@ -59,12 +62,12 @@ public class MentorService {
 
     private MentorResponseDto createNewMentor(Member member, MentorCreateRequestDto requestDto) {
         Mentor newMentor = new Mentor(
-                requestDto.getMentorType(),
-                requestDto.getCareer(),
-                requestDto.getIntroduce(),
-                requestDto.getAdvertisementStatus(),
-                member,
-                requestDto.getContact()
+            requestDto.getMentorType(),
+            requestDto.getCareer(),
+            requestDto.getIntroduce(),
+            requestDto.getAdvertisementStatus(),
+            member,
+            requestDto.getContact()
         );
 
         Mentor savedMentor = mentorRepository.save(newMentor);
@@ -75,7 +78,7 @@ public class MentorService {
     public MentorResponseDto updateMentor(String email, MentorUpdateRequestDto updateRequestDto) {
         Member member = memberService.getMemberByEmail(email);
         Mentor mentor = mentorRepository.findByMemberAndIsDeletedFalse(member)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
 
         if (!mentor.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.MENTOR_UPDATE_NOT_AUTHORIZED);
@@ -90,8 +93,13 @@ public class MentorService {
     public void deleteMentor(String email) {
         Member member = memberService.getMemberByEmail(email);
         Mentor mentor = mentorRepository.findByMemberAndIsDeletedFalse(member)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
 
         mentor.delete();
+    }
+
+    public Mentor getMentor(Long id) {
+        return mentorRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
     }
 }

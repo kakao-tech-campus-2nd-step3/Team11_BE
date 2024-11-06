@@ -1,43 +1,78 @@
 ### get best boards
 GET http://localhost:8080/api/v1/board/best?
     size=5&board_type=ENTIRE&content_length=10
-Cookie: Authorization={{Authorization}}
+Authorization: {{Authorization}}
+
 
 ### get boards
 GET http://localhost:8080/api/v1/board?
-    page=0&size=1&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
-Cookie: Authorization={{Authorization}}
+    page=0&size=10&sort_direction=DESC&sort_by=id&board_type=ENTIRE&content_length=10
+Authorization: {{Authorization}}
 
 ### get board
 GET http://localhost:8080/api/v1/board/1
 
 ### create board
 POST http://localhost:8080/api/v1/board
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: {{Authorization}}
+
+--boundary
+Content-Disposition: form-data; name="data";
 Content-Type: application/json
-Cookie: Authorization={{Authorization}}
 
 {
   "title": "Example Title",
-  "content": "This is an example content for the board.",
+  "content": "content <img src=? />  <img src=? />",
   "board_type": "ENTIRE",
-  "location": "BUSAN",
-  "anonymous_status": "PRIVATE"
+  "location": "BUSAN"
 }
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test1.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test1.png
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test2.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test2.png
+
+--boundary--
 
 
 ### update board
-PUT http://localhost:8080/api/v1/board/1
+PUT http://localhost:8080/api/v1/board/9
+Content-Type: multipart/form-data; boundary=boundary
+Authorization: {{Authorization}}
+
+--boundary
+Content-Disposition: form-data; name="data";
 Content-Type: application/json
-Cookie: Authorization={{Authorization}}
 
 {
   "title": "Example Title",
-  "content": "a.",
+  "content": "content <img src=? />  <img src=? />",
   "board_type": "ENTIRE",
-  "location": "BUSAN",
-  "anonymous_status": "PRIVATE"
+  "location": "BUSAN"
 }
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test1.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test1.png
+
+--boundary
+Content-Disposition: form-data; name="images"; filename="test2.png"
+Content-Type: image/png
+
+< /Users/jaebin/Desktop/test2.png
+
+--boundary--
 
 ### delete board
 DELETE http://localhost:8080/api/v1/board/1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc4NjE2NjUsImV4cCI6MTcyNzg2NDA2NX0.Lc3gVOdsj_D3Zn_y6bvMRipYMCr_IenbLm1XVPi8Rr4
+Authorization: {{Authorization}}

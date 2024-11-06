@@ -46,7 +46,7 @@ public class ProgressController {
 
     //유저의 특정 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}")
-    public ResponseEntity<?> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<ProgressByMainResponseDto> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    @PathVariable("main") MainStepEnum mainStepEnum) {
         ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);

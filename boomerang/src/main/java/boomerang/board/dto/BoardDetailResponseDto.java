@@ -1,6 +1,5 @@
 package boomerang.board.dto;
 
-import boomerang.board.domain.AnonymousStatus;
 import boomerang.board.domain.Board;
 import boomerang.board.domain.BoardType;
 import boomerang.board.domain.Location;
@@ -22,7 +21,6 @@ public class BoardDetailResponseDto {
     private String writerName;
     private BoardType boardType;
     private Location location;
-    private AnonymousStatus anonymousStatus;
     private Long likeCount;
     private boolean isLiked;
     private Long commentCount;
@@ -38,7 +36,6 @@ public class BoardDetailResponseDto {
         this.content = board.getContent();
         this.boardType = board.getBoardType();
         this.location = board.getLocation();
-        this.anonymousStatus = board.getAnonymousStatus();
         this.writerEmail = board.getMember().getEmail();
         this.writerName = board.getMember().getNickname();
         this.likeCount = board.getLikeCount();
