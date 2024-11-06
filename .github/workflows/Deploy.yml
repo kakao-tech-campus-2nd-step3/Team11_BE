@@ -50,12 +50,15 @@ jobs:
             chmod +x ./gradlew
             ./gradlew build -x test
 
+            # .jar 파일이 존재하는지 확인
+            ls -l build/libs/boomerang-0.0.1-SNAPSHOT.jar || echo ".jar 파일이 없습니다."
+
             # 애플리케이션 배포
             screen -dmS boomerang_session bash -c 'java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1'
 
-            # 디버깅을 위한 로그 출력
-            sleep 5  # 애플리케이션이 시작될 시간을 줌
-            ls -l log.txt
-            cat log.txt || echo "log.txt file not found or empty"
+            # log.txt 파일 확인
+            sleep 5  # 애플리케이션이 시작할 시간을 줌
+            ls -l log.txt || echo "log.txt 파일이 없습니다."
+            cat log.txt || echo "log.txt가 비어 있습니다."
 
           EOF
