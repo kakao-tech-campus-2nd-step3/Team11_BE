@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - deploy  # deploy 브랜치에 push할 때 트리거
+      - deploy
 
 jobs:
   deploy:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Connect and deploy to server
         run: |
-            ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-43-203-254-19.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-13-125-238-177.ap-northeast-2.compute.amazonaws.com << 'EOF'
             # 프로젝트 클론 또는 업데이트
             cd Team11_BE || git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git && cd Team11_BE
 
@@ -32,10 +32,17 @@ jobs:
             mkdir -p boomerang/src/main/resources
             envsubst < /home/ubuntu/boomerang.env > boomerang/src/main/resources/application.properties
 
-            # 프로젝트 업데이트 및 빌드
+            # 반영 사항 업데이트
             git pull origin deploy
+
+            # 빌드 재실행 (권한 없으면 chmod 적용)
             cd boomerang
+            chmod +x ./gradlew
             ./gradlew build -x test
 
             # 애플리케이션 배포
             nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
+
+            # 로그 파일 확인
+            tail -f log.txt
+            EOF
