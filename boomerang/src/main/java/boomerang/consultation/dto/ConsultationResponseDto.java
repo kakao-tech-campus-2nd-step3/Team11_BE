@@ -22,6 +22,7 @@ public class ConsultationResponseDto {
     private String menteeNickName;                      //멘티닉네임
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate consultationDate;                 //상담일정
+    private int consultationTime;                       //상담시간
     private ConsultationStatus consultationStatus;      //상담상태
 
     public ConsultationResponseDto(Consultation consultation) {
@@ -30,7 +31,8 @@ public class ConsultationResponseDto {
         this.mentorNickName = consultation.getMentorNickname();
         this.menteeId = consultation.getMenteeId();
         this.menteeNickName = consultation.getMenteeNickname();
-        this.consultationDate = consultation.getConsultationDate();
+        this.consultationDate = consultation.getSchedule().getDate();
+        this.consultationTime = consultation.getSchedule().getLastReservedSlot();
         this.consultationStatus = consultation.getConsultationStatus();
     }
 }

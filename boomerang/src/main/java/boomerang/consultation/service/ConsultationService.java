@@ -17,9 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,14 +32,18 @@ public class ConsultationService {
     public ConsultationResponseDto requestConsultation(PrincipalDetails principalDetails, ConsultationRequestDto consultationRequestDto) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = mentorService.getMentor(consultationRequestDto.getMentorId());
-        LocalDate localDate = LocalDate.now();
-
-        if (consultationRepository.existsByMenteeAndMentorAndConsultationDate(mentee, mentor, localDate)) {
-            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS);
+        LocalDate date = LocalDate.of(2024, consultationRequestDto.getConsultationMonth(),consultationRequestDto.getConsultationDay());
+        Schedule schedule = scheduleRepository.findByMentorAndDate(mentor,date)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
+        if (consultationRepository.existsByMenteeAndMentorAndSchedule(mentee, mentor, schedule) && schedule.getHourlySlots().get(consultationRequestDto.getConsultationTime()) == Boolean.FALSE) {
+            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS); // 이미 신청되어 있는 상담이면 에러 처리
         }
+        schedule.unreserveSlot(consultationRequestDto.getConsultationTime()); // 상담을 신청되면서 해당 시간대 상태 False로 변경
+        scheduleRepository.save(schedule);
 
 
-        Consultation savedConsultation = consultationRepository.save(new Consultation(mentee, mentor, localDate));
+
+        Consultation savedConsultation = consultationRepository.save(new Consultation(mentee, mentor, schedule));
 
         return new ConsultationResponseDto(savedConsultation);
     }
