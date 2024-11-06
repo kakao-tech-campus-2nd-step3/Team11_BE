@@ -33,6 +33,7 @@ public class BoardService {
         this.fileService = fileService;
     }
 
+
     // 베스트 게시물 가져오기
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
         // x일 이내의 시작 날짜 계산
