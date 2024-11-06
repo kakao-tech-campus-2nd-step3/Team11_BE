@@ -30,15 +30,15 @@ public enum MainStepEnum {
         this.subStepEnumList = subStepEnumList;
     }
 
-//    @JsonCreator
-//    public static MainStepEnum fromStepName(String stepName) {
-//        for (MainStepEnum mainStepEnum : MainStepEnum.values()) {
-//            if (mainStepEnum.mainStepName.equals(stepName)) {
-//                return mainStepEnum;
-//            }
-//        }
-//        throw new IllegalArgumentException(ErrorCode.PROGRESS_MAIN_INVALID_NAME.getMessage());
-//    }
+    @JsonCreator
+    public static MainStepEnum fromStepName(String stepName) {
+        for (MainStepEnum mainStepEnum : MainStepEnum.values()) {
+            if (mainStepEnum.mainStepName.equals(stepName)) {
+                return mainStepEnum;
+            }
+        }
+        throw new IllegalArgumentException(ErrorCode.PROGRESS_MAIN_INVALID_NAME.getMessage());
+    }
 
     @JsonValue
     public String getMainStepName() {

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 public class MainStepEnumConverter implements Converter<String, MainStepEnum> {
     @Override
     public MainStepEnum convert(String value) {
-//        return MainStepEnum.fromStepName(value);
-        return null;
+        return MainStepEnum.fromStepName(value);
     }
 }

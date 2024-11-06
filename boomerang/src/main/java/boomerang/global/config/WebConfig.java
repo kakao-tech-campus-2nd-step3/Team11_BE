@@ -12,8 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(new MainStepEnumConverter());
-//        registry.addConverter(new SubStepEnumC  onverter());
+        registry.addConverter(new MainStepEnumConverter());
+        registry.addConverter(new SubStepEnumConverter());
     }
 
     @Override
