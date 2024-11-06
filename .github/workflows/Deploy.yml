@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - deploy  # deploy 브랜치에 push할 때 트리거
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Connect and deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-3-34-197-198.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            # 프로젝트 클론 또는 업데이트
+            cd Team11_BE || git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git && cd Team11_BE
+
+            # 기존 실행 중인 프로세스 종료
+            pkill -f 'boomerang-0.0.1-SNAPSHOT.jar' || true
+
+            # .env 파일을 참조해 application.properties 작성
+            source /home/ubuntu/boomerang.env
+            mkdir -p boomerang/src/main/resources
+            envsubst < /home/ubuntu/boomerang.env > boomerang/src/main/resources/application.properties
+
+            # 프로젝트 업데이트 및 빌드
+            git pull origin deploy
+            cd boomerang
+            ./gradlew build -x test
+
+            # 애플리케이션 배포
+            nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
+          EOF
