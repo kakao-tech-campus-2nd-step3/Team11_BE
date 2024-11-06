@@ -91,7 +91,7 @@ public class BoardController {
     public ResponseEntity<Void> createBoard(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestParam("data") String data,
-            @RequestParam("images") List<MultipartFile> images
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) throws JsonProcessingException {
 
         // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
@@ -110,7 +110,7 @@ public class BoardController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable(name = "board_id") Long boardId,
             @RequestParam("data") String data,
-            @RequestParam("images") List<MultipartFile> images
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) throws JsonProcessingException {
 
         // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
