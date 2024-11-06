@@ -35,16 +35,20 @@ public class Consultation {
 
     private LocalDate consultationDate;
 
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Consultation(Member mentee, Mentor mentor, LocalDate localDate) {
+    public Consultation(Member mentee, Mentor mentor, Schedule schedule) {
         this.mentee = mentee;
         this.mentor = mentor;
-        this.consultationDate = localDate;
+        this.schedule = schedule;
         this.consultationStatus= ConsultationStatus.PENDING;
     }
 

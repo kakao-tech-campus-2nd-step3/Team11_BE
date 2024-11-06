@@ -9,7 +9,6 @@ import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.mentor.domain.Mentor;
-import boomerang.mentor.repository.MentorRepository;
 import boomerang.mentor.service.MentorService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -98,17 +97,18 @@ public class ConsultationService {
     @Transactional
     public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Mentor mentor = mentorService.getMentor(scheduleRequestDto.getMentorId());
+        Mentor mentor = member.getMentor();
         if (!mentor.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
         }
-        List<Schedule> scheduleList = new ArrayList<>();
+        List<Map<String, List<Integer>>> dayList = new ArrayList<>();
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
                 LocalDate date = LocalDate.of(2024, scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey())); // DTO의 월, 일로 LocalDate 생성
                 Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
                         .orElse(new Schedule(mentor,date)); // 해당 날짜의 Schedule이 없으면 새로 생성
                 List<Integer> hours = entry.getValue();
+                List<Integer> reservedHours = new ArrayList<>();
                 for (int hour : hours) {
                     if (hour < 0 || hour >= 24) {
                         throw new BusinessException(ErrorCode.CONSULTATION_TIME_REQUEST_ERROR); // 0 ~ 23 범위에 벗어나는 시간 예외 처리
@@ -117,14 +117,15 @@ public class ConsultationService {
                         throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS); // 중복된 시간 예외 처리
                     }
                     schedule.reserveSlot(hour); // 시간대 예약
-                    scheduleRepository.save(schedule);
-                    if (schedule.getHourlySlots().get(hour) == Boolean.TRUE) {
-                        scheduleList.add(schedule);
-                    }
+                    reservedHours.add(hour);
                 }
+                scheduleRepository.save(schedule);
+                Map<String, List<Integer>> dayEntry = new HashMap<>();
+                dayEntry.put(entry.getKey(), reservedHours);
+                dayList.add(dayEntry);
             }
         }
-        return new ScheduleResponseDto(scheduleList);
+        return new ScheduleResponseDto(scheduleRequestDto.getMonth(), dayList);
     }
 
     @Transactional

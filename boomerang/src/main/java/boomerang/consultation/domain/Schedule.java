@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,19 +29,28 @@ public class Schedule {
     @JoinColumn(name = "mentor_id", nullable = false)
     private Mentor mentor;
 
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Consultation> consultationList;
+
+    private Integer lastReservedSlot = null; // 방금 예약한 시간대
+
     public Schedule(Mentor mentor, LocalDate date) {
         this.mentor = mentor;
         this.date = date;
     }
 
-    // 일정 등록
+    // 상담 가능 시간으로 변경
     public void reserveSlot(int hour) {
         this.hourlySlots.set(hour, true); // 지정된 시간대의 예약 상태를 true로 설정
+        if (this.lastReservedSlot != null && this.lastReservedSlot == hour) {
+            this.lastReservedSlot = null; // 취소된 시간이 마지막 예약 시간대였다면 초기화
+        }
     }
 
-    // 등록한 일정 취소
+    // 상담 불가 시간으로 변경
     public void unreserveSlot(int hour) {
         this.hourlySlots.set(hour, false);
+        this.lastReservedSlot = hour; // 방금 예약한 시간대 저장
     }
 
 

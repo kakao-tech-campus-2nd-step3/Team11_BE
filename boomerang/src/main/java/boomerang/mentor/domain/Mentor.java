@@ -43,7 +43,7 @@ public class Mentor {
 
     private Boolean isDeleted = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -100,5 +100,4 @@ public class Mentor {
         this.isDeleted = true;
     }
 
-    public void registerSchedule(List<Schedule> scheduleList) {this.scheduleList = scheduleList;}
 }
