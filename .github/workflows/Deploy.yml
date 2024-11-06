@@ -51,7 +51,7 @@ jobs:
             ./gradlew build -x test
 
             # 애플리케이션 배포
-            nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 & disown
+            screen -dmS boomerang_session bash -c 'java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1'
 
 
             # 로그 파일 확인
