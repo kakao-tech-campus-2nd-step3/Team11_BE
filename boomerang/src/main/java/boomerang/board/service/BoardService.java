@@ -110,16 +110,30 @@ public class BoardService {
     }
 
     private List<URL> uploadImages(Member member, List<MultipartFile> images) {
-        if (images.isEmpty())
+        if (images == null || images.isEmpty()) {
             return Collections.emptyList();
+        }
 
-        return images.stream()
-                .map(image -> fileService.upload(member.getEmail(), image))  // 업로드 후 URL 반환
+        try {
+            return images.stream()
+                .map(image -> fileService.upload(member.getEmail(), image))
                 .toList();
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.S3_UPLOAD_ERROR);
+        }
     }
 
     private void insertImageUrlsIntoContent(BoardRequestDto boardRequestDto, List<URL> imageUrls) {
         String content = boardRequestDto.getContent();
+
+        // content 내의 이미지 태그 개수 계산
+        int contentImageCount = countImagePlaceholders(content);
+        int providedImageCount = imageUrls.size();
+
+        // 이미지 태그 개수와 실제 이미지 개수가 불일치하면 에러 발생
+        if (contentImageCount != providedImageCount) {
+            throw new BusinessException(ErrorCode.IMAGE_COUNT_MISMATCH_ERROR);
+        }
 
         // <img src=?> 부분을 imageUrls의 URL로 순서대로 대체
         for (URL imageUrl : imageUrls) {
@@ -129,5 +143,17 @@ public class BoardService {
         boardRequestDto.setContentWithImageUrl(content);
     }
 
+    private int countImagePlaceholders(String content) {
+        int count = 0;
+        int index = 0;
+
+        // "<img src=? />" 패턴을 찾아서 카운트
+        while ((index = content.indexOf("<img src=? />", index)) != -1) {
+            count++;
+            index += "<img src=? />".length();
+        }
+
+        return count;
+    }
 }
 

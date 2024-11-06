@@ -28,6 +28,7 @@ public enum ErrorCode {
     // Board
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
+    IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003", "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
 
     // Comment
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
