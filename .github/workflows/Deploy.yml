@@ -20,7 +20,7 @@ jobs:
 
       - name: Connect and deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-3-34-197-198.ap-northeast-2.compute.amazonaws.com << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-43-203-254-19.ap-northeast-2.compute.amazonaws.com << 'EOF'
             # 프로젝트 클론 또는 업데이트
             cd Team11_BE || git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git && cd Team11_BE
 
@@ -39,4 +39,3 @@ jobs:
 
             # 애플리케이션 배포
             nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
-          EOF
