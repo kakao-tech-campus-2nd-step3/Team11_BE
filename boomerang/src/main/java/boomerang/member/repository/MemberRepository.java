@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //        "SUBSTRING(m.nickname, LENGTH(:baseNickname) + 1) REGEXP '^[0-9]+$'")
 //    Integer findMaxSuffixByNicknamePattern(String baseNickname);
     Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByEmailAndNickname(String email, String nickname);
 }

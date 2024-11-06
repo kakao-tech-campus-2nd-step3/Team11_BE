@@ -51,8 +51,16 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addCookie(CookieUtil.createAuthorizationCookies(token));
+        response.addHeader("Authorization", "Bearer " + token);
         return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> loginMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.loginMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addHeader("Authorization", "Bearer " + token);
+        return ResponseEntity.status(HttpStatus.OK)
                 .build();
     }
 

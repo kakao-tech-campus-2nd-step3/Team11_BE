@@ -31,13 +31,13 @@ public class MemberService {
 
     public Member getMember(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
     public String createMember(MemberServiceDto memberCreateServiceDto) {
@@ -49,6 +49,14 @@ public class MemberService {
         String email = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         return memberRepository.findByEmail(email)
                 .orElseGet(() -> memberRepository.save(new Member(kakaoMember)));
+    }
+
+    public String loginMember(MemberServiceDto memberCreateServiceDto) {
+        String email = memberCreateServiceDto.getEmail();
+        String nickName = memberCreateServiceDto.getNickname();
+        Member member = memberRepository.findByEmailAndNickname(email, nickName)
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+        return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
 //    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
