@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,8 +25,6 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final FileService fileService;
-    private final Double WEIGHT = 0.7;
-    private final int MIN_DATE = 7;
 
     public BoardService(BoardRepository boardRepository, FileService fileService) {
         this.boardRepository = boardRepository;
@@ -33,16 +32,11 @@ public class BoardService {
     }
 
     // 베스트 게시물 가져오기
-    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
-        // x일 이내의 시작 날짜 계산
-        LocalDate startDate = LocalDate.now().minusDays(MIN_DATE);
+    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto)
+    {
+        PageRequest pageRequest = PageRequest.of(0, boardBestListRequestDto.getSize(), Sort.unsorted());
 
-        // PageRequest 생성
-        PageRequest pageRequest = PageRequest.of(
-                0, boardBestListRequestDto.getSize(), Sort.unsorted());
-
-        Page<Board> boardPage =  boardRepository.findBestBoardsByDateAndScore(startDate.atStartOfDay(), WEIGHT, boardBestListRequestDto.getBoard_type(), pageRequest);
-        return boardPage;
+        return boardRepository.findBestBoardsByScore(boardBestListRequestDto.getBoard_type(), pageRequest);
     }
 
 
@@ -105,7 +99,7 @@ public class BoardService {
         return PageRequest.of(
                 boardListRequestDto.getPage(),
                 boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getSort_by())
+                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getBoard_sort_type().getName())
         );
     }
 

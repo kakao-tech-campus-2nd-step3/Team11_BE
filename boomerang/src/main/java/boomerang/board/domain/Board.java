@@ -40,6 +40,8 @@ public class Board {
     @Embedded
     private Location location;
 
+    private Long score;
+
     private Long likeCount = 0L;
 
     private Long commentCount = 0L;
