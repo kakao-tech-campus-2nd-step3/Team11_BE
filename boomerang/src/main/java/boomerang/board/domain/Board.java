@@ -92,8 +92,13 @@ public class Board {
     }
 
     private String summaryContent(String content) {
-        String summary = Jsoup.parse(content).text();
         int contentLength = 20;
+
+        // html 태그 제거
+        String summary = Jsoup.parse(content).text();
+
+        // 줄바꿈 문자(\n, \r)들을 스페이스로 변환
+        summary = summary.replaceAll("\\r?\\n", " ");
 
         // contentLength 를 넘으면 이후를 "..."으로 요약
         if (summary.length() > contentLength) {

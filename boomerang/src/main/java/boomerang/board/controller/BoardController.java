@@ -1,12 +1,7 @@
 package boomerang.board.controller;
 
 import boomerang.board.domain.Board;
-import boomerang.board.dto.BoardBestListRequestDto;
-import boomerang.board.dto.BoardDetailResponseDto;
-import boomerang.board.dto.BoardListRequestDto;
-import boomerang.board.dto.BoardRequestDto;
-import boomerang.board.dto.BoardResponseDto;
-import boomerang.board.dto.BoardSimpleResponseDto;
+import boomerang.board.dto.*;
 import boomerang.board.service.BoardService;
 import boomerang.comment.dto.CommentListRequestDto;
 import boomerang.comment.dto.CommentResponseDto;
@@ -19,10 +14,6 @@ import boomerang.global.utils.ResponseHelper;
 import boomerang.like.service.LikeService;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -31,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @Slf4j
@@ -44,8 +37,8 @@ public class BoardController {
     private final LikeService likeService;
 
     public BoardController(BoardService boardService, MemberService memberService,
-        CommentService commentService,
-        LikeService likeService) {
+                           CommentService commentService,
+                           LikeService likeService) {
         this.boardService = boardService;
         this.memberService = memberService;
         this.commentService = commentService;
@@ -54,35 +47,35 @@ public class BoardController {
 
     @GetMapping("/best")
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getBestBoards(
-        @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
+            @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
 
         Page<Board> boardPage = boardService.getBestBoards(boardBestListRequestDto);
         Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new PageResponseDto<>(boardResponsePage));
+                .body(new PageResponseDto<>(boardResponsePage));
     }
 
     @GetMapping
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getAllBoards(
-        @ModelAttribute BoardListRequestDto boardListRequestDto) {
+            @ModelAttribute BoardListRequestDto boardListRequestDto) {
 
         Page<Board> boardPage = boardService.getAllBoards(boardListRequestDto);
         Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new PageResponseDto<>(boardResponsePage));
+                .body(new PageResponseDto<>(boardResponsePage));
     }
 
     @GetMapping("/{board_id}")
     public ResponseEntity<BoardDetailResponseDto> getBoardById(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @PathVariable(name = "board_id") Long boardId) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "board_id") Long boardId) {
 
         Board board = boardService.getBoard(boardId);
         PageResponseDto<CommentResponseDto> commentListResponseDto = new PageResponseDto<>(
-            commentService.getAllComment(boardId, new CommentListRequestDto())
-                .map(CommentResponseDto::new));
+                commentService.getAllComment(boardId, new CommentListRequestDto())
+                        .map(CommentResponseDto::new));
 
         boolean isLiked = false;
 
@@ -92,15 +85,15 @@ public class BoardController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new BoardDetailResponseDto(board, commentListResponseDto, isLiked));
+                .body(new BoardDetailResponseDto(board, commentListResponseDto, isLiked));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BoardSimpleResponseDto> createBoard(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @RequestPart("data") BoardRequestDto boardRequestDto,
-        @RequestParam("content") String content,
-        @RequestParam(value = "images", required = false) List<MultipartFile> images
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestPart("data") BoardRequestDto boardRequestDto,
+            @RequestParam("content") String content,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
@@ -108,16 +101,16 @@ public class BoardController {
         Board createdBoard = boardService.createBoard(boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new BoardSimpleResponseDto(createdBoard, false));
+                .body(new BoardSimpleResponseDto(createdBoard, false));
     }
 
     @PutMapping("/{board_id}")
     public ResponseEntity<BoardSimpleResponseDto> updateBoard(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @PathVariable(name = "board_id") Long boardId,
-        @RequestPart("data") BoardRequestDto boardRequestDto,
-        @RequestParam("content") String content,
-        @RequestParam(value = "images", required = false) List<MultipartFile> images
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "board_id") Long boardId,
+            @RequestPart("data") BoardRequestDto boardRequestDto,
+            @RequestParam("content") String content,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images
     ) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
@@ -125,18 +118,18 @@ public class BoardController {
         Board updatedBoard = boardService.updateBoard(boardId, boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new BoardSimpleResponseDto(updatedBoard, false));
+                .body(new BoardSimpleResponseDto(updatedBoard, false));
     }
 
     @DeleteMapping("/{board_id}")
     public ResponseEntity<Void> deleteBoard(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @PathVariable(name = "board_id") Long boardId) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable(name = "board_id") Long boardId) {
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         boardService.deleteBoard(member, boardId);
         return ResponseEntity.status(HttpStatus.OK)
-            .build();
+                .build();
     }
 
     // GlobalException Handler 에서 처리할 경우,
@@ -144,7 +137,7 @@ public class BoardController {
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponseDto> handleOptionValidException(
-        DomainValidationException e) {
+            DomainValidationException e) {
         log.error(e.toString());
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
