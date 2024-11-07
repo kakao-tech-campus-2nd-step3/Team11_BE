@@ -23,7 +23,7 @@ public class BoardRequestDto {
         this.location = location;
     }
 
-    public void setContentWithImageUrl(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 }

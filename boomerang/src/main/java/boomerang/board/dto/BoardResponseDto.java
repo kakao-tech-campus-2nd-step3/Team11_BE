@@ -10,16 +10,16 @@ import lombok.Getter;
 public class BoardResponseDto {
     private Long id;
     private String title;
-    private String content;
+    private String summary;
     private String writerEmail;
     private String writerName;
     private Long likeCount;
     private Long commentCount;
 
-    public BoardResponseDto(Board board, int contentLength) {
+    public BoardResponseDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
-        this.content = board.getContent();
+        this.summary = board.getSummery();
         this.writerEmail = board.getWriterEmail();
         this.writerName = board.getWriterName();
         this.likeCount = board.getLikeCount();

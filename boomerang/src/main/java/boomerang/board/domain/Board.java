@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jsoup.Jsoup;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +27,10 @@ public class Board {
 
     private String title;
 
+    @Column(length = 10000)
     private String content;
+
+    private String summery;
 
     private String writerEmail;
 
@@ -70,6 +74,8 @@ public class Board {
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
+
+        this.summery = summaryContent(content);
     }
 
     // ID가 있는 경우의 생성자
@@ -81,6 +87,20 @@ public class Board {
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
+
+        this.summery = summaryContent(content);
+    }
+
+    private String summaryContent(String content) {
+        String summary = Jsoup.parse(content).text();
+        int contentLength = 20;
+
+        // contentLength 를 넘으면 이후를 "..."으로 요약
+        if (summary.length() > contentLength) {
+            return summary.substring(0, contentLength - 1) + "...";
+        }
+
+        return summary;
     }
 
     public void increaseLikeCount() {

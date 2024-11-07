@@ -19,6 +19,7 @@ import boomerang.global.utils.ResponseHelper;
 import boomerang.like.service.LikeService;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -28,16 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -63,10 +55,10 @@ public class BoardController {
     @GetMapping("/best")
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getBestBoards(
         @ModelAttribute BoardBestListRequestDto boardBestListRequestDto) {
+
         Page<Board> boardPage = boardService.getBestBoards(boardBestListRequestDto);
-        Page<BoardResponseDto> boardResponsePage
-            = boardPage.map(
-            board -> new BoardResponseDto(board, boardBestListRequestDto.getContent_length()));
+        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
+
         return ResponseEntity.status(HttpStatus.OK)
             .body(new PageResponseDto<>(boardResponsePage));
     }
@@ -74,10 +66,10 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<PageResponseDto<BoardResponseDto>> getAllBoards(
         @ModelAttribute BoardListRequestDto boardListRequestDto) {
+
         Page<Board> boardPage = boardService.getAllBoards(boardListRequestDto);
-        Page<BoardResponseDto> boardResponsePage
-            = boardPage.map(
-            board -> new BoardResponseDto(board, boardListRequestDto.getContent_length()));
+        Page<BoardResponseDto> boardResponsePage = boardPage.map(BoardResponseDto::new);
+
         return ResponseEntity.status(HttpStatus.OK)
             .body(new PageResponseDto<>(boardResponsePage));
     }
@@ -86,6 +78,7 @@ public class BoardController {
     public ResponseEntity<BoardDetailResponseDto> getBoardById(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId) {
+
         Board board = boardService.getBoard(boardId);
         PageResponseDto<CommentResponseDto> commentListResponseDto = new PageResponseDto<>(
             commentService.getAllComment(boardId, new CommentListRequestDto())
@@ -105,16 +98,13 @@ public class BoardController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BoardSimpleResponseDto> createBoard(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @RequestParam("data") String data,
+        @RequestPart("data") BoardRequestDto boardRequestDto,
+        @RequestParam("content") String content,
         @RequestParam(value = "images", required = false) List<MultipartFile> images
-    ) throws JsonProcessingException {
-
-        // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        BoardRequestDto boardRequestDto = objectMapper.readValue(data, BoardRequestDto.class);
-
+    ) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
+        boardRequestDto.setContent(content);
         Board createdBoard = boardService.createBoard(boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -125,15 +115,13 @@ public class BoardController {
     public ResponseEntity<BoardSimpleResponseDto> updateBoard(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @PathVariable(name = "board_id") Long boardId,
-        @RequestParam("data") String data,
+        @RequestPart("data") BoardRequestDto boardRequestDto,
+        @RequestParam("content") String content,
         @RequestParam(value = "images", required = false) List<MultipartFile> images
-    ) throws JsonProcessingException {
-
-        // ObjectMapper를 사용해 JSON 문자열을 DTO로 변환
-        ObjectMapper objectMapper = new ObjectMapper();
-        BoardRequestDto boardRequestDto = objectMapper.readValue(data, BoardRequestDto.class);
-
+    ) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+
+        boardRequestDto.setContent(content);
         Board updatedBoard = boardService.updateBoard(boardId, boardRequestDto, member, images);
 
         return ResponseEntity.status(HttpStatus.CREATED)

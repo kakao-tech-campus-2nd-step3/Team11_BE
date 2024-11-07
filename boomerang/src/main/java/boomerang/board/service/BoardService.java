@@ -65,6 +65,7 @@ public class BoardService {
         insertImageUrlsIntoContent(boardRequestDto, imageUrls);
 
         Board board = new Board(boardRequestDto, member);
+
         return boardRepository.save(board);
     }
 
@@ -139,7 +140,7 @@ public class BoardService {
             content = content.replaceFirst("<img src=\\? />", "<img src='" + imageUrl.toString() + "' />");
         }
 
-        boardRequestDto.setContentWithImageUrl(content);
+        boardRequestDto.setContent(content);
     }
 
     private int countImagePlaceholders(String content) {
