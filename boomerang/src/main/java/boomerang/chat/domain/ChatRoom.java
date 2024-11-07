@@ -1,8 +1,11 @@
 package boomerang.chat.domain;
 
+import boomerang.IsDeleted;
+import boomerang.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,12 +19,13 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_one_id", nullable = false)
+    private Member mentor;
 
-    // 테스트를 위해 주석처리
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "creator_id", nullable = false)
-//    private Member creator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_two_id", nullable = false)
+    private Member client;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
@@ -30,10 +34,16 @@ public class ChatRoom {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private IsDeleted isDeleted;
+
     protected ChatRoom() {
     }
 
-    public ChatRoom(String name) {
-        this.name = name;
+    public ChatRoom(Member mentor, Member client) {
+        this.mentor = mentor;
+        this.client = client;
     }
 }

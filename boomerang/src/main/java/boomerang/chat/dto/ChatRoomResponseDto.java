@@ -14,7 +14,6 @@ public class ChatRoomResponseDto {
 
     public ChatRoomResponseDto(ChatRoom chatRoom) {
         this.id = chatRoom.getId();
-        this.name = chatRoom.getName();
         // 테스트를 위해 주석처리
 //        this.creatorName = chatRoom.getCreator().getNickname();
         this.createdAt = chatRoom.getCreatedAt();
