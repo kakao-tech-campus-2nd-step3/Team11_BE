@@ -19,7 +19,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
@@ -32,7 +31,6 @@ public class BoardService {
         this.boardRepository = boardRepository;
         this.fileService = fileService;
     }
-
 
     // 베스트 게시물 가져오기
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
