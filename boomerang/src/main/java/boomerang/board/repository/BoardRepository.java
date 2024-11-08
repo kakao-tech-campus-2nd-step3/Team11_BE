@@ -12,9 +12,5 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-
-    @Query("SELECT b FROM Board b WHERE b.boardType = :boardType ORDER BY b.score DESC")
-    Page<Board> findBestBoardsByScore(@Param("boardType") BoardType boardType, Pageable pageable);
-
     Page<Board> findByBoardType(BoardType boardType, Pageable pageable);
 }

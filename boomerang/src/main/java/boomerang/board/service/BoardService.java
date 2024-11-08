@@ -32,12 +32,15 @@ public class BoardService {
     }
 
     // 베스트 게시물 가져오기
-    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto)
-    {
-        PageRequest pageRequest = PageRequest.of(0, boardBestListRequestDto.getSize(), Sort.unsorted());
+    public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
+        // 정렬을 score 기준으로 내림차순 설정
+        PageRequest pageRequest =
+                PageRequest.of(0, boardBestListRequestDto.getSize(),
+                        Sort.by(Sort.Direction.DESC, "score"));
 
-        return boardRepository.findBestBoardsByScore(boardBestListRequestDto.getBoard_type(), pageRequest);
+        return boardRepository.findByBoardType(boardBestListRequestDto.getBoard_type(), pageRequest);
     }
+
 
 
     // 모든 게시물 가져오기

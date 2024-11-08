@@ -2,6 +2,7 @@ package boomerang.board.scheduler;
 
 import boomerang.board.domain.Board;
 import boomerang.board.repository.BoardRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class ScoreScheduler {
     }
 
     // 4시간마다 실행 (밀리초 단위: 4 * 60 * 60 * 1000)
+    @Transactional
     @Scheduled(fixedRate = 14400000)
     public void updateBoardScores() {
         List<Board> boards = boardRepository.findAll();
