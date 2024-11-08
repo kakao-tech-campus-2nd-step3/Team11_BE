@@ -68,6 +68,9 @@ dependencies {
     // Document
     implementation 'org.apache.pdfbox:pdfbox:3.0.0'
     implementation 'org.apache.pdfbox:fontbox:3.0.0'
+
+    // html tag 제거
+    implementation 'org.jsoup:jsoup:1.18.1'
 }
 
 configurations {
