@@ -16,4 +16,5 @@ public class BoardBestListRequestDto {
     private int size = 10;
     private BoardType board_type;
     private int content_length;
+
 }
