@@ -11,8 +11,7 @@ public class BoardResponseDto {
     private Long id;
     private String title;
     private String summary;
-    private String writerEmail;
-    private String writerName;
+    private String writerNickname;
     private Long likeCount;
     private Long commentCount;
 
@@ -20,8 +19,7 @@ public class BoardResponseDto {
         this.id = board.getId();
         this.title = board.getTitle();
         this.summary = board.getSummery();
-        this.writerEmail = board.getWriterEmail();
-        this.writerName = board.getWriterName();
+        this.writerNickname = board.getWriterNickname();
         this.likeCount = board.getLikeCount();
         this.commentCount = board.getCommentCount();
     }

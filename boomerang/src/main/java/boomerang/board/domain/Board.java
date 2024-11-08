@@ -32,7 +32,7 @@ public class Board {
 
     private String summery;
 
-    private String writerEmail;
+    private String writerNickname;
 
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
@@ -72,7 +72,7 @@ public class Board {
     public Board(BoardRequestDto boardRequestDto, Member member) {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
-        this.writerEmail = member.getEmail();
+        this.writerNickname = member.getNickname();
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
@@ -84,8 +84,8 @@ public class Board {
     public Board(Long id, BoardRequestDto boardRequestDto, Member member) {
         this.id = id;
         this.title = boardRequestDto.getTitle();
-        this.writerEmail = member.getEmail();
         this.content = boardRequestDto.getContent();
+        this.writerNickname = member.getNickname();
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
@@ -110,6 +110,16 @@ public class Board {
         return summary;
     }
 
+    public void calculateScore(int validDays, Long likeWeight, Long commentWeight) {
+        LocalDateTime expiryDate = createdAt.plusDays(validDays);
+        if (LocalDateTime.now().isAfter(expiryDate)) {
+            // 유효 기간이 지나면 score를 음수로 설정
+            this.score = -1L;
+        } else {
+            this.score = this.likeCount * likeWeight + this.commentCount * commentWeight;
+        }
+    }
+
     public void increaseLikeCount() {
         likeCount += 1;
     }
@@ -126,7 +136,6 @@ public class Board {
         commentCount -= 1;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -139,9 +148,5 @@ public class Board {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public String getWriterName() {
-        return this.member.getNickname();
     }
 }

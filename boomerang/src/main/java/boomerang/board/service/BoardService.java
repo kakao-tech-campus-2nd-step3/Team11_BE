@@ -43,6 +43,7 @@ public class BoardService {
     // 모든 게시물 가져오기
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
+
         return boardRepository.findByBoardType(boardListRequestDto.getBoard_type(), pageRequest);
     }
 
