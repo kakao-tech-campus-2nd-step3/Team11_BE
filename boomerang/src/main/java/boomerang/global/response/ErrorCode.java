@@ -83,6 +83,12 @@ public enum ErrorCode {
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
 
+    // Document
+    DOCUMENT_MISSING_FIELDS(HttpStatus.BAD_REQUEST, "DC001", "필수 입력 필드가 누락되었습니다"),
+    DOCUMENT_EXTRA_FIELDS(HttpStatus.BAD_REQUEST, "DC002", "불필요한 필드가 포함되었습니다"),
+    DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
+    DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
+
     ;
 
     private final HttpStatus status;
