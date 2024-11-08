@@ -19,7 +19,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
