@@ -1,81 +1,85 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.1'
-	id 'io.spring.dependency-management' version '1.1.5'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'com'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.google.guava:guava:33.2.1-jre'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.google.guava:guava:33.2.1-jre'
 
-	// token 설정
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // token 설정
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// Lombok 추가
-	compileOnly 'org.projectlombok:lombok:1.18.30'
-	annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    // Lombok 추가
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-	// MySQL 커넥터
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    // MySQL 커넥터
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	//시큐리티 설정
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    //시큐리티 설정
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	//테스트를 위한 시큐리티 설정
-	testImplementation 'org.springframework.security:spring-security-test'
+    //테스트를 위한 시큐리티 설정
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	// AWS S3
-	implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.1.0'
+    // AWS S3
+    implementation 'io.awspring.cloud:spring-cloud-aws-s3:3.1.0'
 
-	// Log4j2
-	implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.1.2'
+    // Log4j2
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2:3.1.2'
 
-	// websocket
-	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.4'
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:3.3.4'
 
-	// Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// Email
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // Email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-	// Thymeleaf (이메일 템플릿용)
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // Thymeleaf (이메일 템플릿용)
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-	// html tag 제거
-	implementation 'org.jsoup:jsoup:1.18.1'
 
+    // Document
+    implementation 'org.apache.pdfbox:pdfbox:3.0.0'
+    implementation 'org.apache.pdfbox:fontbox:3.0.0'
+
+    // html tag 제거
+    implementation 'org.jsoup:jsoup:1.18.1'
 }
 
 configurations {
-	configureEach {
-		// Log4j2
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
+    configureEach {
+        // Log4j2
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

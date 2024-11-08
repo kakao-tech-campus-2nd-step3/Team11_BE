@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     @Order(0)
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponseDto> handleBusinessException(BusinessException e) {
-        log.error(e.toString());
+        log.error("Business exception occurred: ", e);  // 스택트레이스와 함께 출력
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }
 
@@ -99,11 +99,11 @@ public class GlobalExceptionHandler {
         return ResponseHelper.createErrorResponse(errorCode, e.getStatus(), e.getMessage());
     }
 
-  @Order(4)
+    @Order(4)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
-        log.error(Arrays.toString(e.getStackTrace()));
+        log.error("Unexpected error occurred:", e);  // 예외 메시지와 스택트레이스 모두 출력
         ErrorCode errorCode = ErrorCode.UNEXPECTED_ERROR;
-        return ResponseHelper.createErrorResponse(errorCode);
+        return ResponseHelper.createErrorResponse(errorCode, e.getMessage());  // 에러 메시지도 포함
     }
 }
