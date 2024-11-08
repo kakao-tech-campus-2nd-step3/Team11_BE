@@ -47,7 +47,9 @@ public class BoardService {
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
 
-        return boardRepository.findByBoardType(boardListRequestDto.getBoard_type(), pageRequest);
+        return boardRepository.findByBoardTypeAndTitleContaining(
+                boardListRequestDto.getBoard_type(), boardListRequestDto.getSearch_word(), pageRequest
+        );
     }
 
     // ID로 게시물 가져오기
