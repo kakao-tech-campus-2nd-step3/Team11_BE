@@ -1,9 +1,15 @@
-name: Deploy
+name: Deploy to AWS CodeDeploy 
 
 on:
   push:
     branches:
       - deploy
+
+env:
+  S3_BUCKET_NAME: sursim-img
+  APPLICATION_NAME: boomerang
+  DEPLOYMENT_GROUP_NAME: boomerang-deploy-group
+  REGION: ap-northeast-2
 
 jobs:
   deploy:
@@ -13,50 +19,63 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.5.4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
+          java-version: '21'
+          distribution: 'temurin'
 
-      - name: Connect and deploy to server
-        env:
-          PEM_FILE: ${{ secrets.SSH_KEY }}
+      - name: Create application.properties from Secrets
+        working-directory: ./boomerang
         run: |
-          echo "$PEM_FILE" > kwy-root.pem
-          chmod 600 kwy-root.pem
+          echo "Current directory: $(pwd)"
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
+          cat src/main/resources/application.properties
 
-          ssh -o StrictHostKeyChecking=no -i "kwy-root.pem" ubuntu@ec2-52-79-80-3.ap-northeast-2.compute.amazonaws.com << 'EOF'
+      - name: Grant execute permission for gradlew
+        working-directory: ./boomerang
+        run: chmod +x ./gradlew
 
-            # JAVA_HOME 및 PATH 설정
-            export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-            export PATH=$JAVA_HOME/bin:$PATH
+      - name: Build with Gradle
+        working-directory: ./boomerang
+        run: ./gradlew build -x test
 
-            # 프로젝트 클론 또는 업데이트
-            if [ ! -d "Team11_BE" ]; then
-              git clone https://github.com/kakao-tech-campus-2nd-step3/Team11_BE.git
-            fi
-            cd Team11_BE/boomerang
+      - name: Convert Windows line endings to Unix line endings
+        run: |
+          # Convert Windows line endings to Unix line endings for all scripts in the 'scripts' directory
+          find ./scripts -type f -name "*.sh" -exec sed -i 's/\r$//' {} \;
+          
+      - name: Make zip file including appspec.yml
+        run: |
+          # Ensure appspec.yml is included in the zip
+          cp appspec.yml ./boomerang/
+          cp -r ./boomerang/build/libs ./boomerang/  # Copy libs folder
+          cp -r ./scripts ./boomerang/  # Copy scripts folder
+          chmod +x ./boomerang/scripts/*.sh  # Grant execute permissions to all .sh files
+          cd ./boomerang
+          zip -r ../application.zip .
+          cd ..
 
-            # 반영 사항 업데이트
-            git pull origin deploy
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.REGION }}
 
-            # 기존 실행 중인 프로세스 종료
-            ps -ef | grep java | grep boomerang-0.0.1-SNAPSHOT.jar | awk '{print $2}' | xargs -r kill -9
+      - name: Upload to S3
+        run: aws s3 cp application.zip s3://$S3_BUCKET_NAME/application.zip
 
-            # .env 파일을 application.properties로 변환
-            mkdir -p src/main/resources
-            envsubst < ~/boomerang.env > src/main/resources/application.properties
+      - name: List objects in S3 bucket
+        run: aws s3 ls s3://$S3_BUCKET_NAME/  # List objects in the S3 bucket
 
-            # 빌드 재실행
-            chmod +x ./gradlew
-            ./gradlew build -x test
-
-            # 애플리케이션 배포
-            nohup java -jar build/libs/boomerang-0.0.1-SNAPSHOT.jar > log.txt 2>&1 &
-
-            # 로그 파일 확인
-            sleep 5
-            ls -l log.txt || echo "log.txt 파일이 없습니다."
-            cat log.txt || echo "log.txt가 비어 있습니다."
-
-          EOF
+      - name: Deploy with CodeDeploy
+        run: |
+          aws deploy create-deployment \
+          --application-name $APPLICATION_NAME \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name $DEPLOYMENT_GROUP_NAME \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=application.zip \
+          --region $REGION
