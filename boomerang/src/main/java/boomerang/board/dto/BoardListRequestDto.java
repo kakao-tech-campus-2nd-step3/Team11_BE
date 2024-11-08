@@ -1,5 +1,6 @@
 package boomerang.board.dto;
 
+import boomerang.board.domain.BoardSortType;
 import boomerang.board.domain.BoardType;
 import jakarta.validation.constraints.Min;
 import lombok.EqualsAndHashCode;
@@ -17,8 +18,8 @@ public class BoardListRequestDto {
     private int page = 0;
     @Min(0)
     private int size = 10;
+    private String search_word = "";
     private Sort.Direction sort_direction = Sort.Direction.DESC;
-    private String sort_by = "id";
+    private BoardSortType board_sort_type = BoardSortType.ID;
     private BoardType board_type;
-    private int content_length;
 }
