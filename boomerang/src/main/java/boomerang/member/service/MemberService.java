@@ -9,17 +9,18 @@ import boomerang.member.domain.RandomNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final RandomNickname randomNicknameGenerator;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, RandomNickname randomNicknameGenerator) {
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil,
+        RandomNickname randomNicknameGenerator) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.randomNicknameGenerator = randomNicknameGenerator;
@@ -31,13 +32,13 @@ public class MemberService {
 
     public Member getMember(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
     public String createMember(MemberServiceDto memberCreateServiceDto) {
@@ -48,14 +49,14 @@ public class MemberService {
     public Member loginKakaoMember(KakaoMember kakaoMember) {
         String email = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         return memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(new Member(kakaoMember)));
+            .orElseGet(() -> memberRepository.save(new Member(kakaoMember)));
     }
 
     public String loginMember(MemberServiceDto memberCreateServiceDto) {
         String email = memberCreateServiceDto.getEmail();
         String nickName = memberCreateServiceDto.getNickname();
         Member member = memberRepository.findByEmailAndNickname(email, nickName)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
         return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
