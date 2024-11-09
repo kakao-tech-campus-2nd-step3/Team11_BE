@@ -18,6 +18,9 @@ public class SubStepInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private SubStepEnum subStepEnum;
+
     private String subStepName;
 
     private String content;

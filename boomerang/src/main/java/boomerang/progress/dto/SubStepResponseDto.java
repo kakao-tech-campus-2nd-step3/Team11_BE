@@ -16,7 +16,7 @@ public class SubStepResponseDto {
     public SubStepResponseDto(SubStep subStep) {
         this.name = subStep.getName();
         this.completion = subStep.isCompletion();
-        this.content = subStep.getSubStepEnum().getContent();
+//        this.content = subStep.getSubStepEnum().getContent();
     }
 
 }

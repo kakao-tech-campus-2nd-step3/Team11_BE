@@ -16,7 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class DocumentRequestDto {
 
-    private String subStep;
+    private String subStep; //한글로
     private Map<String, String> formData;
 
     public void validate() {
@@ -26,7 +26,8 @@ public class DocumentRequestDto {
             throw new BusinessException(ErrorCode.DOCUMENT_TYPE_REQUIRED);
         }
 
-        List<String> requiredFields = subStepEnum.getInputs();
+//        List<String> requiredFields = subStepEnum.getInputs();
+        List<String> requiredFields = List.of();
         Set<String> providedFields = formData.keySet();
 
         // 필수 필드 검증
