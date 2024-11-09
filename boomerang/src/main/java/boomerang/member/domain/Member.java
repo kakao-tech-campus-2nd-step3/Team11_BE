@@ -91,6 +91,7 @@ public class Member {
     public Member(KakaoMember kakaoMember) {
         this.email = kakaoMember.email();
         this.memberRole = MemberRole.INCOMPLETE_USER;
+        this.profileImage = kakaoMember.profileImage();
     }
 
     public ProgressType getProgressType() {
@@ -136,5 +137,9 @@ public class Member {
 
     public void verifyEmail() {
         this.emailVerified = true;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

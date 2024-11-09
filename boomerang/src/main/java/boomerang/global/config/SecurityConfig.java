@@ -92,7 +92,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/member/nickname","/api/v1/board/comments/**", "/api/v1/progress/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/member").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/board", "/api/v1/board/*/comments", "/api/v1/board/*/likes").authenticated() // POST 요청 추가
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/board/*", "/api/v1/board/*/comments/*").authenticated() // POST 요청 추가
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/board/*", "/api/v1/board/*/comments/*", "/api/v1/member/*").authenticated() // POST 요청 추가
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/board/*", "/api/v1/board/*/comments/*", "/api/v1/board/*/likes").authenticated() // DELETE 요청 추가
                         .requestMatchers("/api/v1/chat/**").permitAll()  // 채팅 경로 모두 허용
                         .anyRequest().permitAll());
