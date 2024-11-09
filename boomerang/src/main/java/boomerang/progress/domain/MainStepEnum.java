@@ -8,8 +8,7 @@ import java.util.List;
 public enum MainStepEnum {
     A1("전세권-설정-확인", List.of(SubStepEnum.A1_1)),
     A2BC3("전세사기-피해자-신청",
-        List.of(SubStepEnum.A2BC3_1, SubStepEnum.A2BC3_2, SubStepEnum.A2BC3_3, SubStepEnum.A2BC3_4,
-            SubStepEnum.A2BC3_4, SubStepEnum.A2BC3_5, SubStepEnum.A2BC3_6, SubStepEnum.A2BC3_7,
+        List.of(SubStepEnum.A2BC3_1, SubStepEnum.A2BC3_2, SubStepEnum.A2BC3_3, SubStepEnum.A2BC3_4, SubStepEnum.A2BC3_5, SubStepEnum.A2BC3_6, SubStepEnum.A2BC3_7,
             SubStepEnum.A2BC3_8, SubStepEnum.A2BC3_9, SubStepEnum.A2BC3_10, SubStepEnum.A2BC3_11)),
     A3("경매-신청하는-방법", List.of(SubStepEnum.A3_1, SubStepEnum.A3_2)),
     A4("배당-요구-신청", List.of(SubStepEnum.A4_1, SubStepEnum.A4_2, SubStepEnum.A4_3, SubStepEnum.A4_4,
