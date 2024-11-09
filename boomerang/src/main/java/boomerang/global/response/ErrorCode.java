@@ -69,6 +69,7 @@ public enum ErrorCode {
     PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
     PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
+    SUB_STEP_INFO_NOT_FOUND(HttpStatus.BAD_REQUEST, "PG014", "해당 서브단계에 대한 정보가 존재하지 않습니다."),
 
 
     // Chat
@@ -82,6 +83,12 @@ public enum ErrorCode {
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
+
+    // Document
+    DOCUMENT_MISSING_FIELDS(HttpStatus.BAD_REQUEST, "DC001", "필수 입력 필드가 누락되었습니다"),
+    DOCUMENT_EXTRA_FIELDS(HttpStatus.BAD_REQUEST, "DC002", "불필요한 필드가 포함되었습니다"),
+    DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
+    DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
     ;
 

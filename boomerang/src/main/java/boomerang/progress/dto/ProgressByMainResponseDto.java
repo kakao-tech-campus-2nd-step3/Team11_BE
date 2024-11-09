@@ -18,17 +18,13 @@ public class ProgressByMainResponseDto {
     private List<MainStepResponseDto> mainStepList;         //메인단계 리스트
     private List<SubStepResponseDto> subStepList;           //서브리스트
 
-    public ProgressByMainResponseDto(Progress progress, MainStep mainStep) {
+    public ProgressByMainResponseDto(Progress progress, MainStep mainStep, List<SubStepResponseDto> subStepList) {
         this.progressType = progress.getProgressType();
         this.currentMainStep = mainStep.getMainStepEnum();
         this.mainStepList = progress.getMainStepList()
                 .stream()
                 .map(MainStepResponseDto::new)
                 .toList();
-        this.subStepList = mainStep.getSubStepList()
-                .stream()
-                .map(SubStepResponseDto::new)
-                .toList();
-
+        this.subStepList = subStepList;
     }
 }

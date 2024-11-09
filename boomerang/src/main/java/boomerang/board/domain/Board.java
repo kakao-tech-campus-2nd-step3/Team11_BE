@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.jsoup.Jsoup;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,15 +27,20 @@ public class Board {
 
     private String title;
 
+    @Column(length = 10000)
     private String content;
 
-    private String writerEmail;
+    private String summery;
+
+    private String writerNickname;
 
     @Enumerated(EnumType.STRING)
     private BoardType boardType;
 
     @Embedded
     private Location location;
+
+    private Long score;
 
     private Long likeCount = 0L;
 
@@ -43,12 +49,6 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -66,21 +66,52 @@ public class Board {
     public Board(BoardRequestDto boardRequestDto, Member member) {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
-        this.writerEmail = member.getEmail();
+        this.writerNickname = member.getNickname();
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
+
+        this.summery = summaryContent(content);
     }
 
     // ID가 있는 경우의 생성자
     public Board(Long id, BoardRequestDto boardRequestDto, Member member) {
         this.id = id;
         this.title = boardRequestDto.getTitle();
-        this.writerEmail = member.getEmail();
         this.content = boardRequestDto.getContent();
+        this.writerNickname = member.getNickname();
         this.boardType = boardRequestDto.getBoard_type();
         this.location = boardRequestDto.getLocation();
         this.member = member;
+
+        this.summery = summaryContent(content);
+    }
+
+    private String summaryContent(String content) {
+        int contentLength = 20;
+
+        // html 태그 제거
+        String summary = Jsoup.parse(content).text();
+
+        // 줄바꿈 문자(\n, \r)들을 스페이스로 변환
+        summary = summary.replaceAll("\\r?\\n", " ");
+
+        // contentLength 를 넘으면 이후를 "..."으로 요약
+        if (summary.length() > contentLength) {
+            return summary.substring(0, contentLength - 1) + "...";
+        }
+
+        return summary;
+    }
+
+    public void calculateScore(int validDays, Long likeWeight, Long commentWeight) {
+        LocalDateTime expiryDate = createdAt.plusDays(validDays);
+        if (LocalDateTime.now().isAfter(expiryDate)) {
+            // 유효 기간이 지나면 score를 음수로 설정
+            this.score = -1L;
+        } else {
+            this.score = this.likeCount * likeWeight + this.commentCount * commentWeight;
+        }
     }
 
     public void increaseLikeCount() {
@@ -99,7 +130,6 @@ public class Board {
         commentCount -= 1;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,9 +142,5 @@ public class Board {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public String getWriterName() {
-        return this.member.getNickname();
     }
 }

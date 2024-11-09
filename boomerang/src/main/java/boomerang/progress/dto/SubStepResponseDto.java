@@ -13,10 +13,10 @@ public class SubStepResponseDto {
     private boolean completion;
     private String content;
 
-    public SubStepResponseDto(SubStep subStep) {
+    public SubStepResponseDto(SubStep subStep,String content) {
         this.name = subStep.getName();
         this.completion = subStep.isCompletion();
-        this.content = subStep.getSubStepEnum().getContent();
+        this.content = content;
     }
 
 }

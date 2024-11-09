@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,8 +25,6 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final FileService fileService;
-    private final Double WEIGHT = 0.7;
-    private final int MIN_DATE = 7;
 
     public BoardService(BoardRepository boardRepository, FileService fileService) {
         this.boardRepository = boardRepository;
@@ -34,22 +33,23 @@ public class BoardService {
 
     // 베스트 게시물 가져오기
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
-        // x일 이내의 시작 날짜 계산
-        LocalDate startDate = LocalDate.now().minusDays(MIN_DATE);
+        // 정렬을 score 기준으로 내림차순 설정
+        PageRequest pageRequest =
+                PageRequest.of(0, boardBestListRequestDto.getSize(),
+                        Sort.by(Sort.Direction.DESC, "score"));
 
-        // PageRequest 생성
-        PageRequest pageRequest = PageRequest.of(
-                0, boardBestListRequestDto.getSize(), Sort.unsorted());
-
-        Page<Board> boardPage =  boardRepository.findBestBoardsByDateAndScore(startDate.atStartOfDay(), WEIGHT, boardBestListRequestDto.getBoard_type(), pageRequest);
-        return boardPage;
+        return boardRepository.findByBoardType(boardBestListRequestDto.getBoard_type(), pageRequest);
     }
+
 
 
     // 모든 게시물 가져오기
     public Page<Board> getAllBoards(BoardListRequestDto boardListRequestDto) {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
-        return boardRepository.findByBoardType(boardListRequestDto.getBoard_type(), pageRequest);
+
+        return boardRepository.findByBoardTypeAndTitleContaining(
+                boardListRequestDto.getBoard_type(), boardListRequestDto.getSearch_word(), pageRequest
+        );
     }
 
     // ID로 게시물 가져오기
@@ -65,6 +65,7 @@ public class BoardService {
         insertImageUrlsIntoContent(boardRequestDto, imageUrls);
 
         Board board = new Board(boardRequestDto, member);
+
         return boardRepository.save(board);
     }
 
@@ -104,7 +105,7 @@ public class BoardService {
         return PageRequest.of(
                 boardListRequestDto.getPage(),
                 boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getSort_by())
+                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getBoard_sort_type().getName())
         );
     }
 
@@ -139,7 +140,7 @@ public class BoardService {
             content = content.replaceFirst("<img src=\\? />", "<img src='" + imageUrl.toString() + "' />");
         }
 
-        boardRequestDto.setContentWithImageUrl(content);
+        boardRequestDto.setContent(content);
     }
 
     private int countImagePlaceholders(String content) {

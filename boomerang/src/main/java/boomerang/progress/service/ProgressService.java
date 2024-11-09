@@ -1,7 +1,6 @@
 package boomerang.progress.service;
 
 import boomerang.global.exception.BusinessException;
-import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
@@ -25,11 +24,12 @@ public class ProgressService {
 
     private final MemberService memberService;
     private final ProgressRepository progressRepository;
+    private final SubStepInfoService subStepInfoService;
 
     //유저의 타입 검사
     @Transactional
-    public ProgressType checkUserType(PrincipalDetails principalDetails, ProgressTypeRequestDto progressTypeRequestDto) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public ProgressType checkUserType(String email, ProgressTypeRequestDto progressTypeRequestDto) {
+        Member member = memberService.getMemberByEmail(email);
 
         if (member.hasProgress()) {
             throw new BusinessException(ErrorCode.PROGRESS_TYPE_EXISTS);
@@ -44,53 +44,56 @@ public class ProgressService {
     }
 
     //유저의 타입 조회
-    public ProgressType getUserType(PrincipalDetails principalDetails) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public ProgressType getUserType(String email) {
+        Member member = memberService.getMemberByEmail(email);
         return Optional.ofNullable(member.getProgressType())
                 .orElseThrow(() -> new BusinessException(ErrorCode.PROGRESS_TYPE_NON_EXISTENT));
     }
 
     //유저의 진행도 전체 조회
     @Transactional(readOnly = true)
-    public ProgressByMainResponseDto getProgressDetails(PrincipalDetails principalDetails) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public ProgressByMainResponseDto getProgressDetails(String email) {
+        Member member = memberService.getMemberByEmail(email);
 
         Progress progress = getProgressByMember(member);
         MainStep mainStep = getCurrentMainStep(progress);
 
-        return new ProgressByMainResponseDto(progress, mainStep);
+        List<SubStepResponseDto> subStepList = subStepInfoService.getSubStepList(mainStep);
+        return new ProgressByMainResponseDto(progress, mainStep, subStepList);
     }
 
     //특정 메인 단계만 조회
     @Transactional(readOnly = true)
-    public ProgressByMainResponseDto getSubStepsByMainStep(PrincipalDetails principalDetails, MainStepEnum mainStepEnum) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public ProgressByMainResponseDto getSubStepsByMainStep(String email, MainStepEnum mainStepEnum) {
+        Member member = memberService.getMemberByEmail(email);
         Progress progress = getProgressByMember(member);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
 
-        return new ProgressByMainResponseDto(progress, mainStep);
+        List<SubStepResponseDto> subStepList = subStepInfoService.getSubStepList(mainStep);
+        return new ProgressByMainResponseDto(progress, mainStep, subStepList);
     }
 
     //특정 서브단계만 조회
     @Transactional(readOnly = true)
-    public SubStepResponseDto getSubStepStatus(PrincipalDetails principalDetails,
+    public SubStepResponseDto getSubStepStatus(String email,
                                                MainStepEnum mainStepEnum,
                                                SubStepEnum subStepEnum) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Member member = memberService.getMemberByEmail(email);
         Progress progress = getProgressByMember(member);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
         SubStep subStep = getSubStepByEnum(mainStep, subStepEnum);
 
-        return new SubStepResponseDto(subStep);
+        String content = subStepInfoService.getSubStepContent(subStepEnum);
+        return new SubStepResponseDto(subStep, content);
     }
 
     //진행도 업데이트
     @Transactional
-    public SubStepResponseDto completeProgress(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+    public SubStepResponseDto completeProgress(String email, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
 
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Member member = memberService.getMemberByEmail(email);
         Progress progress = getProgressByMember(member);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
@@ -107,13 +110,14 @@ public class ProgressService {
         }
 
         subStep.markAsComplete();
-        return new SubStepResponseDto(subStep);
+        String content = subStepInfoService.getSubStepContent(subStepEnum);
+        return new SubStepResponseDto(subStep, content);
     }
 
     //진행도 완료 취소
     @Transactional
-    public SubStepResponseDto revertProgressToIncomplete(PrincipalDetails principalDetails, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+    public SubStepResponseDto revertProgressToIncomplete(String email, MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+        Member member = memberService.getMemberByEmail(email);
         Progress progress = getProgressByMember(member);
 
         MainStep mainStep = getMainStepByEnum(progress, mainStepEnum);
@@ -126,13 +130,28 @@ public class ProgressService {
             throw new BusinessException(ErrorCode.PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP);
         }
 
-
         if (!subStep.isCompletion()) {
             throw new BusinessException(ErrorCode.PROGRESS_ALREADY_INCOMPLETE);
         }
         subStep.markAsIncomplete();
-        return new SubStepResponseDto(subStep);
+        String content = subStepInfoService.getSubStepContent(subStepEnum);
+        return new SubStepResponseDto(subStep, content);
 
+    }
+
+    public MainStep getCurrentMainStep(Progress progress) {
+        MainStep mainStep = null;
+
+        // 유저의 현재 메인 단계 설정
+        for (MainStepEnum mainStepEnum : progress.getProgressType().getMainStepEnumList()) {
+            MainStep step = getMainStepByEnum(progress, mainStepEnum);
+            if (!step.isCompletion()) {
+                mainStep = step;
+                break;
+            }
+            mainStep = step; // 모든 단계가 완료되었을 때 마지막 단계로 설정
+        }
+        return mainStep;
     }
 
 
@@ -154,18 +173,5 @@ public class ProgressService {
         return progress;
     }
 
-    public MainStep getCurrentMainStep(Progress progress) {
-        MainStep mainStep = null;
 
-        // 유저의 현재 메인 단계 설정
-        for (MainStepEnum mainStepEnum : progress.getProgressType().getMainStepEnumList()) {
-            MainStep step = getMainStepByEnum(progress, mainStepEnum);
-            if (!step.isCompletion()) {
-                mainStep = step;
-                break;
-            }
-            mainStep = step; // 모든 단계가 완료되었을 때 마지막 단계로 설정
-        }
-        return mainStep;
-    }
 }
