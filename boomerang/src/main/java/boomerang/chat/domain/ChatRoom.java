@@ -10,11 +10,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Entity
 @Table(name = "chat_room")
 public class ChatRoom {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,6 +1,8 @@
 package boomerang.kakao.service;
 
-import boomerang.global.exception.BusinessException;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+
 import boomerang.global.exception.KakaoException;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.kakao.domain.KakaoProfile;
@@ -13,9 +15,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 
 @Service
 public class KakaoService {
@@ -39,26 +38,17 @@ public class KakaoService {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
         map.add("client_id", clientId);
-        map.add("redirect_uri", String.format("http://%s:8080/api/v1/auth/login/callback", serverIp));
+        map.add("redirect_uri",
+            String.format("http://%s:8080/api/v1/auth/login/callback", serverIp));
         map.add("code", code);
 
         return restClient.post()
-                .uri("https://kauth.kakao.com/oauth/token")
-                .contentType(CONTENT_TYPE)
-                .body(map)
-                .retrieve()
-                .toEntity(KakaoTokenResponseDto.class)
-                .getBody();
-    }
-
-    public KakaoMember getKakaoProfile(KakaoTokenResponseDto tokenResponse) {
-        KakaoProfile kakaoProfile = restClient.post().uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
-                .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + tokenResponse.accessToken)
-                .retrieve().toEntity(KakaoProfile.class).getBody();
-
-        KakaoMember kakaoMember = new KakaoMember(kakaoProfile);
-        return kakaoMember;
-
+            .uri("https://kauth.kakao.com/oauth/token")
+            .contentType(CONTENT_TYPE)
+            .body(map)
+            .retrieve()
+            .toEntity(KakaoTokenResponseDto.class)
+            .getBody();
     }
 
     public KakaoMember getKakaoProfile(KakaoTokenDto kakaoTokenDto) {
@@ -66,15 +56,16 @@ public class KakaoService {
 
         try {
             kakaoProfile = restClient.post()
-                    .uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
-                    .contentType(CONTENT_TYPE).header(AUTHORIZATION, BEARER + kakaoTokenDto.getAccessToken())
-                    .retrieve().
-                    toEntity(KakaoProfile.class).getBody();
-        }catch (HttpClientErrorException e) {
+                .uri("https://kapi.kakao.com/v2/user/me") // 쿼리파라미터 없이 요청시 전체정보 받음
+                .contentType(CONTENT_TYPE)
+                .header(AUTHORIZATION, BEARER + kakaoTokenDto.getAccessToken())
+                .retrieve().
+                toEntity(KakaoProfile.class).getBody();
+        } catch (HttpClientErrorException e) {
             // 카카오 API에서 반환한 상태 코드와 응답 본문을 출력
             System.out.println("HTTP Status Code: " + e.getStatusCode());
             System.out.println("Error Response Body: " + e.getResponseBodyAsString());
-            throw new KakaoException(e.getStatusCode(),e.getResponseBodyAsString());
+            throw new KakaoException(e.getStatusCode(), e.getResponseBodyAsString());
         }
 
         KakaoMember kakaoMember = new KakaoMember(kakaoProfile);

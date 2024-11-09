@@ -9,20 +9,26 @@
     <img src="https://boomerang-bucket.s3.ap-northeast-2.amazonaws.com/email/logo.png"
          alt="로고" style="width: 150px; height: auto;"/>
   </div>
-  <div style="background-color: #188EFF; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0;">
+  <div
+      style="background-color: #188EFF; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0;">
     <h1 style="margin: 0; font-size: 24px;">이메일 인증</h1>
   </div>
-  <div style="background-color: #ffffff; padding: 20px; border: 1px solid #e9e9e9; border-radius: 0 0 5px 5px;">
+  <div
+      style="background-color: #ffffff; padding: 20px; border: 1px solid #e9e9e9; border-radius: 0 0 5px 5px;">
     <p style="margin: 0 0 10px 0;">안녕하세요!</p>
     <p style="margin: 0 0 20px 0;">멘토 등록을 위한 이메일 인증 코드입니다.</p>
-    <div style="font-size: 32px; font-weight: bold; color: #188EFF; text-align: center; padding: 20px; margin: 20px 0; background-color: #f8f9fa; border-radius: 5px;" th:text="${code}">123456</div>
+    <div
+        style="font-size: 32px; font-weight: bold; color: #188EFF; text-align: center; padding: 20px; margin: 20px 0; background-color: #f8f9fa; border-radius: 5px;"
+        th:text="${code}">123456
+    </div>
     <p style="margin: 0 0 10px 0;">인증 코드는 5분간 유효합니다.</p>
     <p style="margin: 0;">본인이 요청하지 않은 경우 이 메일을 무시하시면 됩니다.</p>
   </div>
   <div style="text-align: center; margin-top: 20px;">
     <img src="https://boomerang-bucket.s3.ap-northeast-2.amazonaws.com/email/footer.png"
          alt="푸터 로고" style="width: 400px; height: auto;"/>
-    <p style="margin: 10px 0 0 0; color: #666; font-size: 12px;">본 메일은 발신전용이며, 문의사항은 고객센터를 이용해 주시기 바랍니다.</p>
+    <p style="margin: 10px 0 0 0; color: #666; font-size: 12px;">본 메일은 발신전용이며, 문의사항은 고객센터를 이용해 주시기
+      바랍니다.</p>
   </div>
 </div>
 </body>

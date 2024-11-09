@@ -1,11 +1,10 @@
 package boomerang.global.handler;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ChatWebSocketHandler extends TextWebSocketHandler {
 
@@ -24,7 +23,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, org.springframework.web.socket.CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session,
+        org.springframework.web.socket.CloseStatus status) throws Exception {
         sessions.remove(session);
     }
 }

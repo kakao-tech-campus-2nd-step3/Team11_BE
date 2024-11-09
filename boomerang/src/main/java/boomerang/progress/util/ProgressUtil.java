@@ -2,32 +2,36 @@ package boomerang.progress.util;
 
 
 import boomerang.member.domain.Member;
-import boomerang.progress.domain.*;
+import boomerang.progress.domain.MainStep;
+import boomerang.progress.domain.MainStepEnum;
+import boomerang.progress.domain.Progress;
+import boomerang.progress.domain.ProgressType;
+import boomerang.progress.domain.SubStep;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProgressUtil {
+
     public static Progress makeProgress(ProgressType progressType, Member member) {
         List<MainStepEnum> mainStepEnumList = progressType.getMainStepEnumList();
 
         Progress progress = new Progress(member, progressType);
         List<MainStep> mainStepList = mainStepEnumList.stream()
-                .map(
-                        mainStepEnum ->
-                        {
-                            MainStep mainStep = new MainStep(mainStepEnum, progress);
-                            List<SubStep> subStepList = mainStepEnum.getSubStepEnumList()
-                                    .stream()
-                                    .map(subStepEnum -> new SubStep(mainStep, subStepEnum)).toList();
+            .map(
+                mainStepEnum ->
+                {
+                    MainStep mainStep = new MainStep(mainStepEnum, progress);
+                    List<SubStep> subStepList = mainStepEnum.getSubStepEnumList()
+                        .stream()
+                        .map(subStepEnum -> new SubStep(mainStep, subStepEnum)).toList();
 
-                            mainStep.registerSubStepList(subStepList);
+                    mainStep.registerSubStepList(subStepList);
 
-                            return mainStep;
-                        })
-                .toList();
+                    return mainStep;
+                })
+            .toList();
 
         progress.registerMainStepList(mainStepList);
 

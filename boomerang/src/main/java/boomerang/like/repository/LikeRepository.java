@@ -3,9 +3,8 @@ package boomerang.like.repository;
 import boomerang.board.domain.Board;
 import boomerang.like.domain.Like;
 import boomerang.member.domain.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 

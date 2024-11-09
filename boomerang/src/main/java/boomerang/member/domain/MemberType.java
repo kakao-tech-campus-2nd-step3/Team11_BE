@@ -5,11 +5,11 @@ import boomerang.member.exception.MemberValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import java.util.Objects;
 
 @Embeddable
 public class MemberType {
+
     @Column(name = "member_type")
     private String value;
 
@@ -37,8 +37,12 @@ public class MemberType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         MemberType that = (MemberType) o;
         return Objects.equals(value, that.value);
     }

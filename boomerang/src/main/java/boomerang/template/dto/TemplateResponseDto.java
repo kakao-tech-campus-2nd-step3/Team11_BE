@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TemplateResponseDto {
+
     private TemplateColumn1 templateColumn1;
     private TemplateColumn2 templateColumn2;
 
@@ -27,8 +28,8 @@ public class TemplateResponseDto {
      */
     public static TemplateResponseDto of(TemplateDomain templateDomain) {
         return TemplateResponseDto.builder()
-                .templateColumn1(templateDomain.getTemplateColumn1())
-                .templateColumn2(templateDomain.getTemplateColumn2())
-                .build();
+            .templateColumn1(templateDomain.getTemplateColumn1())
+            .templateColumn2(templateDomain.getTemplateColumn2())
+            .build();
     }
 }

@@ -4,21 +4,33 @@ import boomerang.consultation.domain.Schedule;
 import boomerang.member.domain.Member;
 import boomerang.mentor.dto.MentorCreateRequestDto;
 import boomerang.mentor.dto.MentorUpdateRequestDto;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 @Getter
 @Entity
 @Table(name = "mentor")
 public class Mentor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,7 +66,8 @@ public class Mentor {
     protected Mentor() {
     }
 
-    public Mentor(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, Member member, String contact) {
+    public Mentor(MentorType mentorType, String career, String introduce,
+        Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;
@@ -66,9 +79,12 @@ public class Mentor {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
             return false;
+        }
         Mentor mentor = (Mentor) o;
         return Objects.equals(id, mentor.id);
     }

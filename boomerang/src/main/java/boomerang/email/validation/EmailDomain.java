@@ -13,7 +13,10 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = EmailDomainValidator.class)
 @Documented
 public @interface EmailDomain {
+
     String message() default "허용되지 않는 이메일 도메인입니다";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

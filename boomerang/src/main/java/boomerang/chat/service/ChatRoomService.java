@@ -15,11 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
+
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
@@ -34,7 +33,8 @@ public class ChatRoomService {
 
     public Page<ChatMessage> getChatMessages(Long chatRoomId, ChatMessageListRequestDto chatMessageListRequestDto) {
         ChatRoom chatRoom = validateChatRoomExists(chatRoomId);
-        return chatMessageRepository.findByChatRoom(chatRoom, chatMessageListRequestDto.toPageRequest());
+        return chatMessageRepository.findByChatRoom(chatRoom,
+            chatMessageListRequestDto.toPageRequest());
     }
 
     public ChatMessage sendChatMessage(ChatMessageRequestDto requestDto, Member sender) {
@@ -54,6 +54,6 @@ public class ChatRoomService {
 
     private ChatRoom validateChatRoomExists(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
+            .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
     }
 }

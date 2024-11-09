@@ -15,5 +15,5 @@ Content-Type: application/json
 Authorization: {{Authorization}}
 
 {
-  "new_nickname":"aaa"
+  "new_nickname": "aaa"
 }

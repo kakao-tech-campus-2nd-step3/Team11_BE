@@ -17,6 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CommentRequestDto {
+
     @NotBlank
     private String text;
 
