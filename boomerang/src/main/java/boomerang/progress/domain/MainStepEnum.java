@@ -7,20 +7,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.List;
 
 public enum MainStepEnum {
-    AB1("계약-해지-내용-증명", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    AB2("임차권-등기-명령-신청", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    AB3("전세사기-피해자-센터-신청", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    B4("보증-이행-청구-서류-준비", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    B5("명도일-지정", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    A4("지급-명령-신청", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    A5("전세-보증금-반환-소송", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-
-    // 전세권 계약한 사람의 단계
-    C1("전세권-계약-여부-확인", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    C2("경매-유예-혹은-속행", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    C3("경매-공매-신청", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    C4("배당-요구-신청", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2)),
-    C5("경매-낙찰-및-유찰-여부-확인", List.of(SubStepEnum.SUB_1, SubStepEnum.SUB_2));
+    A1("전세권-설정-확인",List.of()),
+    A2BC3("전세사기-피해자-신청",List.of()),
+    A3("경매-신청하는-방법",List.of()),
+    A4("배당-요구-신청",List.of()),
+    A5("경매-결과",List.of()),
+    BC1("계약-해지-내용-증명",List.of()),
+    BC2("임차권-등기-명령",List.of()),
+    B4("지급-명령-신청-전세-보증금-반환-소송-집행권원-취득",List.of()),
+    B5("압류-이후-경매-진행",List.of()),
+    C4("보증-이행-청구",List.of()),
+    C5("주택-명도-퇴거",List.of());
 
     private final String mainStepName;
     private final List<SubStepEnum> subStepEnumList;
