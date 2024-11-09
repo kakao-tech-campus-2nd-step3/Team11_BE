@@ -22,7 +22,9 @@ public class SubStepInfo {
     @Column(unique = true)
     private SubStepEnum subStepEnum;
 
-    @Column(columnDefinition = "TEXT")
+    private String subStepName;
+
+    @Column(length = 2000)
     private String content;
 
     @Convert(converter = StringListConverter.class)
