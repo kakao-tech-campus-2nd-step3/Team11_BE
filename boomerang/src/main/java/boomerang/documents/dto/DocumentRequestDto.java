@@ -19,15 +19,13 @@ public class DocumentRequestDto {
     private String subStep; //한글로
     private Map<String, String> formData;
 
-    public void validate() {
+    public void validate(List<String> requiredFields) {
         SubStepEnum subStepEnum = SubStepEnum.fromStepName(subStep); // String을 Enum으로 변환
 
         if (subStepEnum == null) {
             throw new BusinessException(ErrorCode.DOCUMENT_TYPE_REQUIRED);
         }
 
-//        List<String> requiredFields = subStepEnum.getInputs();
-        List<String> requiredFields = List.of();
         Set<String> providedFields = formData.keySet();
 
         // 필수 필드 검증
