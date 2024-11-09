@@ -19,10 +19,10 @@ public class SubStepInfo {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private SubStepEnum subStepEnum;
 
-    private String subStepName;
-
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Convert(converter = StringListConverter.class)
