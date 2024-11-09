@@ -89,7 +89,7 @@ public class MemberController {
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberLoginDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<MemberLoginDto> updateNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                                         HttpServletResponse response,
                                                                         @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
