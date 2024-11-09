@@ -70,6 +70,7 @@ public enum ErrorCode {
     PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
     PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
+    SUB_STEP_INFO_NOT_FOUND(HttpStatus.BAD_REQUEST, "PG014", "해당 서브단계에 대한 정보가 존재하지 않습니다."),
 
 
     // Chat

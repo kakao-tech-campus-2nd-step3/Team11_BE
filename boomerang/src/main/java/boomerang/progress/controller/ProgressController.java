@@ -27,20 +27,20 @@ public class ProgressController {
     @PostMapping("/progress/type")//타입 검사
     public ResponseEntity<ProgressTypeResponseDto> checkUserType(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            @RequestBody ProgressTypeRequestDto progressTypeRequestDto) {
-        ProgressType progressTypeOfMember = progressService.checkUserType(principalDetails, progressTypeRequestDto);
+        ProgressType progressTypeOfMember = progressService.checkUserType(principalDetails.getMemberEmail(), progressTypeRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     @GetMapping("/progress/type")//유저의 타입 정보
     public ResponseEntity<ProgressTypeResponseDto> getUserType(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressType progressTypeOfMember = progressService.getUserType(principalDetails);
+        ProgressType progressTypeOfMember = progressService.getUserType(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     //유저의 메인 단계 목록 조회
     @GetMapping("/progress")
     public ResponseEntity<ProgressByMainResponseDto > getProgressDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(principalDetails);
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
@@ -48,7 +48,7 @@ public class ProgressController {
     @GetMapping("/progress/{main}")
     public ResponseEntity<ProgressByMainResponseDto> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    @PathVariable("main") MainStepEnum mainStepEnum) {
-        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails, mainStepEnum);
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails.getMemberEmail(), mainStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
@@ -58,7 +58,7 @@ public class ProgressController {
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.getSubStepStatus(principalDetails, mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.getSubStepStatus(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
@@ -67,7 +67,7 @@ public class ProgressController {
                                               @PathVariable("main") MainStepEnum mainStepEnum,
                                               @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.completeProgress(principalDetails, mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.completeProgress(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
@@ -76,7 +76,7 @@ public class ProgressController {
                                                         @PathVariable("main") MainStepEnum mainStepEnum,
                                                         @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(principalDetails, mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 

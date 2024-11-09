@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+
+import boomerang.progress.service.SubStepInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
@@ -35,13 +37,14 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 public class DocumentService {
 
     private final S3Client s3Client;
+    private final SubStepInfoService subStepInfoService;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
     public DocumentResponseDto generateDocument(DocumentRequestDto requestDto) {
         try {
-            requestDto.validate();
+            requestDto.validate(subStepInfoService.getSubStepInfo(requestDto.getSubStepEnum()));
             byte[] templatePdf = downloadTemplate(requestDto.getSubStep());
             byte[] generatedPdf = fillPdfForm(templatePdf, requestDto.getFormData());
 
