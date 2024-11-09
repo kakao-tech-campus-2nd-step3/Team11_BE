@@ -8,13 +8,13 @@ import boomerang.global.response.PageResponseDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardDetailResponseDto {
+
     private Long id;
     private String title;
     private String content;
@@ -30,7 +30,8 @@ public class BoardDetailResponseDto {
 
 
     // Board 도메인 객체를 받아서 BoardResponseDto를 생성하는 생성자
-    public BoardDetailResponseDto(Board board, PageResponseDto<CommentResponseDto> commentListResponseDto, boolean isLiked) {
+    public BoardDetailResponseDto(Board board,
+        PageResponseDto<CommentResponseDto> commentListResponseDto, boolean isLiked) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();

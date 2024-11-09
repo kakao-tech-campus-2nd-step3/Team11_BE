@@ -1,11 +1,11 @@
 package boomerang.global.exception;
 
+import java.util.Arrays;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-import java.util.Arrays;
-
 public class KakaoException extends RuntimeException {
+
     private final HttpStatus status;
     private final String message;
 

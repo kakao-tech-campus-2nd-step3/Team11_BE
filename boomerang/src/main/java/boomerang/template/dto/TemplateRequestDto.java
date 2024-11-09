@@ -10,6 +10,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 //@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TemplateRequestDto {
+
     private TemplateColumn1 templateColumn1;
     private TemplateColumn2 templateColumn2;
 
@@ -22,16 +23,16 @@ public class TemplateRequestDto {
     // TemplateCreateServiceDto로 변환하는 메서드
     public TemplateDomain toTemplateDomain() {
         return TemplateDomain.builder()
-                .templateColumn1(templateColumn1)
-                .templateColumn2(templateColumn2)
-                .build();
+            .templateColumn1(templateColumn1)
+            .templateColumn2(templateColumn2)
+            .build();
     }
 
     public TemplateDomain toTemplateDomain(Long id) {
         return TemplateDomain.builder()
-                .id(id)
-                .templateColumn1(templateColumn1)
-                .templateColumn2(templateColumn2)
-                .build();
+            .id(id)
+            .templateColumn1(templateColumn1)
+            .templateColumn2(templateColumn2)
+            .build();
     }
 }

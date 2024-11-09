@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EmailDomainValidator implements ConstraintValidator<EmailDomain, String> {
+
     private static final List<String> ALLOWED_DOMAINS = Arrays.asList(
         "pusan.ac.kr",
         "naver.com"

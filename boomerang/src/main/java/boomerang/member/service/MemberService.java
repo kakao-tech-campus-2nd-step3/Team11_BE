@@ -112,7 +112,8 @@ public class MemberService {
             .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
 
         try {
-            log.info("Attempting to upload image. Original filename: {}", image.getOriginalFilename());
+            log.info("Attempting to upload image. Original filename: {}",
+                image.getOriginalFilename());
 
             // S3에 이미지 업로드
             URL imageUrl = fileService.upload(email, image);

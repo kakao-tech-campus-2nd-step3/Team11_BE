@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
         return ResponseHelper.createErrorResponse(errorCode, e.getMessage());
     }
 
-    
+
     @Order(2)
     @ExceptionHandler(KakaoException.class)
     public ResponseEntity<ErrorResponseDto> handleException(KakaoException e) {

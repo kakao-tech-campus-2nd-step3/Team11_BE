@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 @EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CommentListRequestDto {
+
     private int page = 0;
     private int size = 10;
     private Sort.Direction sortDirection = Sort.Direction.DESC;

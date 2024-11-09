@@ -100,6 +100,6 @@ public class MentorService {
 
     public Mentor getMentor(Long id) {
         return mentorRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MENTOR_NOT_FOUND));
     }
 }

@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardResponseDto {
+
     private Long id;
     private String title;
     private String summary;

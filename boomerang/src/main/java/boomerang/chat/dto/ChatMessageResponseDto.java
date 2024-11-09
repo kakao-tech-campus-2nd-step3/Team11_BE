@@ -1,12 +1,12 @@
 package boomerang.chat.dto;
 
 import boomerang.chat.domain.ChatMessage;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 public class ChatMessageResponseDto {
+
     private Long id;
     private String senderName;
     private String content;

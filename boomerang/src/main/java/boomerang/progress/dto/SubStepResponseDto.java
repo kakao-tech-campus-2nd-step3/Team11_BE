@@ -9,11 +9,12 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SubStepResponseDto {
+
     private String name;                  //보험가입여부
     private boolean completion;
     private String content;
 
-    public SubStepResponseDto(SubStep subStep,String content) {
+    public SubStepResponseDto(SubStep subStep, String content) {
         this.name = subStep.getName();
         this.completion = subStep.isCompletion();
         this.content = content;

@@ -66,7 +66,8 @@ public class CommentService {
 
 
     //댓글 수정
-    public Comment updateComment(String email, Long commentId, CommentRequestDto commentRequestDto) {
+    public Comment updateComment(String email, Long commentId,
+        CommentRequestDto commentRequestDto) {
         Comment comment = getComment(commentId);
 
         if (!comment.isMemberCommentAuthor(memberService.getMemberByEmail(email))) {
@@ -81,14 +82,14 @@ public class CommentService {
 
     public Comment getComment(Long commentId) {
         return commentRepository.findActiveById(commentId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NON_EXISTENT));
     }
 
     private PageRequest getPageRequest(CommentListRequestDto commentListRequestDto) {
         return PageRequest.of(
-                commentListRequestDto.getPage(),
-                commentListRequestDto.getSize(),
-                Sort.by(commentListRequestDto.getSortDirection(), commentListRequestDto.getSortBy())
+            commentListRequestDto.getPage(),
+            commentListRequestDto.getSize(),
+            Sort.by(commentListRequestDto.getSortDirection(), commentListRequestDto.getSortBy())
         );
     }
 

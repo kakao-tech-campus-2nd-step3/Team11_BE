@@ -10,15 +10,15 @@ import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
+
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
@@ -34,9 +34,11 @@ public class ChatRoomService {
     }
 
     // 특정 채팅방 메시지 조회
-    public Page<ChatMessage> getChatMessages(Long chatRoomId, ChatMessageListRequestDto chatMessageListRequestDto) {
+    public Page<ChatMessage> getChatMessages(Long chatRoomId,
+        ChatMessageListRequestDto chatMessageListRequestDto) {
         ChatRoom chatRoom = validateChatRoomExists(chatRoomId);
-        return chatMessageRepository.findByChatRoom(chatRoom, chatMessageListRequestDto.toPageRequest());
+        return chatMessageRepository.findByChatRoom(chatRoom,
+            chatMessageListRequestDto.toPageRequest());
     }
 
     // 메시지 전송
@@ -59,6 +61,6 @@ public class ChatRoomService {
     // 채팅방 존재 여부 확인
     private ChatRoom validateChatRoomExists(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
+            .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
     }
 }

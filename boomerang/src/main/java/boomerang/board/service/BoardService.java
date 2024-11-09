@@ -9,20 +9,18 @@ import boomerang.file.service.FileService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-
 @Service
 public class BoardService {
+
     private final BoardRepository boardRepository;
     private final FileService fileService;
 
@@ -35,12 +33,12 @@ public class BoardService {
     public Page<Board> getBestBoards(BoardBestListRequestDto boardBestListRequestDto) {
         // 정렬을 score 기준으로 내림차순 설정
         PageRequest pageRequest =
-                PageRequest.of(0, boardBestListRequestDto.getSize(),
-                        Sort.by(Sort.Direction.DESC, "score"));
+            PageRequest.of(0, boardBestListRequestDto.getSize(),
+                Sort.by(Sort.Direction.DESC, "score"));
 
-        return boardRepository.findByBoardType(boardBestListRequestDto.getBoard_type(), pageRequest);
+        return boardRepository.findByBoardType(boardBestListRequestDto.getBoard_type(),
+            pageRequest);
     }
-
 
 
     // 모든 게시물 가져오기
@@ -48,7 +46,7 @@ public class BoardService {
         PageRequest pageRequest = getPageRequest(boardListRequestDto);
 
         return boardRepository.findByBoardTypeAndTitleContaining(
-                boardListRequestDto.getBoard_type(), boardListRequestDto.getSearch_word(), pageRequest
+            boardListRequestDto.getBoard_type(), boardListRequestDto.getSearch_word(), pageRequest
         );
     }
 
@@ -58,7 +56,8 @@ public class BoardService {
     }
 
     // 게시물 생성
-    public Board createBoard(BoardRequestDto boardRequestDto, Member member, List<MultipartFile> images) {
+    public Board createBoard(BoardRequestDto boardRequestDto, Member member,
+        List<MultipartFile> images) {
         // S3에 이미지 업로드 및 URL 리스트 생성
         List<URL> imageUrls = uploadImages(member, images);
 
@@ -70,7 +69,8 @@ public class BoardService {
     }
 
     // 게시물 업데이트
-    public Board updateBoard(Long id, BoardRequestDto boardRequestDto, Member member, List<MultipartFile> images) {
+    public Board updateBoard(Long id, BoardRequestDto boardRequestDto, Member member,
+        List<MultipartFile> images) {
         // S3에 이미지 업로드 및 URL 리스트 생성
         List<URL> imageUrls = uploadImages(member, images);
 
@@ -90,7 +90,7 @@ public class BoardService {
     // 게시물 존재 여부 검증
     private Board validateBoardExists(Long id) {
         return boardRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
+            .orElseThrow(() -> new BusinessException(ErrorCode.BOARD_NOT_FOUND_ERROR));
     }
 
     // 게시물 소유자 검증
@@ -103,9 +103,10 @@ public class BoardService {
 
     private PageRequest getPageRequest(BoardListRequestDto boardListRequestDto) {
         return PageRequest.of(
-                boardListRequestDto.getPage(),
-                boardListRequestDto.getSize(),
-                Sort.by(boardListRequestDto.getSort_direction(), boardListRequestDto.getBoard_sort_type().getName())
+            boardListRequestDto.getPage(),
+            boardListRequestDto.getSize(),
+            Sort.by(boardListRequestDto.getSort_direction(),
+                boardListRequestDto.getBoard_sort_type().getName())
         );
     }
 
@@ -137,7 +138,8 @@ public class BoardService {
 
         // <img src=?> 부분을 imageUrls의 URL로 순서대로 대체
         for (URL imageUrl : imageUrls) {
-            content = content.replaceFirst("<img src=\\? />", "<img src='" + imageUrl.toString() + "' />");
+            content = content.replaceFirst("<img src=\\? />",
+                "<img src='" + imageUrl.toString() + "' />");
         }
 
         boardRequestDto.setContent(content);

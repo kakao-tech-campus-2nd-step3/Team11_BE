@@ -4,14 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import java.security.Key;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.util.Date;
-
 @Component
 public class JwtUtil {
+
     // application.properties에서 시크릿 키와 만료시간을 가져옵니다.
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -30,29 +30,29 @@ public class JwtUtil {
 
     public String generateToken(Long memberId, String email) {
         return Jwts.builder()
-                .setSubject(memberId.toString())
-                .claim("email", email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime)) // 설정된 만료 시간 사용
-                .signWith(key)
-                .compact();
+            .setSubject(memberId.toString())
+            .claim("email", email)
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + expirationTime)) // 설정된 만료 시간 사용
+            .signWith(key)
+            .compact();
     }
 
     public Claims extractClaims(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
         return claims;
     }
 
     public String getEmail(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
         return claims.get("email", String.class);
     }
 

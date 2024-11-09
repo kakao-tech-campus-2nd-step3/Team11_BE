@@ -23,7 +23,8 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping
-    public ResponseEntity<ByteArrayResource> generateDocument(@RequestBody DocumentRequestDto requestDto) {
+    public ResponseEntity<ByteArrayResource> generateDocument(
+        @RequestBody DocumentRequestDto requestDto) {
         try {
             DocumentResponseDto responseDto = documentService.generateDocument(requestDto);
 
@@ -31,7 +32,8 @@ public class DocumentController {
 
             return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + responseDto.getFileName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + responseDto.getFileName() + "\"")
                 .body(resource);
 
         } catch (Exception e) {

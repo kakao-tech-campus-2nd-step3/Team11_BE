@@ -11,6 +11,7 @@ public record KakaoProfile(
     Properties properties,
     KakaoAccount kakaoAccount
 ) {
+
     public String nickname() {
         return properties.nickname();
     }
@@ -27,7 +28,9 @@ public record KakaoProfile(
         String nickname,
         @JsonProperty("profile_image") String profileImage,
         @JsonProperty("thumbnail_image") String thumbnailImage
-    ) {}
+    ) {
+
+    }
 
     record KakaoAccount(
         @JsonProperty("profile_nickname_needs_agreement") Boolean profileNicknameNeedsAgreement,
@@ -38,7 +41,9 @@ public record KakaoProfile(
         @JsonProperty("is_email_valid") Boolean isEmailValid,
         @JsonProperty("is_email_verified") Boolean isEmailVerified,
         String email
-    ) {}
+    ) {
+
+    }
 
     record Profile(
         String nickname,
@@ -46,5 +51,7 @@ public record KakaoProfile(
         @JsonProperty("profile_image_url") String profileImageUrl,
         @JsonProperty("is_default_image") Boolean isDefaultImage,
         @JsonProperty("is_default_nickname") Boolean isDefaultNickname
-    ) {}
+    ) {
+
+    }
 }
