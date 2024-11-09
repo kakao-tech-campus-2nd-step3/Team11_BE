@@ -10,9 +10,9 @@ public enum ErrorCode {
     ACCESS_TOKEN_NOT_EXISTS_ERROR(HttpStatus.BAD_REQUEST, "EG002", "Access Token Not Exists Error"),
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "EG004", "잘못된 요청입니다."),
-    COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
-    KAKAO_ERROR(HttpStatus.UNAUTHORIZED, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
-    FILE_ERROR(HttpStatus.UNAUTHORIZED, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
+    COOKIES_ERROR(HttpStatus.BAD_REQUEST, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
+    KAKAO_ERROR(HttpStatus.BAD_REQUEST, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
+    FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
@@ -82,6 +82,12 @@ public enum ErrorCode {
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
+
+    // Document
+    DOCUMENT_MISSING_FIELDS(HttpStatus.BAD_REQUEST, "DC001", "필수 입력 필드가 누락되었습니다"),
+    DOCUMENT_EXTRA_FIELDS(HttpStatus.BAD_REQUEST, "DC002", "불필요한 필드가 포함되었습니다"),
+    DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
+    DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
     ;
 

@@ -55,7 +55,6 @@ public enum SubStepEnum {
     C5_2("이사날짜-확인하기"),
     C5_3("명도-증빙-자료-제출하기");
 
-
     private final String subStepName;
 
     SubStepEnum(String subStepName) {
