@@ -59,7 +59,6 @@ public class KakaoController {
                 .body(new MemberLoginDto(member));
     }
 
-
     @GetMapping("/login")
     public void authorize(HttpServletResponse response) throws IOException {
         String redirectUri = String.format("http://%s:8080/api/v1/auth/login/callback", serverIp);

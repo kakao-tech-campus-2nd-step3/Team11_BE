@@ -138,4 +138,8 @@ public class Member {
     public void verifyEmail() {
         this.emailVerified = true;
     }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 }

@@ -1,5 +1,6 @@
 package boomerang.member.service;
 
+import boomerang.file.service.FileService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.utils.JwtUtil;
@@ -9,21 +10,28 @@ import boomerang.member.domain.RandomNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
+import java.net.URL;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final RandomNickname randomNicknameGenerator;
+    private final FileService fileService;
 
     public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil,
-        RandomNickname randomNicknameGenerator) {
+        RandomNickname randomNicknameGenerator, FileService fileService) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.randomNicknameGenerator = randomNicknameGenerator;
+        this.fileService = fileService;
     }
 
     public List<Member> getAllMembers() {
@@ -96,4 +104,26 @@ public class MemberService {
         return member;
     }
 
+    @Transactional
+    public Member updateProfileImage(String email, MultipartFile image) {
+        log.info("Starting profile image update for email: {}", email);
+
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+
+        try {
+            log.info("Attempting to upload image. Original filename: {}", image.getOriginalFilename());
+
+            // S3에 이미지 업로드
+            URL imageUrl = fileService.upload(email, image);
+            log.info("Successfully uploaded image to S3. URL: {}", imageUrl);
+
+            member.updateProfileImage(imageUrl.toString());
+
+            return member;
+        } catch (Exception e) {
+            log.error("Error during image upload/update process", e);
+            throw new BusinessException(ErrorCode.S3_UPLOAD_ERROR);
+        }
+    }
 }

@@ -14,6 +14,7 @@ import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Slf4j
@@ -107,6 +110,17 @@ public class MemberController {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(),
             requestDto.getNewNickname());
         return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
+    }
+
+    @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemberResponseDto> updateProfileImage(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @RequestParam(value = "image", required = true) MultipartFile image) {
+
+        Member updatedMember = memberService.updateProfileImage(principalDetails.getMemberEmail(),
+            image);
+
+        return ResponseEntity.ok(new MemberResponseDto(updatedMember));
     }
 
     // GlobalException Handler 에서 처리할 경우,
