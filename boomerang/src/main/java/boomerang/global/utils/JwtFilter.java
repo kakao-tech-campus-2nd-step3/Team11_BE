@@ -6,16 +6,14 @@ import boomerang.global.properties.ClientServerProperties;
 import boomerang.member.domain.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
@@ -24,14 +22,16 @@ public class JwtFilter extends OncePerRequestFilter {
     private final PrincipalService principalService;
     private final ClientServerProperties clientServerProperties;
 
-    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService, ClientServerProperties clientServerProperties) {
+    public JwtFilter(JwtUtil jwtUtil, PrincipalService principalService,
+        ClientServerProperties clientServerProperties) {
         this.jwtUtil = jwtUtil;
         this.principalService = principalService;
         this.clientServerProperties = clientServerProperties;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
 
         String token = request.getHeader("Authorization");
         if (token == null || token.isBlank()) {
@@ -72,13 +72,14 @@ public class JwtFilter extends OncePerRequestFilter {
         PrincipalDetails memberDetail = (PrincipalDetails) principalService.loadUserByEmail(email);
 
         if (memberDetail.getMemberRole().equals(MemberRole.INCOMPLETE_USER)
-                && !("/api/v1/member/nickname".equals(path) && "PUT".equalsIgnoreCase(method))) {
+            && !("/api/v1/member/nickname".equals(path) && "PUT".equalsIgnoreCase(method))) {
             response.sendRedirect(clientServerProperties.getWelcome());
             filterChain.doFilter(request, response);
         }
 
         //스프링 시큐리티 인증 토큰 생성
-        Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null, memberDetail.getAuthorities());
+        Authentication authToken = new UsernamePasswordAuthenticationToken(memberDetail, null,
+            memberDetail.getAuthorities());
 
         //세션에 사용자 등록
         SecurityContextHolder.getContext().setAuthentication(authToken);

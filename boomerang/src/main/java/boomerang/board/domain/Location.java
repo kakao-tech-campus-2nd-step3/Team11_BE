@@ -3,11 +3,11 @@ package boomerang.board.domain;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import java.util.Objects;
 
 @Embeddable
 public class Location {
+
     @Column(name = "location")
     private String value;
 
@@ -32,8 +32,12 @@ public class Location {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Location that = (Location) o;
         return Objects.equals(value, that.value);
     }

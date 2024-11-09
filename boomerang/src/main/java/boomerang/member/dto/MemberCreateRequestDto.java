@@ -6,6 +6,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MemberCreateRequestDto {
+
     private String email;
     private String nickname;
 

@@ -15,7 +15,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -25,62 +31,79 @@ public class ProgressController {
     private final ProgressService progressService;
 
     @PostMapping("/progress/type")//타입 검사
-    public ResponseEntity<ProgressTypeResponseDto> checkUserType(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                           @RequestBody ProgressTypeRequestDto progressTypeRequestDto) {
-        ProgressType progressTypeOfMember = progressService.checkUserType(principalDetails.getMemberEmail(), progressTypeRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
+    public ResponseEntity<ProgressTypeResponseDto> checkUserType(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @RequestBody ProgressTypeRequestDto progressTypeRequestDto) {
+        ProgressType progressTypeOfMember = progressService.checkUserType(
+            principalDetails.getMemberEmail(), progressTypeRequestDto);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     @GetMapping("/progress/type")//유저의 타입 정보
-    public ResponseEntity<ProgressTypeResponseDto> getUserType(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressType progressTypeOfMember = progressService.getUserType(principalDetails.getMemberEmail());
-        return ResponseEntity.status(HttpStatus.OK).body(new ProgressTypeResponseDto(progressTypeOfMember));
+    public ResponseEntity<ProgressTypeResponseDto> getUserType(
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        ProgressType progressTypeOfMember = progressService.getUserType(
+            principalDetails.getMemberEmail());
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new ProgressTypeResponseDto(progressTypeOfMember));
     }
 
     //유저의 메인 단계 목록 조회
     @GetMapping("/progress")
-    public ResponseEntity<ProgressByMainResponseDto > getProgressDetails(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(principalDetails.getMemberEmail());
+    public ResponseEntity<ProgressByMainResponseDto> getProgressDetails(
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getProgressDetails(
+            principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 특정 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}")
-    public ResponseEntity<ProgressByMainResponseDto> getSubStepsByMainStep(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                   @PathVariable("main") MainStepEnum mainStepEnum) {
-        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(principalDetails.getMemberEmail(), mainStepEnum);
+    public ResponseEntity<ProgressByMainResponseDto> getSubStepsByMainStep(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable("main") MainStepEnum mainStepEnum) {
+        ProgressByMainResponseDto progressByMainResponseDto = progressService.getSubStepsByMainStep(
+            principalDetails.getMemberEmail(), mainStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(progressByMainResponseDto);
     }
 
     //유저의 메인 단계의 서브 단계 목록 조회
     @GetMapping("/progress/{main}/{sub}")
-    public ResponseEntity<SubStepResponseDto> getSubStepStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("main") MainStepEnum mainStepEnum,
-                                              @PathVariable("sub") SubStepEnum subStepEnum) {
+    public ResponseEntity<SubStepResponseDto> getSubStepStatus(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable("main") MainStepEnum mainStepEnum,
+        @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.getSubStepStatus(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.getSubStepStatus(
+            principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
     @PostMapping("/progress/{main}/{sub}")//특정 서브단계 완료로 변경
-    public ResponseEntity<SubStepResponseDto> completeProgress(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                              @PathVariable("main") MainStepEnum mainStepEnum,
-                                              @PathVariable("sub") SubStepEnum subStepEnum) {
+    public ResponseEntity<SubStepResponseDto> completeProgress(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable("main") MainStepEnum mainStepEnum,
+        @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.completeProgress(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.completeProgress(
+            principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
     @DeleteMapping("/progress/{main}/{sub}")//특정 서브단계 미완료로 변경
-    public ResponseEntity<SubStepResponseDto> revertProgressToIncomplete(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                        @PathVariable("main") MainStepEnum mainStepEnum,
-                                                        @PathVariable("sub") SubStepEnum subStepEnum) {
+    public ResponseEntity<SubStepResponseDto> revertProgressToIncomplete(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @PathVariable("main") MainStepEnum mainStepEnum,
+        @PathVariable("sub") SubStepEnum subStepEnum) {
         validMatchingOfMainStepAndSubStep(mainStepEnum, subStepEnum);
-        SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
+        SubStepResponseDto subStepResponseDto = progressService.revertProgressToIncomplete(
+            principalDetails.getMemberEmail(), mainStepEnum, subStepEnum);
         return ResponseEntity.status(HttpStatus.OK).body(subStepResponseDto);
     }
 
-    private void validMatchingOfMainStepAndSubStep(MainStepEnum mainStepEnum, SubStepEnum subStepEnum) {
+    private void validMatchingOfMainStepAndSubStep(MainStepEnum mainStepEnum,
+        SubStepEnum subStepEnum) {
         if (!mainStepEnum.isMatchingMainAndSub(subStepEnum)) {
             throw new BusinessException(ErrorCode.PROGRESS_SUB_MAIN_DO_NOT_MATCH);
         }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 
 @Getter
 public class ChatMessageListRequestDto {
+
     private int page = 0;
     private int size = 20;
     private Sort.Direction sortDirection = Sort.Direction.DESC;

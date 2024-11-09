@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardSimpleResponseDto {
+
     private Long id;
     private String title;
     private String content;

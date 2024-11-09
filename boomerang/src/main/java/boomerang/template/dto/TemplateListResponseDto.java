@@ -1,11 +1,10 @@
 package boomerang.template.dto;
 
 import boomerang.template.domain.TemplateDomain;
+import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-
-import java.util.List;
 
     /*
         상황에 따라서는 List 로 담고 싶은 ResponseDto 와 기존의 ResponseDto의 형태가 조금 달라지는 경우가 있다
@@ -33,6 +32,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode
 public class TemplateListResponseDto {
+
     // page와 같은 추가적인 정보를 담는 필드
     private String val;
     private List<TemplateResponseDto> templateResponseDtoList;
@@ -48,12 +48,12 @@ public class TemplateListResponseDto {
     */
     public static TemplateListResponseDto of(List<TemplateDomain> templateDomainList) {
         List<TemplateResponseDto> templateResponseDtoList = templateDomainList.stream()
-                .map(TemplateResponseDto::of)
-                .toList();
+            .map(TemplateResponseDto::of)
+            .toList();
 
         return TemplateListResponseDto.builder()
-                .val("some_value")  // 필요에 따라 값 설정
-                .templateResponseDtoList(templateResponseDtoList)
-                .build();
+            .val("some_value")  // 필요에 따라 값 설정
+            .templateResponseDtoList(templateResponseDtoList)
+            .build();
     }
 }

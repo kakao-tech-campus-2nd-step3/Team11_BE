@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MentorUpdateRequestDto {
+
     @NotNull(message = "멘토 유형은 필수입니다.")
     private final MentorType mentorType;
 
@@ -28,7 +29,8 @@ public class MentorUpdateRequestDto {
     @Size(min = 10, max = 20, message = "연락처는 10자 이상 20자 이하여야 합니다.")
     private final String contact;
 
-    public MentorUpdateRequestDto(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, String contact) {
+    public MentorUpdateRequestDto(MentorType mentorType, String career, String introduce,
+        Boolean advertisementStatus, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;

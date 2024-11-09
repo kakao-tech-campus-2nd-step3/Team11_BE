@@ -3,10 +3,9 @@ package boomerang.board.scheduler;
 import boomerang.board.domain.Board;
 import boomerang.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ScoreScheduler {

@@ -2,6 +2,9 @@ package boomerang.file.service;
 
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,10 +12,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-
-import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 public class AmazonS3Service implements FileService {
@@ -29,7 +28,7 @@ public class AmazonS3Service implements FileService {
     @Override
     public URL upload(String email, MultipartFile multipartFile) {
         String fileName = String.join("/", email,
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss.SSSSSS")));
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss.SSSSSS")));
 
         return putImage(fileName, multipartFile);
     }
@@ -39,19 +38,19 @@ public class AmazonS3Service implements FileService {
             // 업로드할 파일 정보 설정
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucket)
-                    .contentLength(multipartFile.getSize())
-                    .contentType(multipartFile.getContentType())
-                    .key(fileName)
-                    .build();
+                .bucket(bucket)
+                .contentLength(multipartFile.getSize())
+                .contentType(multipartFile.getContentType())
+                .key(fileName)
+                .build();
 
             RequestBody requestBody = RequestBody.fromBytes(multipartFile.getBytes());
             amazonS3Client.putObject(putObjectRequest, requestBody);
 
             GetUrlRequest getUrlRequest = GetUrlRequest.builder()
-                    .bucket(bucket)
-                    .key(fileName)
-                    .build();
+                .bucket(bucket)
+                .key(fileName)
+                .build();
 
             return amazonS3Client.utilities().getUrl(getUrlRequest);
 

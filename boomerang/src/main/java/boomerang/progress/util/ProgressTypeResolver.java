@@ -2,8 +2,8 @@ package boomerang.progress.util;
 
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
-import boomerang.progress.domain.ProgressType;
 import boomerang.progress.domain.LeaseTypeEnum;
+import boomerang.progress.domain.ProgressType;
 import boomerang.progress.dto.ProgressTypeRequestDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,6 @@ public class ProgressTypeResolver {
     public static ProgressType checkType(ProgressTypeRequestDto progressTypeRequestDto) {
         Boolean isMemberInsureds = progressTypeRequestDto.getIsInsured();
         LeaseTypeEnum leaseType = progressTypeRequestDto.getLeaseType();
-
 
         if (!isMemberInsureds && leaseType.equals(LeaseTypeEnum.RENTAL)) { //보험가입 X, 임대차계약
             return ProgressType.B;
