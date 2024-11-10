@@ -29,7 +29,7 @@ public enum ErrorCode {
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
     IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003",
-        "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
+            "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
 
     // Comment
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
@@ -41,6 +41,8 @@ public enum ErrorCode {
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),
     LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "MB002", "로그인이 필요합니다."),
     IMAGE_REQUIRED_ERROR(HttpStatus.BAD_REQUEST, "MB003", "프로필 이미지 파일이 필요합니다."),
+    LOGIN_EXPIRATION(HttpStatus.BAD_REQUEST, "MB003", "로그인이 만료되었습니다."),
+    LOGIN_MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB004", "로그인한 유저 정보를 찾을 수 없습니다."),
 
     // Mentor
     MENTOR_ALREADY_EXISTS(HttpStatus.CONFLICT, "MT_001", "이미 멘토로 등록된 사용자입니다."),
@@ -53,16 +55,16 @@ public enum ErrorCode {
     CONSULTATION_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "CS003", "같은날짜에 동일한 상담이 존재합니다."),
     CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
     CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005",
-        "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
+            "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
     CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
     SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),
     PROGRESS_TYPE_NON_EXISTENT(HttpStatus.BAD_REQUEST, "PG003",
-        "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
+            "유저의 타입정보가 없습니다. 진행도 검사를 완료하지 않았습니다."),
     PROGRESS_NON_EXISTENT(HttpStatus.NOT_FOUND, "PG004",
-        "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
+            "진행도가 생성되지 않았습니다. 진행도 타입 검사를 안했을 수도 있습니다."),
     PROGRESS_REQUEST_ERROR(HttpStatus.NOT_FOUND, "PG005", "해당 세부 단계를 찾을 수 없습니다."),
     PROGRESS_SUB_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG006", "세부 단계의 이름이 잘못되었습니다."),
     PROGRESS_MAIN_INVALID_NAME(HttpStatus.BAD_REQUEST, "PG007", "메인 단계의 이름이 잘못되었습니다."),
@@ -72,7 +74,7 @@ public enum ErrorCode {
     PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
     PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013",
-        "해당 서브단계는 유저의 현재 단계가 아닙니다."),
+            "해당 서브단계는 유저의 현재 단계가 아닙니다."),
     SUB_STEP_INFO_NOT_FOUND(HttpStatus.BAD_REQUEST, "PG014", "해당 서브단계에 대한 정보가 존재하지 않습니다."),
 
 
