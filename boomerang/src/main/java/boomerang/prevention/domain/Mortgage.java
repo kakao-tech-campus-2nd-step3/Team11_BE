@@ -39,7 +39,8 @@ public class Mortgage {
     @JoinColumn(name = "prevention_id")
     private Prevention prevention;
 
-    public Mortgage(Long amount, String creditor, LocalDate registrationDate, Prevention prevention) {
+    public Mortgage(Long amount, String creditor, LocalDate registrationDate,
+        Prevention prevention) {
         this.amount = amount;
         this.creditor = creditor;
         this.registrationDate = registrationDate;

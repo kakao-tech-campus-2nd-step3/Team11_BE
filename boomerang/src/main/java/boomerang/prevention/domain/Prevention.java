@@ -1,6 +1,7 @@
 package boomerang.prevention.domain;
 
 import boomerang.member.domain.Member;
+import boomerang.prevention.dto.PreventionRequestDto;
 import boomerang.prevention.enums.ContractType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -72,56 +73,16 @@ public class Prevention {
     @OneToMany(mappedBy = "prevention", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Mortgage> mortgages = new ArrayList<>();
 
-    // 경매 x, 임차권 x
-    public Prevention(Member member, String address, Long housePrice, Long depositAmount,
-        ContractType contractType, LocalDate contractDate) {
+    public Prevention(Member member, PreventionRequestDto requestDto) {
         this.member = member;
-        this.address = address;
-        this.housePrice = housePrice;
-        this.depositAmount = depositAmount;
-        this.contractType = contractType;
-        this.contractDate = contractDate;
-    }
-
-    // 경매 o, 임차권 x
-    public Prevention(Member member, String address, Long housePrice, Long depositAmount,
-        ContractType contractType, LocalDate contractDate, LocalDate auctionStartDate) {
-        this.member = member;
-        this.address = address;
-        this.housePrice = housePrice;
-        this.depositAmount = depositAmount;
-        this.contractType = contractType;
-        this.contractDate = contractDate;
-        this.auctionStartDate = auctionStartDate;
-    }
-
-    // 경매 x, 임차권 o
-    public Prevention(Member member, String address, Long housePrice, Long depositAmount,
-        ContractType contractType, LocalDate contractDate,
-        LocalDate leaseRegistrationDate, Long leaseRegistrationAmount) {
-        this.member = member;
-        this.address = address;
-        this.housePrice = housePrice;
-        this.depositAmount = depositAmount;
-        this.contractType = contractType;
-        this.contractDate = contractDate;
-        this.leaseRegistrationDate = leaseRegistrationDate;
-        this.leaseRegistrationAmount = leaseRegistrationAmount;
-    }
-
-    // 경매 o, 임차권 o
-    public Prevention(Member member, String address, Long housePrice, Long depositAmount,
-        ContractType contractType, LocalDate contractDate, LocalDate auctionStartDate,
-        LocalDate leaseRegistrationDate, Long leaseRegistrationAmount) {
-        this.member = member;
-        this.address = address;
-        this.housePrice = housePrice;
-        this.depositAmount = depositAmount;
-        this.contractType = contractType;
-        this.contractDate = contractDate;
-        this.auctionStartDate = auctionStartDate;
-        this.leaseRegistrationDate = leaseRegistrationDate;
-        this.leaseRegistrationAmount = leaseRegistrationAmount;
+        this.address = requestDto.getAddress();
+        this.housePrice = requestDto.getHousePrice();
+        this.depositAmount = requestDto.getDepositAmount();
+        this.contractType = requestDto.getContractType();
+        this.contractDate = requestDto.getContractDate();
+        this.auctionStartDate = requestDto.getAuctionStartDate();
+        this.leaseRegistrationDate = requestDto.getLeaseRegistrationDate();
+        this.leaseRegistrationAmount = requestDto.getLeaseRegistrationAmount();
     }
 
     public void addMortgage(Long amount, String creditor, LocalDate registrationDate) {
