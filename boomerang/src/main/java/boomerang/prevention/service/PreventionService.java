@@ -1,5 +1,7 @@
 package boomerang.prevention.service;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import boomerang.prevention.domain.Prevention;
@@ -38,4 +40,13 @@ public class PreventionService {
         return new PreventionResponseDto(savedPrevention);
     }
 
+    @Transactional(readOnly = true)
+    public PreventionResponseDto getPrevention(String memberEmail) {
+        Member member = memberService.getMemberByEmail(memberEmail);
+
+        Prevention prevention = preventionRepository.findByMember(member)
+            .orElseThrow(() -> new BusinessException(ErrorCode.PREVENTION_NOT_FOUND));
+
+        return new PreventionResponseDto(prevention);
+    }
 }
