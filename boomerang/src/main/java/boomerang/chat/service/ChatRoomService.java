@@ -10,10 +10,11 @@ import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
-import boomerang.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
-    public ChatRoom createChatRoom(ChatRoomRequestDto chatRoomRequestDto, Member mentor, Member client) {
-        ChatRoom chatRoom = new ChatRoom(mentor, client);
+    public ChatRoom createChatRoom(ChatRoomRequestDto chatRoomRequestDto, Member mentor, Member mentee) {
+        ChatRoom chatRoom = new ChatRoom(mentor, mentee);
         return chatRoomRepository.save(chatRoom);
     }
 
@@ -45,10 +46,7 @@ public class ChatRoomService {
 
     public void deleteChatRoom(String memberEmail, Long roomId) {
         ChatRoom chatRoom = validateChatRoomExists(roomId);
-        // 테스트를 위해 주석처리
-//        if (!chatRoom.getCreator().getEmail().equals(memberEmail)) {
-//            throw new BusinessException(ErrorCode.CHATROOM_DONT_HAS_OWNERSHIP_ERROR);
-//        }
+
         chatRoomRepository.delete(chatRoom);
     }
 

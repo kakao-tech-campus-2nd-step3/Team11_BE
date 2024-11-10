@@ -10,8 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Entity
@@ -23,12 +21,12 @@ public class ChatRoom {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_one_id", nullable = false)
+    @JoinColumn(name = "mento", nullable = false)
     private Member mentor;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_two_id", nullable = false)
-    private Member client;
+    @JoinColumn(name = "mentee", nullable = false)
+    private Member mentee;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> messages = new ArrayList<>();
@@ -45,8 +43,8 @@ public class ChatRoom {
     protected ChatRoom() {
     }
 
-    public ChatRoom(Member mentor, Member client) {
+    public ChatRoom(Member mentor, Member mentee) {
         this.mentor = mentor;
-        this.client = client;
+        this.mentee = mentee;
     }
 }

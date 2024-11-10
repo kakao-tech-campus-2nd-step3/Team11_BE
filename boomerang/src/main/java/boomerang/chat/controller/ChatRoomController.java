@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequestMapping("/api/v1/chat")
@@ -48,10 +50,10 @@ public class ChatRoomController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ChatRoomRequestDto chatRoomRequestDto
     ) {
-        Member client = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Member mentor = memberService.getMemberByEmail(chatRoomRequestDto.getMentorEmail());
 
-        chatRoomService.createChatRoom(chatRoomRequestDto, mentor, client);
+        chatRoomService.createChatRoom(chatRoomRequestDto, mentor, mentee);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
