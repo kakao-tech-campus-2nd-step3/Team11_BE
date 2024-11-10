@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PreventionRepository extends JpaRepository<Prevention, Long> {
 
     Optional<Prevention> findByMember(Member member);
+
+    boolean existsByMember(Member member);
 }

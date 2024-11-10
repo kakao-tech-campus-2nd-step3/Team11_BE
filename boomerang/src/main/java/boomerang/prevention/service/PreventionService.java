@@ -24,6 +24,12 @@ public class PreventionService {
     public PreventionResponseDto savePrevention(String memberEmail,
         PreventionRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(memberEmail);
+
+        // 기존 예방 설문 결과 존재 여부 유효성 검사
+        if (preventionRepository.existsByMember(member)) {
+            throw new BusinessException(ErrorCode.PREVENTION_ALREADY_EXISTS);
+        }
+
         Prevention prevention = new Prevention(member, requestDto);
 
         if (requestDto.getMortgages() != null) {
