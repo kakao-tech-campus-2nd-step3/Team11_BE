@@ -4,9 +4,12 @@ import boomerang.board.domain.Board;
 import boomerang.board.repository.BoardRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ScoreScheduler {
 
@@ -30,5 +33,7 @@ public class ScoreScheduler {
 
         // 모든 Board 객체를 한 번에 저장
         boardRepository.saveAll(boards);
+
+        log.info("board score 업데이트 완료");
     }
 }
