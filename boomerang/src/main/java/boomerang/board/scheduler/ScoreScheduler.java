@@ -19,9 +19,9 @@ public class ScoreScheduler {
         this.boardRepository = boardRepository;
     }
 
-    // 4시간마다 실행 (밀리초 단위: 4 * 60 * 60 * 1000)
+    // 4시간마다 실행
     @Transactional
-    @Scheduled(fixedRate = 14400000)
+    @Scheduled(cron = "0 0 */4 * * *")
     public void updateBoardScores() {
         List<Board> boards = boardRepository.findAll();
 
