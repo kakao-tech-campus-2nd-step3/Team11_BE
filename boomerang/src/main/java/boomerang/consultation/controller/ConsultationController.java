@@ -44,8 +44,8 @@ public class ConsultationController {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
         }
 
-        ConsultationResponseDto consultationResponseDto = consultationService.requestConsultation(principalDetails, consultationRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
+        consultationService.requestConsultation(principalDetails, consultationRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     //일정등록

@@ -39,7 +39,8 @@ public class ConsultationService {
     private final MemberService memberService;
     private final MentorService mentorService;
 
-    public ConsultationResponseDto requestConsultation(PrincipalDetails principalDetails,
+    @Transactional
+    public void requestConsultation(PrincipalDetails principalDetails,
         ConsultationRequestDto consultationRequestDto) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = mentorService.getMentor(consultationRequestDto.getMentorId());
@@ -54,9 +55,10 @@ public class ConsultationService {
 
 
         consultation.makeSchedule(localDateTime);
-        consultationRepository.save(consultation);
+        schedule.unreserveHourSlot(localDateTime.getHour());
 
-        return new ConsultationResponseDto(consultation);
+        consultationRepository.save(consultation);
+        scheduleRepository.save(schedule);
     }
 
     public ConsultationResponseDto confirmConsultation(PrincipalDetails principalDetails, Long consultationId) {
