@@ -59,7 +59,7 @@ public class ChatRoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Void> createChatRoom(
+    public ResponseEntity<Void> deleteChatRoom(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @PathVariable Long roomId
     ) {
