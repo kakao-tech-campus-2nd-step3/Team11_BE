@@ -34,7 +34,7 @@ public class Schedule {
 
     @ElementCollection
     @Column(length = 24)
-    private List<Boolean> hourlySlots = new ArrayList<>(
+    private List<Boolean> hourSlots = new ArrayList<>(
         Collections.nCopies(24, Boolean.FALSE)); // 하루 24시간 예약 상태를 기본값 false로 초기화된 리스트
 
     @ManyToOne

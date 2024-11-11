@@ -2,13 +2,7 @@ package boomerang.consultation.service;
 
 import boomerang.consultation.domain.Consultation;
 import boomerang.consultation.domain.Schedule;
-import boomerang.consultation.dto.ConsultationRequestDto;
-import boomerang.consultation.dto.ConsultationResponseDto;
-import boomerang.consultation.dto.ConsultationResponseListDto;
-import boomerang.consultation.dto.ScheduleMonthDto;
-import boomerang.consultation.dto.ScheduleRequestDto;
-import boomerang.consultation.dto.ScheduleResponseDto;
-import boomerang.consultation.dto.ScheduleResponseListDto;
+import boomerang.consultation.dto.*;
 import boomerang.consultation.repository.ConsultationRepository;
 import boomerang.consultation.repository.ScheduleRepository;
 import boomerang.global.exception.BusinessException;
