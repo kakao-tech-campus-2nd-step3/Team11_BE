@@ -31,8 +31,8 @@ public class ConsultationResponseDto {
         this.mentorNickName = consultation.getMentorNickname();
         this.menteeId = consultation.getMenteeId();
         this.menteeNickName = consultation.getMenteeNickname();
-        this.consultationDate = consultation.getSchedule().getDate();
-        this.consultationTime = consultation.getSchedule().getLastReservedSlot();
+        this.consultationDate = consultation.getConsultationDateTime().toLocalDate();
+        this.consultationTime = consultation.getConsultationDateTime().getHour();
         this.consultationStatus = consultation.getConsultationStatus();
     }
 }

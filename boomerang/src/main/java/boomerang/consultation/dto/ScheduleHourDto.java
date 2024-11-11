@@ -6,17 +6,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+// 예약된 특정 시간을 나타내는 HourSchedule 클래스
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ScheduleMonthDto {
-    private int month;
-    private List<ScheduleDayDto> dayList;
+public class ScheduleHourDto {
+    private int hour;
 
-    public ScheduleMonthDto(int month, List<ScheduleDayDto> dayList) {
-        this.month = month;
-        this.dayList = dayList;
+    public ScheduleHourDto(int hour) {
+        this.hour = hour;
     }
 }

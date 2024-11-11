@@ -29,9 +29,6 @@ public class Schedule {
     @JoinColumn(name = "mentor_id", nullable = false)
     private Mentor mentor;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Consultation> consultationList;
-
     private Integer lastReservedSlot = null; // 방금 예약한 시간대
 
     public Schedule(Mentor mentor, LocalDate date) {

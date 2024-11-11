@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Entity
@@ -33,11 +34,11 @@ public class Consultation {
     @Enumerated(EnumType.STRING)
     private ConsultationStatus consultationStatus;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    private String consultationTitle;
+
+    private String consultationContent;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -45,11 +46,13 @@ public class Consultation {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Consultation(Member mentee, Mentor mentor, Schedule schedule) {
+    public Consultation(Member mentee, Mentor mentor, LocalDateTime consultationDateTime, String consultationTitle, String consultationContent) {
         this.mentee = mentee;
         this.mentor = mentor;
-        this.schedule = schedule;
-        this.consultationStatus= ConsultationStatus.PENDING;
+        this.consultationDateTime = consultationDateTime;
+        this.consultationTitle = consultationTitle;
+        this.consultationContent = consultationContent;
+        this.consultationStatus = ConsultationStatus.RECEIVED;
     }
 
     public long getMentorId() {
@@ -76,12 +79,28 @@ public class Consultation {
         return this.mentee.equals(mentee);
     }
 
+    public void confirm() {
+        this.consultationStatus = ConsultationStatus.PENDING;
+    }
+
+    public void start() {
+        this.consultationStatus = ConsultationStatus.ONGOING;
+    }
+
     public void complete() {
         this.consultationStatus = ConsultationStatus.FINISHED;
     }
 
+    public boolean isConfirmed() {
+        return this.consultationStatus.equals(ConsultationStatus.PENDING);
+    }
+
     public boolean isFinished() {
         return this.consultationStatus.equals(ConsultationStatus.FINISHED);
+    }
+
+    public void makeSchedule(int month, int day, int hour) {
+                this.consultationDateTime = LocalDateTime.of(LocalDate.now().getYear(), month, day, hour, 0, 0); // LocalDateTime.of로 바로 생성
     }
 }
 

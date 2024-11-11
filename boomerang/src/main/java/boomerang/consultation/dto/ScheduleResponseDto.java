@@ -15,9 +15,9 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ScheduleResponseDto {
     private int month;
-    private List<Map<String, List<Integer>>> dayList = new ArrayList<>();
+    private List<ScheduleDayDto> dayList = new ArrayList<>();
 
-    public ScheduleResponseDto(int month, List<Map<String, List<Integer>>> dayList) {
+    public ScheduleResponseDto(int month, List<ScheduleDayDto> dayList) {
         this.month = month;
         this.dayList = dayList;
     }

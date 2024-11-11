@@ -17,4 +17,6 @@ public class ConsultationRequestDto {
     int consultationMonth;
     int consultationDay;
     int consultationTime;
+    String consultationTitle;
+    String consultationContent;
 }
