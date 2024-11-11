@@ -96,6 +96,9 @@ public enum ErrorCode {
     DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
     DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
+
+    //NOTIFICATION
+    NOTIFICATION_USER_SESSION_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT01", "해당 알림을 보낼 유저가 세션에 저장되어있지 않습니다."),
     ;
 
     private final HttpStatus status;

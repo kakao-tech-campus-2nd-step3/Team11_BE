@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Notification Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #notifications {
+            margin-top: 20px;
+        }
+        .notification {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    <!-- SockJS 및 STOMP 클라이언트 라이브러리 추가 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+
+<h1>WebSocket Notification Test</h1>
+
+<button onclick="sendNotificationUsingApi('This is a notification sent via REST API!')">Send Notification via API</button>
+<button onclick="sendNotificationUsingWebSocket('This is a WebSocket test notification!')">Send Notification via WebSocket</button>
+
+<div id="notifications">
+    <h2>Received Notifications</h2>
+</div>
+
+<script>
+    // JWT 토큰 (테스트용, 실제 환경에서는 실제 인증된 토큰을 사용)
+    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNSIsImVtYWlsIjoidGVzdEBtYWlsIiwiaWF0IjoxNzMxMzMxNDQwLCJleHAiOjI0MTczMTMzMTQ0MH0.KydGnwy3HeaQEXYxbqxmxjFXQES00vdaLpvnj02EMg8";
+
+    // SockJS 및 STOMP 클라이언트 설정
+    const socket = new SockJS("http://localhost:8080/ws/notifications");
+    const stompClient = Stomp.over(socket);
+
+    // STOMP 연결 설정
+    stompClient.connect({ Authorization: token }, function(frame) {
+        console.log("STOMP 연결 성공:", frame);
+
+        // 특정 토픽을 구독하여 메시지 수신
+        stompClient.subscribe("/topic/notifications", function(message) {
+            displayNotification(message.body);
+            console.log("서버로부터 받은 메시지:", message.body);
+        });
+
+        stompClient.subscribe("/user/queue/notifications", function(notification) {
+            displayNotification(notification.body);
+        });
+
+    }, function(error) {
+        console.error("STOMP 연결 실패:", error);
+    });
+
+
+    // REST API를 통해 서버로 메시지 전송 (클릭 시 호출)
+    function sendNotificationUsingApi(message) {
+        fetch('/api/v1/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message })
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("알림 메시지가 서버로 전송되었습니다.");
+                } else {
+                    console.error("서버로부터 오류 응답이 반환되었습니다.");
+                }
+            })
+            .catch(error => {
+                console.error("서버 통신 중 오류 발생:", error);
+            });
+    }
+
+    // STOMP를 통해 서버로 메시지 전송 (클릭 시 호출)
+    function sendNotificationUsingWebSocket(messageContent) {
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/send-notification", {}, JSON.stringify({ content: messageContent }));
+            console.log("메시지를 STOMP를 통해 서버로 전송했습니다:", messageContent);
+        } else {
+            console.log("STOMP 연결이 준비되지 않았습니다.");
+        }
+    }
+
+    // 수신한 메시지를 UI에 표시하는 함수
+    function displayNotification(message) {
+        const notificationContainer = document.getElementById("notifications");
+        const notificationElement = document.createElement("div");
+        notificationElement.className = "notification";
+        notificationElement.textContent = message;
+        notificationContainer.appendChild(notificationElement);
+    }
+</script>
+
+</body>
+</html>

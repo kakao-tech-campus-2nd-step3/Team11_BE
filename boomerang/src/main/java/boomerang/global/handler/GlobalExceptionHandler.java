@@ -2,15 +2,14 @@ package boomerang.global.handler;
 
 import boomerang.global.exception.BusinessException;
 import boomerang.global.exception.KakaoException;
+import boomerang.global.exception.WebNotificationException;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
@@ -19,6 +18,10 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -42,13 +45,13 @@ public class GlobalExceptionHandler {
     @Order(1)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidationException(
-        MethodArgumentNotValidException e) {
+            MethodArgumentNotValidException e) {
         log.error("Validation error: {}", e.getMessage());
         List<String> errors = e.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .collect(Collectors.toList());
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
 
         String errorMessage = String.join(", ", errors);
         return ResponseHelper.createErrorResponse(ErrorCode.BAD_REQUEST, errorMessage);
@@ -57,12 +60,12 @@ public class GlobalExceptionHandler {
     @Order(1)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleConstraintViolation(
-        ConstraintViolationException e) {
+            ConstraintViolationException e) {
         log.error("Constraint violation: {}", e.getMessage());
         List<String> errors = e.getConstraintViolations()
-            .stream()
-            .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toList());
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
 
         String errorMessage = String.join(", ", errors);
         return ResponseHelper.createErrorResponse(ErrorCode.BAD_REQUEST, errorMessage);
@@ -73,10 +76,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleBindException(BindException e) {
         log.error("Bind error: {}", e.getMessage());
         List<String> errors = e.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .collect(Collectors.toList());
+                .getFieldErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
 
         String errorMessage = String.join(", ", errors);
         return ResponseHelper.createErrorResponse(ErrorCode.BAD_REQUEST, errorMessage);
@@ -100,6 +103,23 @@ public class GlobalExceptionHandler {
     }
 
     @Order(4)
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(JsonProcessingException e) {
+        log.error(Arrays.toString(e.getStackTrace()));
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        return ResponseHelper.createErrorResponse(errorCode, e.getMessage());
+    }
+
+    @Order(5)
+    @ExceptionHandler(WebNotificationException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(WebNotificationException e) {
+        log.error(Arrays.toString(e.getStackTrace()));
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        return ResponseHelper.createErrorResponse(errorCode, e.getMessage());
+    }
+
+
+    @Order(6)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleException(Exception e) {
         log.error("Unexpected error occurred:", e);  // 예외 메시지와 스택트레이스 모두 출력
