@@ -8,15 +8,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ScheduleMonthDto {
 
     private int month;
-    private List<Map<String, List<Integer>>> dayList;
+    private List<ScheduleDayDto> dayList;
 
-    public ScheduleMonthDto(int month, List<Map<String, List<Integer>>> dayList) {
+    public ScheduleMonthDto(int month, List<ScheduleDayDto> dayList) {
         this.month = month;
         this.dayList = dayList;
     }

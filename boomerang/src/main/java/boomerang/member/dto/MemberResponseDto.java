@@ -3,9 +3,12 @@ package boomerang.member.dto;
 import boomerang.member.domain.Member;
 import boomerang.member.domain.MemberRole;
 import boomerang.progress.domain.ProgressType;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 
 @Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MemberResponseDto {
 
     private final Long memberId;
