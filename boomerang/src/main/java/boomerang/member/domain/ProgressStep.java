@@ -5,11 +5,11 @@ import boomerang.member.exception.MemberValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import java.util.Objects;
 
 @Embeddable
 public class ProgressStep {
+
     @Column(name = "progress_step")
     private String value;
 
@@ -37,8 +37,12 @@ public class ProgressStep {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ProgressStep that = (ProgressStep) o;
         return Objects.equals(value, that.value);
     }

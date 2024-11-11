@@ -1,10 +1,14 @@
 package boomerang.member.dto;
 
-import boomerang.member.domain.*;
+import boomerang.member.domain.MemberType;
+import boomerang.member.domain.ProgressStep;
+import boomerang.member.domain.ReturnDeposit;
+import boomerang.member.domain.SafetyScore;
 import lombok.Getter;
 
 @Getter
 public class MemberServiceDto {
+
     private Long id;
     private String email;
     private String nickname;

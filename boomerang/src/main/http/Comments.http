@@ -20,7 +20,7 @@ Content-Type: application/json
 Cookie: Authorization=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJrYWthbzM3Mjk0MzgwNTIiLCJpYXQiOjE3Mjc5MzM4MjcsImV4cCI6MjQxNzI3OTMzODI3fQ.LvKK8vbExt91eIqU-rfsdvYE0JqC1MUlsK7gdRE72co
 
 {
-    "text": "댓글수정!"
+  "text": "댓글수정!"
 }
 
 ### delete comments

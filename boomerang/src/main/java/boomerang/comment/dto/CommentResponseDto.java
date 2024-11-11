@@ -4,18 +4,18 @@ import boomerang.comment.domain.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CommentResponseDto {
+
     private Long id;                        //댓글아이디
     private String writerEmail;              //작성자이름
     private String writerName;
@@ -33,7 +33,8 @@ public class CommentResponseDto {
         this.writerName = comment.getAuthorName();
         this.text = comment.getText();
         this.isEdited = !comment.getCreatedAt().equals(comment.getUpdatedAt()); // 수정 여부 계산
-        this.lastModifiedAt = comment.getUpdatedAt() != null ? comment.getUpdatedAt() : comment.getCreatedAt(); //마지막으로 수정된 시간 제공
+        this.lastModifiedAt = comment.getUpdatedAt() != null ? comment.getUpdatedAt()
+            : comment.getCreatedAt(); //마지막으로 수정된 시간 제공
     }
 
 }

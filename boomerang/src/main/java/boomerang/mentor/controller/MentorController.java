@@ -15,7 +15,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +34,7 @@ public class MentorController {
     // 멘토 조회
     @GetMapping
     public ResponseEntity<PageResponseDto<MentorResponseDto>> getAllMentors(
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<MentorResponseDto> mentors = mentorService.getAllMentors(pageable);
         return ResponseEntity.ok(new PageResponseDto(mentors));
     }
@@ -35,31 +42,34 @@ public class MentorController {
     // 멘토 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<MentorResponseDto> getMentorById(@PathVariable Long id) {
-        MentorResponseDto mentorResponseDto = mentorService.getMentor(id);
+        MentorResponseDto mentorResponseDto = mentorService.getMentorProfile(id);
         return ResponseEntity.ok(mentorResponseDto);
     }
 
     // 멘토 등록
     @PostMapping
     public ResponseEntity<MentorResponseDto> createMentor(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @Valid @RequestBody MentorCreateRequestDto mentorCreateRequestDto) {
-        MentorResponseDto mentorResponseDto = mentorService.createMentor(principalDetails.getMemberEmail(), mentorCreateRequestDto);
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @Valid @RequestBody MentorCreateRequestDto mentorCreateRequestDto) {
+        MentorResponseDto mentorResponseDto = mentorService.createMentor(
+            principalDetails.getMemberEmail(), mentorCreateRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(mentorResponseDto);
     }
 
     // 멘토 정보 수정
     @PutMapping
     public ResponseEntity<MentorResponseDto> updateMentor(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @Valid @RequestBody MentorUpdateRequestDto updateRequestDto) {
-        MentorResponseDto updatedMentor = mentorService.updateMentor(principalDetails.getMemberEmail(), updateRequestDto);
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @Valid @RequestBody MentorUpdateRequestDto updateRequestDto) {
+        MentorResponseDto updatedMentor = mentorService.updateMentor(
+            principalDetails.getMemberEmail(), updateRequestDto);
         return ResponseEntity.ok(updatedMentor);
     }
 
     // 멘토 삭제
     @DeleteMapping
-    public ResponseEntity<Void> deleteMentor(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<Void> deleteMentor(
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
         mentorService.deleteMentor(principalDetails.getMemberEmail());
         return ResponseEntity.noContent().build();
     }

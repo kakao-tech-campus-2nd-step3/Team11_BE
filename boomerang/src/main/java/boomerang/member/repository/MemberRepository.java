@@ -1,11 +1,11 @@
 package boomerang.member.repository;
 
 import boomerang.member.domain.Member;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
 public interface MemberRepository extends JpaRepository<Member, Long> {
+
     boolean existsById(Long id);
 
     boolean existsByEmail(String email);
@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //        "SUBSTRING(m.nickname, LENGTH(:baseNickname) + 1) REGEXP '^[0-9]+$'")
 //    Integer findMaxSuffixByNicknamePattern(String baseNickname);
     Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByEmailAndNickname(String email, String nickname);
 }

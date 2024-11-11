@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProgressTypeResponseDto {
+
     private ProgressType progressType;
 
     public ProgressTypeResponseDto(ProgressType progressType) {

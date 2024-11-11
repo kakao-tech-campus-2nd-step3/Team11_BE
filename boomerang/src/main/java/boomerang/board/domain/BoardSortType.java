@@ -2,12 +2,12 @@ package boomerang.board.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum AnonymousStatus {
-    PRIVATE("PRIVATE"), PUBLIC("PUBLIC");
+public enum BoardSortType {
+    ID("id"), LIKE("likeCount"), COMMENT("commentCount");
 
     private final String name;
 
-    AnonymousStatus(String name) {
+    BoardSortType(String name) {
         this.name = name;
     }
 

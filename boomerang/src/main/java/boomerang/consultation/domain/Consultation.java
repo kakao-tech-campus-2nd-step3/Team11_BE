@@ -1,0 +1,95 @@
+package boomerang.consultation.domain;
+
+import boomerang.member.domain.Member;
+import boomerang.mentor.domain.Mentor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
+public class Consultation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "mentee_id")
+    private Member mentee;
+
+    @ManyToOne
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
+
+    @Enumerated(EnumType.STRING)
+    private ConsultationStatus consultationStatus;
+
+    private LocalDate consultationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    public Consultation(Member mentee, Mentor mentor, Schedule schedule) {
+        this.mentee = mentee;
+        this.mentor = mentor;
+        this.schedule = schedule;
+        this.consultationStatus = ConsultationStatus.PENDING;
+    }
+
+    public long getMentorId() {
+        return this.mentor.getMember().getId();
+    }
+
+    public String getMentorNickname() {
+        return this.mentor.getMember().getNickname();
+    }
+
+    public String getMenteeNickname() {
+        return this.mentee.getNickname();
+    }
+
+    public long getMenteeId() {
+        return this.mentee.getId();
+    }
+
+    public boolean isMentor(Mentor mentor) {
+        return this.mentor.equals(mentor);
+    }
+
+    public boolean isMentee(Member mentee) {
+        return this.mentee.equals(mentee);
+    }
+
+    public void complete() {
+        this.consultationStatus = ConsultationStatus.FINISHED;
+    }
+
+    public boolean isFinished() {
+        return this.consultationStatus.equals(ConsultationStatus.FINISHED);
+    }
+}
+

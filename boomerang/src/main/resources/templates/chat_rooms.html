@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat Rooms</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Chat Rooms</title>
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div th:replace="layout :: header"></div>
 <div class="container mt-4">
-    <h1>Chat Rooms</h1>
-    <div class="mb-4">
-        <input type="text" id="newRoomName" class="form-control" placeholder="Enter chat room name">
-        <button class="btn btn-primary mt-2" onclick="createChatRoom()">Create Chat Room</button>
-    </div>
-    <h3>Available Chat Rooms</h3>
-    <ul class="list-group" id="chatRoomList">
-        <!-- 채팅방 목록이 동적으로 로드됩니다. -->
-    </ul>
+  <h1>Chat Rooms</h1>
+  <div class="mb-4">
+    <input type="text" id="newRoomName" class="form-control" placeholder="Enter chat room name">
+    <button class="btn btn-primary mt-2" onclick="createChatRoom()">Create Chat Room</button>
+  </div>
+  <h3>Available Chat Rooms</h3>
+  <ul class="list-group" id="chatRoomList">
+    <!-- 채팅방 목록이 동적으로 로드됩니다. -->
+  </ul>
 </div>
 
 <script>
@@ -30,7 +31,9 @@
         $.get("/api/v1/chat/rooms", function (data) {
             $('#chatRoomList').empty();
             data.forEach(function (room) {
-                $('#chatRoomList').append('<li class="list-group-item"><a href="/api/v1/chat/room/' + room.id + '">' + room.name + '</a></li>');
+                $('#chatRoomList').append(
+                    '<li class="list-group-item"><a href="/api/v1/chat/room/' + room.id + '">'
+                    + room.name + '</a></li>');
             });
         });
     }
