@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MainStepEnumConverter implements Converter<String, MainStepEnum> {
+
     @Override
     public MainStepEnum convert(String value) {
         return MainStepEnum.fromStepName(value);

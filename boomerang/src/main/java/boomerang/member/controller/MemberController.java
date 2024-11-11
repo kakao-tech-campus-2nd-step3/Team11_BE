@@ -1,28 +1,39 @@
 package boomerang.member.controller;
 
-import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.service.MemberService;
 import boomerang.global.exception.DomainValidationException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
-import boomerang.global.utils.CookieUtil;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
-import boomerang.member.dto.*;
+import boomerang.member.dto.MemberCreateRequestDto;
+import boomerang.member.dto.MemberLoginDto;
+import boomerang.member.dto.MemberResponseDto;
+import boomerang.member.dto.NicknameUpdateRequestDto;
+import boomerang.member.dto.RandomNicknameCreateResponseDTO;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/member")
 public class MemberController {
+
     private final MemberService memberService;
     public static String Authorization = "Authorization";
 
@@ -35,16 +46,16 @@ public class MemberController {
     public ResponseEntity<Member> getMemberById(@PathVariable(name = "id") Long id) {
         Member member = memberService.getMember(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(member);
+            .body(member);
     }
 
     // 시큐리티 필터 테스트 컨트롤러
     @GetMapping
-    public ResponseEntity<Member> getMember(
-            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<MemberResponseDto> getMember(
+        @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         return ResponseEntity.status(HttpStatus.OK)
-                .body(member);
+            .body(new MemberResponseDto(member));
     }
 
     @PostMapping
@@ -52,16 +63,17 @@ public class MemberController {
         String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
         response.addHeader("Authorization", token);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+            .build();
     }
 
 
     @GetMapping("/login")
-    public ResponseEntity<Void> loginMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+    public ResponseEntity<Void> loginMember(
+        @RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.loginMember(memberCreateRequestDTO.toMemberCreateServiceDto());
         response.addHeader("Authorization", token);
         return ResponseEntity.status(HttpStatus.OK)
-                .build();
+            .build();
     }
 
 //    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
@@ -85,23 +97,36 @@ public class MemberController {
     public ResponseEntity<RandomNicknameCreateResponseDTO> generateRandomNickname() {
         String nickname = memberService.generateUniqueNickname();
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new RandomNicknameCreateResponseDTO(nickname));
+            .body(new RandomNicknameCreateResponseDTO(nickname));
     }
 
     @PutMapping("/nickname")
-    public ResponseEntity<MemberLoginDto> updateRandomNickname(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                        HttpServletResponse response,
-                                                                        @RequestBody NicknameUpdateRequestDto requestDto) {
-        Member member = memberService.updateNickname(principalDetails.getMemberEmail(), requestDto.getNewNickname());
-        response.addHeader("Set-Cookie", CookieUtil.createNicknameCookies(member.getNickname()).toString());
+    public ResponseEntity<MemberLoginDto> updateNickname(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        HttpServletResponse response,
+        @RequestBody NicknameUpdateRequestDto requestDto) {
+        Member member = memberService.updateNickname(principalDetails.getMemberEmail(),
+            requestDto.getNewNickname());
         return ResponseEntity.status(HttpStatus.CREATED).body(new MemberLoginDto(member));
+    }
+
+    @PutMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemberResponseDto> updateProfileImage(
+        @AuthenticationPrincipal PrincipalDetails principalDetails,
+        @RequestParam(value = "image", required = true) MultipartFile image) {
+
+        Member updatedMember = memberService.updateProfileImage(principalDetails.getMemberEmail(),
+            image);
+
+        return ResponseEntity.ok(new MemberResponseDto(updatedMember));
     }
 
     // GlobalException Handler 에서 처리할 경우,
     // RequestBody에서 발생한 에러가 HttpMessageNotReadableException 로 Wrapping 이 되는 문제가 발생한다
     // 때문에, 해당 에러로 Wrapping 되기 전 Controller 에서 Domain Error 를 처리해주었다
     @ExceptionHandler(DomainValidationException.class)
-    public ResponseEntity<ErrorResponseDto> handleOptionValidException(DomainValidationException e) {
+    public ResponseEntity<ErrorResponseDto> handleOptionValidException(
+        DomainValidationException e) {
         log.error(e.toString());
         return ResponseHelper.createErrorResponse(e.getErrorCode());
     }

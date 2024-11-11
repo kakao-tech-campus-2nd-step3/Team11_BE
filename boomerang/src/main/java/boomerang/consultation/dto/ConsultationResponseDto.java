@@ -5,16 +5,16 @@ import boomerang.consultation.domain.ConsultationStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ConsultationResponseDto {
+
     private long consultationId;                        //상담아이디
     private long mentorId;                              //멘토아이디
     private String mentorNickName;                      //멤토닉네임

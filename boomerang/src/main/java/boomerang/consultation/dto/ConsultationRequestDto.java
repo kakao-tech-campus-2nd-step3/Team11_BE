@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ConsultationRequestDto {
+
     @Positive(message = "Mentor ID는 빈값일 수 없습니다.")
     private Long mentorId;
     LocalDateTime consultationDateTime;

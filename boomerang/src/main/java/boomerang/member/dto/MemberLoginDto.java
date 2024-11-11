@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MemberLoginDto {
+
     private MemberRole memberRole;
     private String nickname;
 

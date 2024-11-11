@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LikeSummaryResponseDto {
+
     private int count;
     private boolean isLiked;
 

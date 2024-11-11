@@ -3,20 +3,29 @@ package boomerang.consultation.domain;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.mentor.domain.Mentor;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Schedule {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +34,8 @@ public class Schedule {
 
     @ElementCollection
     @Column(length = 24)
-    private List<Boolean> hourSlots = new ArrayList<>(Collections.nCopies(24, Boolean.FALSE)); // 하루 24시간 예약 상태를 기본값 false로 초기화된 리스트
+    private List<Boolean> hourlySlots = new ArrayList<>(
+        Collections.nCopies(24, Boolean.FALSE)); // 하루 24시간 예약 상태를 기본값 false로 초기화된 리스트
 
     @ManyToOne
     @JoinColumn(name = "mentor_id", nullable = false)

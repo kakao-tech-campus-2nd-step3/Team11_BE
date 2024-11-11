@@ -29,7 +29,8 @@ public class MentorCreateRequestDto {
     @Size(min = 10, max = 20, message = "연락처는 10자 이상 20자 이하여야 합니다.")
     private final String contact;
 
-    public MentorCreateRequestDto(MentorType mentorType, String career, String introduce, Boolean advertisementStatus, String contact) {
+    public MentorCreateRequestDto(MentorType mentorType, String career, String introduce,
+        Boolean advertisementStatus, String contact) {
         this.mentorType = mentorType;
         this.career = career;
         this.introduce = introduce;

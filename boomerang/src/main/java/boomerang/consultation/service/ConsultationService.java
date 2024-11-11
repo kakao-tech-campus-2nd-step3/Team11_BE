@@ -1,8 +1,16 @@
 package boomerang.consultation.service;
 
-import boomerang.consultation.domain.*;
-import boomerang.consultation.dto.*;
-import boomerang.consultation.repository.*;
+import boomerang.consultation.domain.Consultation;
+import boomerang.consultation.domain.Schedule;
+import boomerang.consultation.dto.ConsultationRequestDto;
+import boomerang.consultation.dto.ConsultationResponseDto;
+import boomerang.consultation.dto.ConsultationResponseListDto;
+import boomerang.consultation.dto.ScheduleMonthDto;
+import boomerang.consultation.dto.ScheduleRequestDto;
+import boomerang.consultation.dto.ScheduleResponseDto;
+import boomerang.consultation.dto.ScheduleResponseListDto;
+import boomerang.consultation.repository.ConsultationRepository;
+import boomerang.consultation.repository.ScheduleRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
@@ -11,6 +19,13 @@ import boomerang.member.service.MemberService;
 import boomerang.mentor.domain.Mentor;
 import boomerang.mentor.service.MentorService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +45,8 @@ public class ConsultationService {
     private final MemberService memberService;
     private final MentorService mentorService;
 
-    public ConsultationResponseDto requestConsultation(PrincipalDetails principalDetails, ConsultationRequestDto consultationRequestDto) {
+    public ConsultationResponseDto requestConsultation(PrincipalDetails principalDetails,
+        ConsultationRequestDto consultationRequestDto) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = mentorService.getMentor(consultationRequestDto.getMentorId());
 
@@ -141,19 +157,22 @@ public class ConsultationService {
     }
 
 
-    public ConsultationResponseListDto getConsultationOfUser(PrincipalDetails principalDetails, Pageable pageable) {
+    public ConsultationResponseListDto getConsultationOfUser(PrincipalDetails principalDetails,
+        Pageable pageable) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
-        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentee(member, pageable)
-                .map(ConsultationResponseDto::new);
+        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentee(
+                member, pageable)
+            .map(ConsultationResponseDto::new);
 
         return new ConsultationResponseListDto(consultationResponsePage);
     }
 
     public ConsultationResponseListDto getConsultationOfMentor(Long mentorId, Pageable pageable) {
         Mentor mentor = mentorService.getMentor(mentorId);
-        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentor(mentor, pageable)
-                .map(ConsultationResponseDto::new);
+        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentor(
+                mentor, pageable)
+            .map(ConsultationResponseDto::new);
 
         return new ConsultationResponseListDto(consultationResponsePage);
 
@@ -161,7 +180,7 @@ public class ConsultationService {
 
     public Consultation getConsultation(long id) {
         return consultationRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
+            .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
     }
 
     public void checkHour(int hour, List<Integer> hours) {
@@ -172,7 +191,8 @@ public class ConsultationService {
 
 
     @Transactional
-    public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+    public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails,
+        ScheduleRequestDto scheduleRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = member.getMentor();
         if (!mentor.getMember().equals(member)) {
@@ -203,7 +223,8 @@ public class ConsultationService {
     }
 
     @Transactional
-    public void deleteSchedule(PrincipalDetails principalDetails, ScheduleRequestDto scheduleRequestDto) {
+    public void deleteSchedule(PrincipalDetails principalDetails,
+        ScheduleRequestDto scheduleRequestDto) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = member.getMentor();
         if (!mentor.getMember().equals(member)) {
@@ -224,7 +245,7 @@ public class ConsultationService {
         }
     }
 
-    public ScheduleResponseListDto getScheduleByMentor(PrincipalDetails principalDetails){
+    public ScheduleResponseListDto getScheduleByMentor(PrincipalDetails principalDetails) {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = member.getMentor();
 
@@ -260,8 +281,8 @@ public class ConsultationService {
 
         // Map을 ScheduleMonthDto 리스트로 변환
         List<ScheduleMonthDto> scheduleMonthDtoList = monthToDaysMap.entrySet().stream()
-                .map(entry -> new ScheduleMonthDto(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
+            .map(entry -> new ScheduleMonthDto(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
 
         return new ScheduleResponseListDto(scheduleMonthDtoList);
     }

@@ -8,12 +8,14 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class BoardRequestDto {
+
     private String title;
     private String content;
     private BoardType board_type;
     private Location location;
 
-    public BoardRequestDto() {}
+    public BoardRequestDto() {
+    }
 
     // 생성자
     public BoardRequestDto(String title, String content, BoardType board_type, Location location) {
@@ -23,7 +25,7 @@ public class BoardRequestDto {
         this.location = location;
     }
 
-    public void setContentWithImageUrl(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 }

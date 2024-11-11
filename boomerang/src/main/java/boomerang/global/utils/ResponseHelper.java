@@ -15,19 +15,21 @@ public class ResponseHelper {
     public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode);
         return ResponseEntity.status(errorCode.getStatus())
-                .body(errorResponseDto);
+            .body(errorResponseDto);
     }
 
-    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode, String errorMessage) {
+    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode,
+        String errorMessage) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode, errorMessage);
         return ResponseEntity.status(errorCode.getStatus())
-                .body(errorResponseDto);
+            .body(errorResponseDto);
     }
 
 
-    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode,HttpStatus status, String errorMessage) {
+    public static ResponseEntity<ErrorResponseDto> createErrorResponse(ErrorCode errorCode,
+        HttpStatus status, String errorMessage) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(errorCode, errorMessage);
         return ResponseEntity.status(errorCode.getStatus())
-                .body(errorResponseDto);
+            .body(errorResponseDto);
     }
 }

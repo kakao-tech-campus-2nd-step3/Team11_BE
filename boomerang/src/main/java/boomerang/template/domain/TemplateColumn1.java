@@ -5,11 +5,11 @@ import boomerang.template.exception.TemplateValidException;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-
 import java.util.Objects;
 
 @Embeddable
 public class TemplateColumn1 {
+
     @Column(name = "template_column1")
     private String value;
 
@@ -37,8 +37,12 @@ public class TemplateColumn1 {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         TemplateColumn1 that = (TemplateColumn1) o;
         return Objects.equals(value, that.value);
     }

@@ -12,11 +12,11 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BoardSimpleResponseDto {
+
     private Long id;
     private String title;
     private String content;
-    private String writerEmail;
-    private String writerName;
+    private String writerNickname;
     private BoardType boardType;
     private Location location;
     private Long likeCount;
@@ -31,8 +31,7 @@ public class BoardSimpleResponseDto {
         this.content = board.getContent();
         this.boardType = board.getBoardType();
         this.location = board.getLocation();
-        this.writerEmail = board.getMember().getEmail();
-        this.writerName = board.getMember().getNickname();
+        this.writerNickname = board.getWriterNickname();
         this.likeCount = board.getLikeCount();
         this.isLiked = isLiked;
         this.commentCount = board.getCommentCount();

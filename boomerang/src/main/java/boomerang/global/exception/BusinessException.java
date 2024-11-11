@@ -1,10 +1,10 @@
 package boomerang.global.exception;
 
 import boomerang.global.response.ErrorCode;
-
 import java.util.Arrays;
 
 public class BusinessException extends RuntimeException {
+
     private final ErrorCode errorCode;
 
     public BusinessException(ErrorCode errorCode) {

@@ -10,9 +10,9 @@ public enum ErrorCode {
     ACCESS_TOKEN_NOT_EXISTS_ERROR(HttpStatus.BAD_REQUEST, "EG002", "Access Token Not Exists Error"),
     JWT_ERROR(HttpStatus.UNAUTHORIZED, "EG003", "JWT token is not valid"),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "EG004", "잘못된 요청입니다."),
-    COOKIES_ERROR(HttpStatus.UNAUTHORIZED, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
-    KAKAO_ERROR(HttpStatus.UNAUTHORIZED, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
-    FILE_ERROR(HttpStatus.UNAUTHORIZED, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
+    COOKIES_ERROR(HttpStatus.BAD_REQUEST, "EG005", "닉네임 쿠키 생성중 오류가 발생했습니다."),
+    KAKAO_ERROR(HttpStatus.BAD_REQUEST, "EG006", "카카오 로그인 중 에러가 발생했습니다."),
+    FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EG007", "욕설 파일 읽어오는 과정 중 에러가 발생했습니다."),
 
     // Template
     TEMPLATE_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Template Not Found Error"),
@@ -28,7 +28,8 @@ public enum ErrorCode {
     // Board
     BOARD_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EB001", "Board Not Found Error"),
     BOARD_DONT_HAS_OWNERSHIP_ERROR(HttpStatus.BAD_REQUEST, "EB002", "수정 또는 삭제 권한이 없는 게시글입니다"),
-    IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003", "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
+    IMAGE_COUNT_MISMATCH_ERROR(HttpStatus.BAD_REQUEST, "EB003",
+        "이미지 파일 수가 콘텐츠의 이미지 태그 수와 일치하지 않습니다"),
 
     // Comment
     COMMENT_IS_NULL(HttpStatus.BAD_REQUEST, "CM001", "댓글은 빈 내용일 수 없습니다."),
@@ -39,6 +40,7 @@ public enum ErrorCode {
     // Member
     MEMBER_NON_EXISTENT(HttpStatus.BAD_REQUEST, "MB001", "해당 멤버를 찾을 수 없습니다."),
     LOGIN_REQUIRED(HttpStatus.BAD_REQUEST, "MB002", "로그인이 필요합니다."),
+    IMAGE_REQUIRED_ERROR(HttpStatus.BAD_REQUEST, "MB003", "프로필 이미지 파일이 필요합니다."),
 
     // Mentor
     MENTOR_ALREADY_EXISTS(HttpStatus.CONFLICT, "MT_001", "이미 멘토로 등록된 사용자입니다."),
@@ -51,7 +53,8 @@ public enum ErrorCode {
     CONSULTATION_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS002", "해당 상담은 존재하지 않습니다."),
     CONSULTATION_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "CS003", "같은날짜에 동일한 상담이 존재합니다."),
     CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
-    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005", "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
+    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005",
+        "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
     CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
     SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     CONSULTATION_ALREADY_CONFIRMED(HttpStatus.NOT_FOUND,"CS008","해당 상담은 이미 확정되었습니다."),
@@ -71,7 +74,9 @@ public enum ErrorCode {
     PROGRESS_NOT_INCLUDED_MAIN(HttpStatus.NOT_FOUND, "PG010", "유저의 피해타입은 해당 메인단계를 가지고 있지 않습니다."),
     PROGRESS_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "PG011", "해당 서브단계는 이미 완료 단계입니다"),
     PROGRESS_ALREADY_INCOMPLETE(HttpStatus.BAD_REQUEST, "PG012", "해당 서브단계는 이미 미완료 단계입니다."),
-    PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013", "해당 서브단계는 유저의 현재 단계가 아닙니다."),
+    PROGRESS_REQUEST_MAIN_STEP_IS_NOT_THE_CURRENT_STEP(HttpStatus.BAD_REQUEST, "PG013",
+        "해당 서브단계는 유저의 현재 단계가 아닙니다."),
+    SUB_STEP_INFO_NOT_FOUND(HttpStatus.BAD_REQUEST, "PG014", "해당 서브단계에 대한 정보가 존재하지 않습니다."),
 
 
     // Chat
@@ -85,6 +90,12 @@ public enum ErrorCode {
     VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EM001", "인증 코드가 만료되었습니다"),
     VERIFICATION_CODE_INVALID(HttpStatus.BAD_REQUEST, "EM002", "잘못된 인증 코드입니다"),
     EMAIL_NOT_VERIFIED(HttpStatus.FORBIDDEN, "EM003", "이메일 인증이 필요합니다"),
+
+    // Document
+    DOCUMENT_MISSING_FIELDS(HttpStatus.BAD_REQUEST, "DC001", "필수 입력 필드가 누락되었습니다"),
+    DOCUMENT_EXTRA_FIELDS(HttpStatus.BAD_REQUEST, "DC002", "불필요한 필드가 포함되었습니다"),
+    DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
+    DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
     ;
 

@@ -2,15 +2,15 @@ package boomerang.global.oauth.dto;
 
 import boomerang.member.domain.Member;
 import boomerang.member.domain.MemberRole;
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 @Getter
 public class PrincipalDetails implements UserDetails {
+
     private Member member;
 
     public PrincipalDetails(Member member) {
