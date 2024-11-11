@@ -59,6 +59,7 @@ public enum ErrorCode {
     SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     CONSULTATION_ALREADY_CONFIRMED(HttpStatus.NOT_FOUND,"CS008","해당 상담은 이미 확정되었습니다."),
     CONSULTATION_NOT_CHANGED(HttpStatus.BAD_REQUEST, "CS009", "유효하지 않는 ENUM값 입니다."),
+    CONSULTATION_NOT_FOR_MENTOR(HttpStatus.BAD_REQUEST,"CS010","멘토는 상담신청 할 수 없습니다."),
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),

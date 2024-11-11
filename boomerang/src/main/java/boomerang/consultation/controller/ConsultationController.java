@@ -38,12 +38,6 @@ public class ConsultationController {
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @Valid @RequestBody ConsultationRequestDto consultationRequestDto
     ) {
-
-        //상담 신청하는 사람이 멘티인지 검증
-        if(memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
-        }
-
         consultationService.requestConsultation(principalDetails, consultationRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -51,10 +45,10 @@ public class ConsultationController {
     //일정등록
     @PostMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseDto> registerSchedule(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @RequestBody ScheduleRequestDto scheduleRequestDto) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody ScheduleRequestDto scheduleRequestDto) {
         ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule(
-            principalDetails, scheduleRequestDto);
+                principalDetails, scheduleRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponseDto);
     }
@@ -62,8 +56,8 @@ public class ConsultationController {
     //일정 삭제
     @DeleteMapping("/consultation/schedule")
     public ResponseEntity<Void> deleteSchedule(
-        @AuthenticationPrincipal PrincipalDetails principalDetails,
-        @RequestBody ScheduleRequestDto scheduleRequestDto) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody ScheduleRequestDto scheduleRequestDto) {
         consultationService.deleteSchedule(principalDetails, scheduleRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -71,16 +65,16 @@ public class ConsultationController {
     //일정 조회
     @GetMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseListDto> getSchedule(
-        @AuthenticationPrincipal PrincipalDetails principalDetails) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentor(
-            principalDetails);
+                principalDetails);
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
     }
 
     //멘티가 멘토별 일정 조회
     @GetMapping("????/{mentor_id}")
-    public ResponseEntity<ScheduleResponseListDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails,@PathVariable("mentor_id") Long mentorId) {
-        if(memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
+    public ResponseEntity<ScheduleResponseListDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
+        if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
         ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentorId(mentorId);
@@ -90,9 +84,9 @@ public class ConsultationController {
     //상담상태 변경
     @PutMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> changeConsultationStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                       @PathVariable("consultation_id") Long consultationId,
-                                                                       @RequestBody ConsultationStatus consultationStatus) {
-        if(memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() == null) {
+                                                                            @PathVariable("consultation_id") Long consultationId,
+                                                                            @RequestBody ConsultationStatus consultationStatus) {
+        if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() == null) {
             throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
         }
 
@@ -122,19 +116,19 @@ public class ConsultationController {
     //상담조회
     @GetMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> requestConsultation(
-        @PathVariable("consultation_id") Long consultationId) {
+            @PathVariable("consultation_id") Long consultationId) {
         ConsultationResponseDto consultationResponseDto = consultationService.getConsultationDetail(
-            consultationId);
+                consultationId);
         return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
     }
 
 
     //멘토별 상담 조회
-    @GetMapping("mentor/{mentor_id}/consultation")
+    @GetMapping("/mentor/{mentor_id}/consultation")
     public ResponseEntity<ConsultationResponseListDto> getConsultationOfMentor(
-        @PathVariable("mentor_id") Long mentorId, Pageable pageable) {
+            @PathVariable("mentor_id") Long mentorId, Pageable pageable) {
         ConsultationResponseListDto consultation = consultationService.getConsultationOfMentor(
-            mentorId, pageable);
+                mentorId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(consultation);
     }
 
@@ -142,7 +136,7 @@ public class ConsultationController {
     @GetMapping("?????????")
     public ResponseEntity<ConsultationResponseListDto> getConsultationsByMentor(@AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
         Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
-        if(mentor == null) {
+        if (mentor == null) {
             throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
         }
         ConsultationResponseListDto consultation = consultationService.getConsultationOfMentor(mentor.getId(), pageable);
@@ -150,11 +144,11 @@ public class ConsultationController {
     }
 
     //개인별 상담 내역조회
-    @GetMapping("member/consultation")
+    @GetMapping("/member/consultation")
     public ResponseEntity<ConsultationResponseListDto> getConsultationOfUser(
-        @AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
+            @AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
         ConsultationResponseListDto consultation = consultationService.getConsultationOfUser(
-            principalDetails, pageable);
+                principalDetails, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(consultation);
     }
 

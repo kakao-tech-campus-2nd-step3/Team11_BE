@@ -43,6 +43,7 @@ public class ConsultationService {
     public void requestConsultation(PrincipalDetails principalDetails,
         ConsultationRequestDto consultationRequestDto) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        validateMentee(mentee);
         Mentor mentor = mentorService.getMentor(consultationRequestDto.getMentorId());
 
         LocalDateTime localDateTime = consultationRequestDto.getConsultationDateTime();
@@ -329,6 +330,20 @@ public class ConsultationService {
     private Schedule validateScheduleExists(Mentor mentor, LocalDate localDate) {
         return scheduleRepository.findByMentorAndLocalDate(mentor, localDate)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
+    }
+
+    // 멘티인지 멘토인지 검증
+    private boolean isMentor(Member member) {
+        if (member.getMentor() != null) {
+            return true;
+        }
+        return false;
+    }
+
+    private void validateMentee(Member member) {
+        if (member.getMentor() != null) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_FOR_MENTOR);
+        }
     }
 
 }
