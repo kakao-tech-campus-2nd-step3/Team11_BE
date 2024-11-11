@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,25 +17,21 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ConsultationResponseDto {
 
-    private long consultationId;                        //상담아이디
-    private long mentorId;                              //멘토아이디
     private String mentorNickName;                      //멤토닉네임
-    private long menteeId;                              //멘티아이디
     private String menteeNickName;                      //멘티닉네임
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate consultationDate;                 //상담일정
-    private int consultationTime;                       //상담시간
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH")
+    private LocalDateTime consultationDateTime;                 //상담일정
     private ConsultationStatus consultationStatus;      //상담상태
+    private String title;
+    private String content;
 
     public ConsultationResponseDto(Consultation consultation) {
-        this.consultationId = consultation.getId();
-        this.mentorId = consultation.getMentorId();
         this.mentorNickName = consultation.getMentorNickname();
-        this.menteeId = consultation.getMenteeId();
         this.menteeNickName = consultation.getMenteeNickname();
-        this.consultationDate = consultation.getConsultationDateTime().toLocalDate();
-        this.consultationTime = consultation.getConsultationDateTime().getHour();
+        this.consultationDateTime = consultation.getConsultationDateTime();
         this.consultationStatus = consultation.getConsultationStatus();
+        this.title = consultation.getTitle();
+        this.content = consultation.getContent();
     }
 }
 

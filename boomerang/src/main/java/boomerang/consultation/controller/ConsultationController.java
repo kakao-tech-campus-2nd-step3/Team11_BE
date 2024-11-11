@@ -7,22 +7,16 @@ import boomerang.consultation.service.ConsultationService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
+import boomerang.global.response.PageResponseDto;
 import boomerang.member.service.MemberService;
-import boomerang.mentor.domain.Mentor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,7 +84,7 @@ public class ConsultationController {
             throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
         }
 
-        Consultation consultation = consultationService.getConsultation(consultationId);
+        Consultation consultation = consultationService.validateConsultationExists(consultationId);
 
         //현재상태가 확정전이며 변경하고자 하는 상태가 진행전이면 변경
         if ((consultation.getConsultationStatus() == ConsultationStatus.RECEIVED) && (consultationStatus == ConsultationStatus.PENDING)) {
@@ -132,24 +126,19 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).body(consultation);
     }
 
-    //멘토의 본인 상담 조회
-    @GetMapping("?????????")
-    public ResponseEntity<ConsultationResponseListDto> getConsultationsByMentor(@AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
-        Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
-        if (mentor == null) {
-            throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
-        }
-        ConsultationResponseListDto consultation = consultationService.getConsultationOfMentor(mentor.getId(), pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(consultation);
-    }
 
     //개인별 상담 내역조회
     @GetMapping("/member/consultation")
-    public ResponseEntity<ConsultationResponseListDto> getConsultationOfUser(
-            @AuthenticationPrincipal PrincipalDetails principalDetails, Pageable pageable) {
-        ConsultationResponseListDto consultation = consultationService.getConsultationOfUser(
-                principalDetails, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(consultation);
+    public ResponseEntity<PageResponseDto<ConsultationResponseDto>> getConsultationOfUser(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @ModelAttribute ConsultationListRequestDto consultationListRequestDto
+            ) {
+        Page<Consultation> consultationPage = consultationService.getConsultationPage(
+                principalDetails, consultationListRequestDto);
+        Page<ConsultationResponseDto> consultationResponseDtoPage = consultationPage.map(ConsultationResponseDto::new);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new PageResponseDto<>(consultationResponseDtoPage));
     }
 
 }

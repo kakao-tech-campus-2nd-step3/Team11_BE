@@ -15,20 +15,18 @@ import boomerang.mentor.service.MentorService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +62,7 @@ public class ConsultationService {
 
     public ConsultationResponseDto confirmConsultation(PrincipalDetails principalDetails, Long consultationId) {
         Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
-        Consultation consultation = getConsultation(consultationId);
+        Consultation consultation = validateConsultationExists(consultationId);
         LocalDate date = LocalDate.of(LocalDate.now().getYear(),consultation.getConsultationDateTime().getMonth(),
                 consultation.getConsultationDateTime().getDayOfMonth());
         Schedule schedule = scheduleRepository.findByMentorAndLocalDate(mentor, date)
@@ -100,7 +98,7 @@ public class ConsultationService {
 
     public ConsultationResponseDto startConsultationMentor(PrincipalDetails principalDetails, Long consultationId) {
         Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
-        Consultation consultation = getConsultation(consultationId);
+        Consultation consultation = validateConsultationExists(consultationId);
 
         if (!consultation.isMentor(mentor)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
@@ -132,7 +130,7 @@ public class ConsultationService {
     //상담 진행 완료로 상태 변경
     public ConsultationResponseDto completeConsultation(PrincipalDetails principalDetails, Long consultationId) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Consultation consultation = getConsultation(consultationId);
+        Consultation consultation = validateConsultationExists(consultationId);
 
         if (!consultation.isMentee(mentee)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
@@ -149,21 +147,11 @@ public class ConsultationService {
     }
 
     public ConsultationResponseDto getConsultationDetail(Long consultationId) {
-        Consultation consultation = getConsultation(consultationId);
+        Consultation consultation = validateConsultationExists(consultationId);
         return new ConsultationResponseDto(consultation);
     }
 
 
-    public ConsultationResponseListDto getConsultationOfUser(PrincipalDetails principalDetails,
-        Pageable pageable) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-
-        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentee(
-                member, pageable)
-            .map(ConsultationResponseDto::new);
-
-        return new ConsultationResponseListDto(consultationResponsePage);
-    }
 
     public ConsultationResponseListDto getConsultationOfMentor(Long mentorId, Pageable pageable) {
         Mentor mentor = mentorService.getMentor(mentorId);
@@ -175,10 +163,7 @@ public class ConsultationService {
 
     }
 
-    public Consultation getConsultation(long id) {
-        return consultationRepository.findById(id)
-            .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
-    }
+
 
     public void checkHour(int hour, List<Integer> hours) {
         if (hour < 0 || hour >= 24) {
@@ -332,12 +317,9 @@ public class ConsultationService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
     }
 
-    // 멘티인지 멘토인지 검증
-    private boolean isMentor(Member member) {
-        if (member.getMentor() != null) {
-            return true;
-        }
-        return false;
+    public Consultation validateConsultationExists(Long id) {
+        return consultationRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
     }
 
     private void validateMentee(Member member) {
@@ -346,4 +328,20 @@ public class ConsultationService {
         }
     }
 
+    public Page<Consultation> getConsultationPage(PrincipalDetails principalDetails,
+                                                  ConsultationListRequestDto consultationListRequestDto) {
+        PageRequest pageRequest = getConsultationPageRequest(consultationListRequestDto);
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        
+        return consultationRepository.findAllByMember(
+                member, consultationListRequestDto.getConsultation_status(), pageRequest);
+    }
+
+    private PageRequest getConsultationPageRequest(ConsultationListRequestDto consultationListRequestDto) {
+        return PageRequest.of(
+                consultationListRequestDto.getPage(),
+                consultationListRequestDto.getSize(),
+                Sort.by("id").descending()
+        );
+    }
 }
