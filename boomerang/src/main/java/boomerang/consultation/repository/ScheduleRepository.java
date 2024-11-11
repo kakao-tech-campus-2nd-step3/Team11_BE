@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-    Optional<Schedule> findByDate(LocalDate date);
-    Optional<Schedule> findByMentorAndDate(Mentor mentor, LocalDate date);
+    Optional<Schedule> findByMentorAndLocalDate(Mentor mentor, LocalDate localDate);
     List<Schedule> findAllByMentor(Mentor mentor);
 }

@@ -34,27 +34,19 @@ public class ConsultationService {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = mentorService.getMentor(consultationRequestDto.getMentorId());
 
-        LocalDateTime consultationDateTime = LocalDateTime.of(LocalDate.now().getYear(),
-                consultationRequestDto.getConsultationMonth(),consultationRequestDto.getConsultationDay(), consultationRequestDto.getConsultationTime(), 0, 0);
+        LocalDateTime localDateTime = consultationRequestDto.getConsultationDateTime();
 
-        LocalDate date = LocalDate.of(LocalDate.now().getYear(), consultationRequestDto.getConsultationMonth(),
-                consultationRequestDto.getConsultationDay());
+        Schedule schedule = validateScheduleExists(mentor, localDateTime.toLocalDate());
+        schedule.validateHourSlot(localDateTime.getHour());
 
-        Schedule schedule = scheduleRepository.findByMentorAndDate(mentor,date)
-                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
+        Consultation consultation = new Consultation(mentee, mentor, localDateTime,
+                consultationRequestDto.getTitle(), consultationRequestDto.getContent());
 
-        if (consultationRepository.existsByMenteeAndMentorAndConsultationDateTime(mentee, mentor, consultationDateTime)
-                && schedule.getHourlySlots().get(consultationRequestDto.getConsultationTime()) == Boolean.FALSE) {
-            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS); // 이미 신청되어 있는 상담이면 에러 처리
-        }
 
-        Consultation savedConsultation = consultationRepository.save(new Consultation(mentee, mentor, consultationDateTime,
-                consultationRequestDto.getConsultationTitle(), consultationRequestDto.getConsultationContent()));
-        savedConsultation.makeSchedule(consultationRequestDto.getConsultationMonth(),consultationRequestDto.getConsultationDay(),
-                consultationRequestDto.getConsultationTime());
-        consultationRepository.save(savedConsultation);
+        consultation.makeSchedule(localDateTime);
+        consultationRepository.save(consultation);
 
-        return new ConsultationResponseDto(savedConsultation);
+        return new ConsultationResponseDto(consultation);
     }
 
     public ConsultationResponseDto confirmConsultation(PrincipalDetails principalDetails, Long consultationId) {
@@ -62,7 +54,7 @@ public class ConsultationService {
         Consultation consultation = getConsultation(consultationId);
         LocalDate date = LocalDate.of(LocalDate.now().getYear(),consultation.getConsultationDateTime().getMonth(),
                 consultation.getConsultationDateTime().getDayOfMonth());
-        Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
+        Schedule schedule = scheduleRepository.findByMentorAndLocalDate(mentor, date)
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
 
         if (!consultation.isMentor(mentor)) {
@@ -74,7 +66,7 @@ public class ConsultationService {
         }
 
         consultation.confirm(); // 상담을 확정하면서 상태 ENUM PENDING으로 변경
-        schedule.unreserveSlot(consultation.getConsultationDateTime().getHour()); // 상담을 신청되면서 해당 시간대 상태 False로 변경
+        schedule.unreserveHourSlot(consultation.getConsultationDateTime().getHour()); // 상담을 신청되면서 해당 시간대 상태 False로 변경
         scheduleRepository.save(schedule);
         Consultation savedConsultation = consultationRepository.save(consultation);
         return new ConsultationResponseDto(savedConsultation);
@@ -190,16 +182,16 @@ public class ConsultationService {
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
                 LocalDate date = LocalDate.of(LocalDate.now().getYear(), scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey())); // DTO의 월, 일로 LocalDate 생성
-                Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
+                Schedule schedule = scheduleRepository.findByMentorAndLocalDate(mentor, date)
                         .orElse(new Schedule(mentor,date)); // 해당 날짜의 Schedule이 없으면 새로 생성
                 List<Integer> hours = entry.getValue();
                 List<ScheduleHourDto> reservedHours = new ArrayList<>();
                 for (int hour : hours) {
                     checkHour(hour, hours); // 시간 범위 검증 로직 별도 메서드로 분리
-                    if (schedule.getHourlySlots().get(hour)) {
+                    if (schedule.getHourSlots().get(hour)) {
                         throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_EXISTS); // 중복된 시간 예외 처리
                     }
-                    schedule.reserveSlot(hour); // 시간대 예약
+                    schedule.reserveHourSlot(hour); // 시간대 예약
                     reservedHours.add(new ScheduleHourDto(hour));
                 }
                 scheduleRepository.save(schedule);
@@ -220,12 +212,12 @@ public class ConsultationService {
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
                 LocalDate date = LocalDate.of(LocalDate.now().getYear(), scheduleRequestDto.getMonth(),Integer.parseInt(entry.getKey()));
-                Schedule schedule = scheduleRepository.findByMentorAndDate(mentor, date)
+                Schedule schedule = scheduleRepository.findByMentorAndLocalDate(mentor, date)
                         .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
                 List<Integer> hours = entry.getValue();
                 for (int hour : hours) {
                     checkHour(hour, hours);
-                    schedule.unreserveSlot(hour);
+                    schedule.unreserveHourSlot(hour);
                     scheduleRepository.save(schedule);
                 }
             }
@@ -248,13 +240,13 @@ public class ConsultationService {
         Map<Integer, List<ScheduleDayDto>> monthToDaysMap = new HashMap<>();
 
         for (Schedule schedule : scheduleList) {
-            int month = schedule.getDate().getMonthValue();
-            String day = String.valueOf(schedule.getDate().getDayOfMonth());
+            int month = schedule.getLocalDate().getMonthValue();
+            String day = String.valueOf(schedule.getLocalDate().getDayOfMonth());
             List<ScheduleHourDto> reservedHours = new ArrayList<>();
 
             // 예약된 시간대만 추출하여 HourSchedule로 추가
-            for (int hour = 0; hour < schedule.getHourlySlots().size(); hour++) {
-                if (schedule.getHourlySlots().get(hour)) {
+            for (int hour = 0; hour < schedule.getHourSlots().size(); hour++) {
+                if (schedule.getHourSlots().get(hour)) {
                     reservedHours.add(new ScheduleHourDto(hour));
                 }
             }
@@ -289,13 +281,13 @@ public class ConsultationService {
         Map<Integer, List<ScheduleDayDto>> monthToDaysMap = new HashMap<>();
 
         for (Schedule schedule : scheduleList) {
-            int month = schedule.getDate().getMonthValue();
-            String day = String.valueOf(schedule.getDate().getDayOfMonth());
+            int month = schedule.getLocalDate().getMonthValue();
+            String day = String.valueOf(schedule.getLocalDate().getDayOfMonth());
             List<ScheduleHourDto> reservedHours = new ArrayList<>();
 
             // 예약된 시간대만 추출하여 HourSchedule로 추가
-            for (int hour = 0; hour < schedule.getHourlySlots().size(); hour++) {
-                if (schedule.getHourlySlots().get(hour)) {
+            for (int hour = 0; hour < schedule.getHourSlots().size(); hour++) {
+                if (schedule.getHourSlots().get(hour)) {
                     reservedHours.add(new ScheduleHourDto(hour));
                 }
             }
@@ -314,6 +306,12 @@ public class ConsultationService {
 
         return new ScheduleResponseListDto(scheduleMonthDtoList);
 
+    }
+
+    // 스케줄 존재 여부 검증
+    private Schedule validateScheduleExists(Mentor mentor, LocalDate localDate) {
+        return scheduleRepository.findByMentorAndLocalDate(mentor, localDate)
+                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
     }
 
 }

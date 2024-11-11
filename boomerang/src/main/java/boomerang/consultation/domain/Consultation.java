@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Entity
@@ -36,9 +35,9 @@ public class Consultation {
 
     private LocalDateTime consultationDateTime;
 
-    private String consultationTitle;
+    private String title;
 
-    private String consultationContent;
+    private String content;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -46,12 +45,12 @@ public class Consultation {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Consultation(Member mentee, Mentor mentor, LocalDateTime consultationDateTime, String consultationTitle, String consultationContent) {
+    public Consultation(Member mentee, Mentor mentor, LocalDateTime consultationDateTime, String title, String content) {
         this.mentee = mentee;
         this.mentor = mentor;
         this.consultationDateTime = consultationDateTime;
-        this.consultationTitle = consultationTitle;
-        this.consultationContent = consultationContent;
+        this.title = title;
+        this.content = content;
         this.consultationStatus = ConsultationStatus.RECEIVED;
     }
 
@@ -99,8 +98,8 @@ public class Consultation {
         return this.consultationStatus.equals(ConsultationStatus.FINISHED);
     }
 
-    public void makeSchedule(int month, int day, int hour) {
-                this.consultationDateTime = LocalDateTime.of(LocalDate.now().getYear(), month, day, hour, 0, 0); // LocalDateTime.of로 바로 생성
+    public void makeSchedule(LocalDateTime localDateTime) {
+        this.consultationDateTime = localDateTime;
     }
 }
 

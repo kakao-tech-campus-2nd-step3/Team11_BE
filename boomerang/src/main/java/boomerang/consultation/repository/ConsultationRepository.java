@@ -20,7 +20,6 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
 
     Page<Consultation> findAllByMentor(Mentor mentor, Pageable pageable);
 
-    boolean existsByMenteeAndMentorAndConsultationDateTime(Member mentee, Mentor mentor, LocalDateTime consultationDateTime);
 
     @Query("SELECT c FROM Consultation c WHERE c.consultationStatus = 'PENDING' AND c.consultationDateTime <= :now")
     List<Consultation> findPendingConsultationsForTime(LocalDateTime now);
