@@ -1,5 +1,7 @@
 package boomerang.consultation.domain;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.mentor.domain.Mentor;
 import jakarta.persistence.Entity;
@@ -11,7 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -78,8 +80,8 @@ public class Consultation {
         return this.mentee.getId();
     }
 
-    public boolean isMentor(Mentor mentor) {
-        return this.mentor.equals(mentor);
+    public boolean isNotMentor(Mentor mentor) {
+        return !this.mentor.equals(mentor);
     }
 
     public boolean isMentee(Member mentee) {
@@ -96,6 +98,12 @@ public class Consultation {
 
     public void complete() {
         this.consultationStatus = ConsultationStatus.FINISHED;
+    }
+
+    public void validateReceived() {
+        if (this.consultationStatus != ConsultationStatus.RECEIVED) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_RECEIVED);
+        }
     }
 
     public boolean isConfirmed() {

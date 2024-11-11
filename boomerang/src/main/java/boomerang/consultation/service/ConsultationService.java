@@ -61,46 +61,24 @@ public class ConsultationService {
     }
 
     public ConsultationResponseDto confirmConsultation(PrincipalDetails principalDetails, Long consultationId) {
-        Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
         Consultation consultation = validateConsultationExists(consultationId);
-        LocalDate date = LocalDate.of(LocalDate.now().getYear(),consultation.getConsultationDateTime().getMonth(),
-                consultation.getConsultationDateTime().getDayOfMonth());
-        Schedule schedule = scheduleRepository.findByMentorAndLocalDate(mentor, date)
-                .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
+        consultation.validateReceived();
 
-        if (!consultation.isMentor(mentor)) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
-        }
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        validateConsultationOwnership(member, consultation);
 
-        if (consultation.isConfirmed()) {
-            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_CONFIRMED);
-        }
+        consultation.confirm();
+        consultationRepository.save(consultation);
 
-        consultation.confirm(); // 상담을 확정하면서 상태 ENUM PENDING으로 변경
-        schedule.unreserveHourSlot(consultation.getConsultationDateTime().getHour()); // 상담을 신청되면서 해당 시간대 상태 False로 변경
-        scheduleRepository.save(schedule);
-        Consultation savedConsultation = consultationRepository.save(consultation);
-        return new ConsultationResponseDto(savedConsultation);
+        return new ConsultationResponseDto(consultation);
     }
 
-//    public ConsultationResponseDto startConsultationMentee(PrincipalDetails principalDetails, Long consultationId) {
-//        Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-//        Consultation consultation = getConsultation(consultationId);
-//
-//        if (!consultation.isMentee(mentee)) {
-//            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
-//        }
-//        consultation.start();
-//
-//        Consultation savedConsultation = consultationRepository.save(consultation);
-//        return new ConsultationResponseDto(savedConsultation);
-//    }
 
     public ConsultationResponseDto startConsultationMentor(PrincipalDetails principalDetails, Long consultationId) {
         Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
         Consultation consultation = validateConsultationExists(consultationId);
 
-        if (!consultation.isMentor(mentor)) {
+        if (!consultation.isNotMentor(mentor)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
         }
 
@@ -317,6 +295,15 @@ public class ConsultationService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR));
     }
 
+    private void validateConsultationOwnership(Member mentor, Consultation consultation) {
+        if (mentor.getMentor() == null) {
+            throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
+        }
+        if (consultation.isNotMentor(mentor.getMentor())) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
+        }
+    }
+
     public Consultation validateConsultationExists(Long id) {
         return consultationRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
@@ -332,7 +319,7 @@ public class ConsultationService {
                                                   ConsultationListRequestDto consultationListRequestDto) {
         PageRequest pageRequest = getConsultationPageRequest(consultationListRequestDto);
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        
+
         return consultationRepository.findAllByMember(
                 member, consultationListRequestDto.getConsultation_status(), pageRequest);
     }

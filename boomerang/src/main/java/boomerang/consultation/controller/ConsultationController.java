@@ -66,7 +66,7 @@ public class ConsultationController {
     }
 
     //멘티가 멘토별 일정 조회
-    @GetMapping("????/{mentor_id}")
+    @GetMapping("/consultation/schedule/{mentor_id}")
     public ResponseEntity<ScheduleResponseListDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
         if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
@@ -75,8 +75,20 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
     }
 
-    //상담상태 변경
+    //상담 확정하기
     @PutMapping("/consultation/{consultation_id}")
+    public ResponseEntity<ConsultationResponseDto> confirmConsultation(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable("consultation_id") Long consultationId
+    ) {
+        ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(consultationResponseDto);
+    }
+
+    //상담상태 변경
+    @PutMapping
     public ResponseEntity<ConsultationResponseDto> changeConsultationStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                                             @PathVariable("consultation_id") Long consultationId,
                                                                             @RequestBody ConsultationStatus consultationStatus) {
@@ -107,32 +119,12 @@ public class ConsultationController {
 
     }
 
-    //상담조회
-    @GetMapping("/consultation/{consultation_id}")
-    public ResponseEntity<ConsultationResponseDto> requestConsultation(
-            @PathVariable("consultation_id") Long consultationId) {
-        ConsultationResponseDto consultationResponseDto = consultationService.getConsultationDetail(
-                consultationId);
-        return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-    }
-
-
-    //멘토별 상담 조회
-    @GetMapping("/mentor/{mentor_id}/consultation")
-    public ResponseEntity<ConsultationResponseListDto> getConsultationOfMentor(
-            @PathVariable("mentor_id") Long mentorId, Pageable pageable) {
-        ConsultationResponseListDto consultation = consultationService.getConsultationOfMentor(
-                mentorId, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(consultation);
-    }
-
-
     //개인별 상담 내역조회
     @GetMapping("/member/consultation")
     public ResponseEntity<PageResponseDto<ConsultationResponseDto>> getConsultationOfUser(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @ModelAttribute ConsultationListRequestDto consultationListRequestDto
-            ) {
+    ) {
         Page<Consultation> consultationPage = consultationService.getConsultationPage(
                 principalDetails, consultationListRequestDto);
         Page<ConsultationResponseDto> consultationResponseDtoPage = consultationPage.map(ConsultationResponseDto::new);
