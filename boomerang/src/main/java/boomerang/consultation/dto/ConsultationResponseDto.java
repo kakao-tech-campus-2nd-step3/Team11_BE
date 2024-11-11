@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ConsultationResponseDto {
 
+    private Long id;
     private String mentorNickName;                      //멤토닉네임
     private String menteeNickName;                      //멘티닉네임
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH")
@@ -26,6 +27,7 @@ public class ConsultationResponseDto {
     private String content;
 
     public ConsultationResponseDto(Consultation consultation) {
+        this.id = consultation.getId();
         this.mentorNickName = consultation.getMentorNickname();
         this.menteeNickName = consultation.getMenteeNickname();
         this.consultationDateTime = consultation.getConsultationDateTime();
