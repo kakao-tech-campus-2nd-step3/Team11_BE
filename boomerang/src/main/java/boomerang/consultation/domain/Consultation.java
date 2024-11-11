@@ -122,5 +122,12 @@ public class Consultation {
     public void makeSchedule(LocalDateTime localDateTime) {
         this.consultationDateTime = localDateTime;
     }
+
+    // 해당 멤버가 상담에 속한 멤버인지 검증
+    public void validateMemberIsParticipant(Member member) {
+        if (!this.mentee.equals(member) && !this.mentor.getMember().equals(member)) {
+            throw new BusinessException(ErrorCode.CONSULTATION_MEMBER_IS_NOT_PARTICIPANT);
+        }
+    }
 }
 
