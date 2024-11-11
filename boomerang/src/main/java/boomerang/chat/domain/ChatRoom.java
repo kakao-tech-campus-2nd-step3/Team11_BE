@@ -28,9 +28,6 @@ public class ChatRoom {
     @JoinColumn(name = "mentee", nullable = false)
     private Member mentee;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatMessage> messages = new ArrayList<>();
-
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
