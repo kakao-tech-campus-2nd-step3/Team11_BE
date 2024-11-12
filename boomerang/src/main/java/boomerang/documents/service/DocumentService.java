@@ -46,7 +46,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 public class DocumentService {
 
     private final S3Client s3Client;
-    private final SubStepInfoService subStepInfoService;
     private static final float DPI = 300; // 이미지 해상도
 
     @Value("${cloud.aws.s3.bucket}")
@@ -54,7 +53,7 @@ public class DocumentService {
 
     public DocumentResponseDto generateDocument(DocumentRequestDto requestDto) {
         try {
-            requestDto.validate(subStepInfoService.getSubStepInfo(requestDto.getSubStepEnum()));
+            requestDto.validate();
             byte[] templatePdf = downloadTemplate(requestDto.getSubStep());
             byte[] generatedPdf = fillPdfForm(templatePdf, requestDto.getFormData());
 
@@ -85,6 +84,9 @@ public class DocumentService {
 
             // 폼 데이터 채우기
             formData.forEach((fieldName, fieldValue) -> {
+                if (fieldValue == null || fieldValue.trim().isEmpty()) {
+                    return; // 값이 없는 필드는 건너뛰기
+                }
                 try {
                     if (fieldName.endsWith("*")) {
                         // 체크박스 필드 처리

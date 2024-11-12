@@ -19,25 +19,9 @@ public class DocumentRequestDto {
     private String subStep; //한글로
     private Map<String, String> formData;
 
-    public void validate(List<String> requiredFields) {
-        SubStepEnum subStepEnum = SubStepEnum.fromStepName(subStep); // String을 Enum으로 변환
-
-        if (subStepEnum == null) {
-            throw new BusinessException(ErrorCode.DOCUMENT_TYPE_REQUIRED);
-        }
-
-        Set<String> providedFields = formData.keySet();
-
-        // 필수 필드 검증
-        Set<String> missingFields = new HashSet<>(requiredFields);
-        missingFields.removeAll(providedFields);
-
-        if (!missingFields.isEmpty()) {
+    public void validate() {
+        if (formData == null) {
             throw new BusinessException(ErrorCode.DOCUMENT_MISSING_FIELDS);
         }
-    }
-
-    public SubStepEnum getSubStepEnum() {
-        return SubStepEnum.fromStepName(subStep);
     }
 }
