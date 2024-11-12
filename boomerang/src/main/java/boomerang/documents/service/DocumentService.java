@@ -29,6 +29,7 @@ import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -85,12 +86,32 @@ public class DocumentService {
             // 폼 데이터 채우기
             formData.forEach((fieldName, fieldValue) -> {
                 try {
-                    PDField field = acroForm.getField(fieldName);
-                    if (field instanceof PDTextField textField) {
-                        textField.setDefaultAppearance("/KoreanFont 12 Tf 0 g");
-                        textField.setValue(fieldValue);
-                    } else if (field != null) {
-                        field.setValue(fieldValue);
+                    if (fieldName.endsWith("*")) {
+                        // 체크박스 필드 처리
+                        handleCheckboxField(acroForm, fieldName, fieldValue);
+                    } else {
+                        // 일반 텍스트 필드 처리
+                        PDField field = acroForm.getField(fieldName);
+                        if (field instanceof PDTextField textField) {
+                            // 기존 default appearance string에서 폰트 크기 추출
+                            String defaultAppearance = textField.getDefaultAppearance();
+                            String fontSize = "12";
+
+                            if (defaultAppearance != null && !defaultAppearance.isEmpty()) {
+                                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
+                                    "\\s+(\\d+(\\.\\d+)?)\\s+Tf\\s+");
+                                java.util.regex.Matcher matcher = pattern.matcher(
+                                    defaultAppearance);
+                                if (matcher.find()) {
+                                    fontSize = matcher.group(1);
+                                }
+                            }
+
+                            textField.setDefaultAppearance("/KoreanFont " + fontSize + " Tf 0 g");
+                            textField.setValue(fieldValue);
+                        } else if (field != null) {
+                            field.setValue(fieldValue);
+                        }
                     }
                 } catch (IOException e) {
                     log.error("Error setting value for field: {} (value: {})", fieldName,
@@ -98,7 +119,6 @@ public class DocumentService {
                 }
             });
 
-            // 폼 플래튼
             acroForm.flatten();
 
             ByteArrayOutputStream tempBaos = new ByteArrayOutputStream();
@@ -145,6 +165,41 @@ public class DocumentService {
             newDocument.save(finalBaos);
             return finalBaos.toByteArray();
         }
+    }
+
+    private void handleCheckboxField(PDAcroForm acroForm, String fieldName, String fieldValue)
+        throws IOException {
+        // 선택지 파싱
+        String[] options = parseOptions(fieldName);
+
+        // 각 옵션에 대한 체크박스 처리
+        for (String option : options) {
+            String checkboxFieldName = fieldName + "_" + option;
+            PDField field = acroForm.getField(checkboxFieldName);
+
+            if (field instanceof PDCheckBox checkbox) {
+                if (option.equals(fieldValue)) {
+                    String[] exportValues = checkbox.getExportValues().toArray(new String[0]);
+                    if (exportValues.length > 0) {
+                        checkbox.setValue(exportValues[0]);
+                    } else {
+                        checkbox.setValue("Yes");
+                    }
+                } else {
+                    checkbox.setValue("Off");
+                }
+            }
+        }
+    }
+
+    private String[] parseOptions(String fieldName) {
+        int start = fieldName.indexOf("(");
+        int end = fieldName.indexOf(")");
+        if (start >= 0 && end >= 0) {
+            String optionsStr = fieldName.substring(start + 1, end);
+            return optionsStr.split("/");
+        }
+        return new String[0];
     }
 
     private byte[] downloadTemplate(String templateName) throws IOException {
