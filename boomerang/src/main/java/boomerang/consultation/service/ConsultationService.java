@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -276,6 +275,20 @@ public class ConsultationService {
         Page<Consultation> consultations = consultationRepository.findAllByMember(
                 member, consultationListRequestDto.getConsultation_status(), pageRequest);
 
+
+        return consultations;
+    }
+
+    private PageRequest getConsultationPageRequest(ConsultationListRequestDto consultationListRequestDto) {
+        return PageRequest.of(
+                consultationListRequestDto.getPage(),
+                consultationListRequestDto.getSize(),
+                Sort.by("id").descending()
+        );
+    }
+
+    public void updateConsultationStatus(List<Consultation> consultations) {
+
         // 현재 시간을 가져와 조회된 consultations의 상태를 확인 후 업데이트
         LocalDateTime now = LocalDateTime.now();
         consultations.forEach(consultation -> {
@@ -292,15 +305,5 @@ public class ConsultationService {
                 consultation.complete(); // 상태를 FINISHED으로 변경, 진행중인 상담이 상담시간보다 1시간 30분이 지나면 진행중 -> 상담완료
             }
         });
-
-        return consultations;
-    }
-
-    private PageRequest getConsultationPageRequest(ConsultationListRequestDto consultationListRequestDto) {
-        return PageRequest.of(
-                consultationListRequestDto.getPage(),
-                consultationListRequestDto.getSize(),
-                Sort.by("id").descending()
-        );
     }
 }
