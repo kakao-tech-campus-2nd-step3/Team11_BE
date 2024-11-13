@@ -94,6 +94,10 @@ public enum ErrorCode {
     DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
     DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
+    // Prevention
+    PREVENTION_NOT_FOUND(HttpStatus.NOT_FOUND, "PV001", "예방 설문 결과를 찾을 수 없습니다."),
+    PREVENTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "PV002", "이미 예방 설문 결과가 존재합니다."),
+
     ;
 
     private final HttpStatus status;

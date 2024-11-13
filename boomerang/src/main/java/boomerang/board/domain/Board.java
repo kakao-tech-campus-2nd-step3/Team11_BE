@@ -37,7 +37,7 @@ public class Board {
     @Column(length = 10000)
     private String content;
 
-    private String summery;
+    private String summary;
 
     private String writerNickname;
 
@@ -78,7 +78,7 @@ public class Board {
         this.location = boardRequestDto.getLocation();
         this.member = member;
 
-        this.summery = summaryContent(content);
+        this.summary = summaryContent(content);
     }
 
     // ID가 있는 경우의 생성자
@@ -91,7 +91,7 @@ public class Board {
         this.location = boardRequestDto.getLocation();
         this.member = member;
 
-        this.summery = summaryContent(content);
+        this.summary = summaryContent(content);
     }
 
     private String summaryContent(String content) {
