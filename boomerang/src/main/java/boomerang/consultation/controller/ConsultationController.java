@@ -43,6 +43,7 @@ public class ConsultationController {
     public ResponseEntity<ScheduleResponseDto> registerSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ScheduleRequestDto scheduleRequestDto) {
+
         ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule(
                 principalDetails, scheduleRequestDto);
 
@@ -54,7 +55,9 @@ public class ConsultationController {
     public ResponseEntity<Void> deleteSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ScheduleRequestDto scheduleRequestDto) {
+
         consultationService.deleteSchedule(principalDetails, scheduleRequestDto);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -62,8 +65,10 @@ public class ConsultationController {
     @GetMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseListDto> getSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+
         ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentor(
                 principalDetails);
+
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
     }
 
@@ -74,6 +79,7 @@ public class ConsultationController {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
         ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentorId(mentorId);
+
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
     }
 
@@ -81,7 +87,8 @@ public class ConsultationController {
     @PutMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> confirmConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-    ) {
+            @PathVariable("consultation_id") Long consultationId) {
+
         ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -109,12 +116,14 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+
+
     //개인별 상담 내역조회
     @GetMapping("/member/consultation")
     public ResponseEntity<PageResponseDto<ConsultationResponseDto>> getConsultationOfUser(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @ModelAttribute ConsultationListRequestDto consultationListRequestDto
-    ) {
+            @ModelAttribute ConsultationListRequestDto consultationListRequestDto) {
+
         Page<Consultation> consultationPage = consultationService.getConsultationPage(
                 principalDetails, consultationListRequestDto);
         Page<ConsultationResponseDto> consultationResponseDtoPage = consultationPage.map(ConsultationResponseDto::new);
