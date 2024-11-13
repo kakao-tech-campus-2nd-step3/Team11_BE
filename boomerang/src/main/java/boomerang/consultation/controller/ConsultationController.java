@@ -8,6 +8,7 @@ import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.response.PageResponseDto;
+import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -87,35 +88,10 @@ public class ConsultationController {
                 .body(consultationResponseDto);
     }
 
-    //상담상태 변경
-    @PutMapping
-    public ResponseEntity<ConsultationResponseDto> changeConsultationStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                            @PathVariable("consultation_id") Long consultationId,
-                                                                            @RequestBody ConsultationStatus consultationStatus) {
-        if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() == null) {
-            throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
-        }
 
-        Consultation consultation = consultationService.validateConsultationExists(consultationId);
 
-        //현재상태가 확정전이며 변경하고자 하는 상태가 진행전이면 변경
-        if ((consultation.getConsultationStatus() == ConsultationStatus.RECEIVED) && (consultationStatus == ConsultationStatus.PENDING)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //현재상태가 진행전이며 변경하고자 하는 상태가 진행중이면 변경
-        else if ((consultation.getConsultationStatus() == ConsultationStatus.PENDING) && (consultationStatus == ConsultationStatus.ONGOING)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.startConsultationMentor(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //현재상태가 진행중이며 변경하고자 하는 상태가 상담완료이면 변경
-        else if ((consultation.getConsultationStatus() == ConsultationStatus.ONGOING) && (consultationStatus == ConsultationStatus.FINISHED)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.completeConsultation(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //단계를 건너뛰려고 하거나 확전전인데 다른 상태에서 이전단계로 돌아가려고 하면 에러
-        else
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_CHANGED);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     }
 

@@ -1,6 +1,7 @@
 package boomerang.consultation.service;
 
 import boomerang.consultation.domain.Consultation;
+import boomerang.consultation.domain.ConsultationStatus;
 import boomerang.consultation.domain.Schedule;
 import boomerang.consultation.dto.*;
 import boomerang.consultation.repository.ConsultationRepository;
@@ -73,75 +74,16 @@ public class ConsultationService {
         return new ConsultationResponseDto(consultation);
     }
 
-
-    public ConsultationResponseDto startConsultationMentor(PrincipalDetails principalDetails, Long consultationId) {
-        Mentor mentor = memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor();
         Consultation consultation = validateConsultationExists(consultationId);
 
-        if (!consultation.isNotMentor(mentor)) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
-        }
 
-        consultation.start();
-
-        Consultation savedConsultation = consultationRepository.save(consultation);
-        return new ConsultationResponseDto(savedConsultation);
     }
 
-    // 현재 시간이 상담 예약 시간에 도달한 경우 PENDING 상태를 ONGOING으로 업데이트
-    @Transactional
-    public void updatePendingToOngoing() {
-        LocalDateTime currentTime = LocalDateTime.now(); // 현재 시간 가져오기
-
-        // 예약 시간이 현재 시간과 일치하고 상태가 PENDING인 상담을 조회
-        List<Consultation> consultations = consultationRepository
-                .findPendingConsultationsForTime(currentTime);
-
-        // 각 상담 상태를 ONGOING으로 변경
-        for (Consultation consultation : consultations) {
-            consultation.start();
-        }
-
-        consultationRepository.saveAll(consultations); // 변경된 상담 상태 저장
-    }
-
-    //상담 진행 완료로 상태 변경
-    public ConsultationResponseDto completeConsultation(PrincipalDetails principalDetails, Long consultationId) {
-        Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Consultation consultation = validateConsultationExists(consultationId);
 
-        if (!consultation.isMentee(mentee)) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTEE);
-        }
-
-        if (consultation.isFinished()) {
-            throw new BusinessException(ErrorCode.CONSULTATION_ALREADY_FINISHED);
-        }
 
         consultation.complete();
-
-        Consultation savedConsultation = consultationRepository.save(consultation);
-        return new ConsultationResponseDto(savedConsultation);
     }
-
-    public ConsultationResponseDto getConsultationDetail(Long consultationId) {
-        Consultation consultation = validateConsultationExists(consultationId);
-        return new ConsultationResponseDto(consultation);
-    }
-
-
-
-    public ConsultationResponseListDto getConsultationOfMentor(Long mentorId, Pageable pageable) {
-        Mentor mentor = mentorService.getMentor(mentorId);
-        Page<ConsultationResponseDto> consultationResponsePage = consultationRepository.findAllByMentor(
-                mentor, pageable)
-            .map(ConsultationResponseDto::new);
-
-        return new ConsultationResponseListDto(consultationResponsePage);
-
-    }
-
-
 
     public void checkHour(int hour, List<Integer> hours) {
         if (hour < 0 || hour >= 24) {
@@ -153,11 +95,14 @@ public class ConsultationService {
     @Transactional
     public ScheduleResponseDto registerSchedule(PrincipalDetails principalDetails,
         ScheduleRequestDto scheduleRequestDto) {
+
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = member.getMentor();
+
         if (!mentor.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
         }
+
         List<ScheduleDayDto> dayList = new ArrayList<>();
         for (Map<String, List<Integer>> dateEntry : scheduleRequestDto.getDayList()){
             for (Map.Entry<String, List<Integer>> entry : dateEntry.entrySet()){
@@ -315,13 +260,33 @@ public class ConsultationService {
         }
     }
 
+    @Transactional
     public Page<Consultation> getConsultationPage(PrincipalDetails principalDetails,
                                                   ConsultationListRequestDto consultationListRequestDto) {
         PageRequest pageRequest = getConsultationPageRequest(consultationListRequestDto);
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
 
-        return consultationRepository.findAllByMember(
+        Page<Consultation> consultations = consultationRepository.findAllByMember(
                 member, consultationListRequestDto.getConsultation_status(), pageRequest);
+
+        // 현재 시간을 가져와 조회된 consultations의 상태를 확인 후 업데이트
+        LocalDateTime now = LocalDateTime.now();
+        consultations.forEach(consultation -> {
+            if (consultation.getConsultationDateTime().isBefore(now)
+                    && consultation.getConsultationStatus() == ConsultationStatus.RECEIVED) {
+                consultation.complete(); // 상태를 FINISHED으로 변경, 상담 시간이 되어도 확정되지 않으면 확정전 -> 상담완료
+            }
+            if (consultation.getConsultationDateTime().isBefore(now)
+                    && consultation.getConsultationStatus() == ConsultationStatus.PENDING) {
+                consultation.start(); // 상태를 ONGOING으로 변경, 확정된 상담이 신청 시간이 지나면 진행전 -> 진행중
+            }
+            if (consultation.getConsultationDateTime().plusHours(1).plusMinutes(30).isBefore(now)
+                    && consultation.getConsultationStatus() == ConsultationStatus.ONGOING) {
+                consultation.complete(); // 상태를 FINISHED으로 변경, 진행중인 상담이 상담시간보다 1시간 30분이 지나면 진행중 -> 상담완료
+            }
+        });
+
+        return consultations;
     }
 
     private PageRequest getConsultationPageRequest(ConsultationListRequestDto consultationListRequestDto) {
