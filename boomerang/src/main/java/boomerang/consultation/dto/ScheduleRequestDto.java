@@ -12,10 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ScheduleRequestDto {
-
-    private int month;
-    private List<Map<String, List<Integer>>> dayList;
-
-
+    private Map<String, List<Integer>> list; // LocalDate 문자열을 키로 사용
 }
 

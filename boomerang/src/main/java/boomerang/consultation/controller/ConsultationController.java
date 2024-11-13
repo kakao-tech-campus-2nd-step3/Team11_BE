@@ -60,24 +60,24 @@ public class ConsultationController {
 
     //일정 조회
     @GetMapping("/consultation/schedule")
-    public ResponseEntity<ScheduleResponseListDto> getSchedule(
+    public ResponseEntity<ScheduleResponseDto> getSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
 
-        ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentor(
+        ScheduleResponseDto scheduleResponseDto = consultationService.getScheduleByMentor(
                 principalDetails);
 
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
     //멘티가 멘토별 일정 조회
     @GetMapping("/consultation/schedule/{mentor_id}")
-    public ResponseEntity<ScheduleResponseListDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
+    public ResponseEntity<ScheduleResponseDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
         if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
-        ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentorId(mentorId);
+        ScheduleResponseDto scheduleResponseDto = consultationService.getScheduleByMentorId(mentorId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
     //상담 확정하기
