@@ -88,7 +88,13 @@ public class ConsultationController {
                 .body(consultationResponseDto);
     }
 
+    //상담 거절하기
+    @DeleteMapping("/consultation/{consultation_id}")
+    public ResponseEntity<Void> deleteConsultation(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable("consultation_id") Long consultationId) {
 
+        consultationService.deleteConsultation(principalDetails, consultationId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

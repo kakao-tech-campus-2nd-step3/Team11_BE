@@ -76,9 +76,14 @@ public class ConsultationService {
         return new ConsultationResponseDto(consultation);
     }
 
+    public void deleteConsultation(PrincipalDetails principalDetails, Long consultationId) {
         Consultation consultation = validateConsultationExists(consultationId);
+        consultation.validateReceived();
 
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        validateConsultationOwnership(member, consultation);
 
+        consultationRepository.delete(consultation);
     }
 
         Consultation consultation = validateConsultationExists(consultationId);
