@@ -31,10 +31,11 @@ public class ConsultationController {
     @PostMapping("/consultation")
     public ResponseEntity<ConsultationResponseDto> requestConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @Valid @RequestBody ConsultationRequestDto consultationRequestDto
-    ) {
-        consultationService.requestConsultation(principalDetails, consultationRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            @Valid @RequestBody ConsultationRequestDto consultationRequestDto) {
+
+        ConsultationResponseDto consultationResponseDto = consultationService.requestConsultation(principalDetails, consultationRequestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
     }
 
     //일정등록
@@ -80,7 +81,6 @@ public class ConsultationController {
     @PutMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> confirmConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable("consultation_id") Long consultationId
     ) {
         ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
 

@@ -39,7 +39,7 @@ public class ConsultationService {
     private final MentorService mentorService;
 
     @Transactional
-    public void requestConsultation(PrincipalDetails principalDetails,
+    public ConsultationResponseDto requestConsultation(PrincipalDetails principalDetails,
         ConsultationRequestDto consultationRequestDto) {
         Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         validateMentee(mentee);
@@ -59,6 +59,8 @@ public class ConsultationService {
 
         consultationRepository.save(consultation);
         scheduleRepository.save(schedule);
+
+        return new ConsultationResponseDto(consultation);
     }
 
     public ConsultationResponseDto confirmConsultation(PrincipalDetails principalDetails, Long consultationId) {
