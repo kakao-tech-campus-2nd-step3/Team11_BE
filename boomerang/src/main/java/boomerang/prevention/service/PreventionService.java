@@ -39,6 +39,8 @@ public class PreventionService {
             }
         }
 
+        prevention.calculateDanger();
+
         Prevention savedPrevention = preventionRepository.save(prevention);
         return new PreventionResponseDto(savedPrevention);
     }
