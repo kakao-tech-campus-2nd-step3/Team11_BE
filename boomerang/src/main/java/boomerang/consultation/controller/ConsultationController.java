@@ -99,6 +99,14 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    //상담 종료하기
+    @PutMapping("/consultation/finish/{consultation_id}")
+    public ResponseEntity<Void> finishConsultation(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable("consultation_id") Long consultationId) {
+
+        consultationService.finishConsultation(principalDetails, consultationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //개인별 상담 내역조회

@@ -86,10 +86,15 @@ public class ConsultationService {
         consultationRepository.delete(consultation);
     }
 
+    public void finishConsultation(PrincipalDetails principalDetails, Long consultationId) {
         Consultation consultation = validateConsultationExists(consultationId);
+        consultation.validateOngoing();
 
+        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        validateConsultationMember(member, consultation);
 
         consultation.complete();
+        consultationRepository.save(consultation);
     }
 
     public void checkHour(int hour, List<Integer> hours) {
@@ -253,6 +258,12 @@ public class ConsultationService {
         }
         if (consultation.isNotMentor(mentor.getMentor())) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
+        }
+    }
+
+    private void validateConsultationMember(Member member, Consultation consultation) {
+        if (consultation.isNotMentee(member) && consultation.isNotMentor(member.getMentor()) ) {
+            throw new BusinessException(ErrorCode.CONSULTATION_MEMBER_IS_NOT_PARTICIPANT);
         }
     }
 
