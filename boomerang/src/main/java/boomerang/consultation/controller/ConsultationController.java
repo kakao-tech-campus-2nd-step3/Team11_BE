@@ -1,19 +1,16 @@
 package boomerang.consultation.controller;
 
 import boomerang.consultation.domain.Consultation;
-import boomerang.consultation.domain.ConsultationStatus;
 import boomerang.consultation.dto.*;
 import boomerang.consultation.service.ConsultationService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.response.PageResponseDto;
-import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

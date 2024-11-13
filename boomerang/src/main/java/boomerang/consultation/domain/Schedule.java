@@ -4,7 +4,6 @@ import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.global.utils.BooleanListConverter;
 import boomerang.mentor.domain.Mentor;
-import boomerang.progress.util.StringListConverter;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
