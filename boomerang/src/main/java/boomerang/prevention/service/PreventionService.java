@@ -9,6 +9,8 @@ import boomerang.prevention.dto.MortgageRequestDto;
 import boomerang.prevention.dto.PreventionRequestDto;
 import boomerang.prevention.dto.PreventionResponseDto;
 import boomerang.prevention.repository.PreventionRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +26,6 @@ public class PreventionService {
     public PreventionResponseDto savePrevention(String memberEmail,
         PreventionRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(memberEmail);
-
-        // 기존 예방 설문 결과 존재 여부 유효성 검사
-        if (preventionRepository.existsByMember(member)) {
-            throw new BusinessException(ErrorCode.PREVENTION_ALREADY_EXISTS);
-        }
 
         Prevention prevention = new Prevention(member, requestDto);
 
@@ -47,10 +44,24 @@ public class PreventionService {
     }
 
     @Transactional(readOnly = true)
-    public PreventionResponseDto getPrevention(String memberEmail) {
+    public List<PreventionResponseDto> getPreventions(String memberEmail) {
         Member member = memberService.getMemberByEmail(memberEmail);
 
-        Prevention prevention = preventionRepository.findByMember(member)
+        List<Prevention> preventions = preventionRepository.findAllByMemberOrderByIdDesc(member);
+
+        if (preventions.isEmpty()) {
+            throw new BusinessException(ErrorCode.PREVENTION_NOT_FOUND);
+        }
+
+        return preventions.stream()
+            .map(PreventionResponseDto::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PreventionResponseDto getPreventionsByAddress(String memberEmail, String address) {
+        Member member = memberService.getMemberByEmail(memberEmail);
+        Prevention prevention = preventionRepository.findTopByMemberAndAddressOrderByIdDesc(member, address)
             .orElseThrow(() -> new BusinessException(ErrorCode.PREVENTION_NOT_FOUND));
 
         return new PreventionResponseDto(prevention);
