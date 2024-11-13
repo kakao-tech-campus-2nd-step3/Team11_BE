@@ -19,7 +19,7 @@ public class BoardResponseDto {
     public BoardResponseDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
-        this.summary = board.getSummery();
+        this.summary = board.getSummary();
         this.writerNickname = board.getWriterNickname();
         this.likeCount = board.getLikeCount();
         this.commentCount = board.getCommentCount();
