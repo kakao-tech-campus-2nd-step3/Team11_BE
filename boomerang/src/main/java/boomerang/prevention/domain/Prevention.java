@@ -49,6 +49,10 @@ public class Prevention {
     @Column(nullable = false)
     private Long totalMortgageAmount = 0L;
 
+    // 위험 여부
+    @Column(nullable = false)
+    private Boolean isDangerous;
+
     // 채권
     @OneToMany(mappedBy = "prevention", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Mortgage> mortgages = new ArrayList<>();
@@ -58,11 +62,17 @@ public class Prevention {
         this.address = requestDto.getAddress();
         this.housePrice = requestDto.getHousePrice();
         this.depositAmount = requestDto.getDepositAmount();
+        this.isDangerous = false;
     }
 
     public void addMortgage(Long amount, String creditor, LocalDate registrationDate) {
         Mortgage mortgage = new Mortgage(amount, creditor, registrationDate, this);
         this.mortgages.add(mortgage);
         this.totalMortgageAmount += amount;
+    }
+
+    public void calculateDanger() {
+        // (house_price * 0.8) - total_mortgage_amount - deposit_amount > 0
+        this.isDangerous = (this.housePrice * 0.8) - this.totalMortgageAmount - this.depositAmount <= 0;
     }
 }

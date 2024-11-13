@@ -96,7 +96,6 @@ public enum ErrorCode {
 
     // Prevention
     PREVENTION_NOT_FOUND(HttpStatus.NOT_FOUND, "PV001", "예방 설문 결과를 찾을 수 없습니다."),
-    PREVENTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "PV002", "이미 예방 설문 결과가 존재합니다."),
 
     ;
 
