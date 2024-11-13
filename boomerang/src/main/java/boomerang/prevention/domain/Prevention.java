@@ -2,12 +2,9 @@ package boomerang.prevention.domain;
 
 import boomerang.member.domain.Member;
 import boomerang.prevention.dto.PreventionRequestDto;
-import boomerang.prevention.enums.ContractType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,26 +45,9 @@ public class Prevention {
     @Column(nullable = false)
     private Long depositAmount;
 
-    // 계약 유형 (전세, 월세)
-    @Enumerated(EnumType.STRING)
+    // 채권 총액
     @Column(nullable = false)
-    private ContractType contractType;
-
-    // 계약 날짜
-    @Column(nullable = false)
-    private LocalDate contractDate;
-
-    // 경매 날짜
-    @Column
-    private LocalDate auctionStartDate;
-
-    // 임차권 날짜
-    @Column
-    private LocalDate leaseRegistrationDate;
-
-    // 임차권 금액
-    @Column
-    private Long leaseRegistrationAmount;
+    private Long totalMortgageAmount = 0L;
 
     // 채권
     @OneToMany(mappedBy = "prevention", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -78,15 +58,11 @@ public class Prevention {
         this.address = requestDto.getAddress();
         this.housePrice = requestDto.getHousePrice();
         this.depositAmount = requestDto.getDepositAmount();
-        this.contractType = requestDto.getContractType();
-        this.contractDate = requestDto.getContractDate();
-        this.auctionStartDate = requestDto.getAuctionStartDate();
-        this.leaseRegistrationDate = requestDto.getLeaseRegistrationDate();
-        this.leaseRegistrationAmount = requestDto.getLeaseRegistrationAmount();
     }
 
     public void addMortgage(Long amount, String creditor, LocalDate registrationDate) {
         Mortgage mortgage = new Mortgage(amount, creditor, registrationDate, this);
         this.mortgages.add(mortgage);
+        this.totalMortgageAmount += amount;
     }
 }

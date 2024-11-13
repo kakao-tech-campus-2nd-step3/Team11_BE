@@ -1,6 +1,5 @@
 package boomerang.prevention.dto;
 
-import boomerang.prevention.enums.ContractType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.Valid;
@@ -8,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,19 +29,6 @@ public class PreventionRequestDto {
     @NotNull(message = "보증금은 필수 입력값입니다")
     @Positive(message = "보증금은 0보다 커야 합니다")
     private Long depositAmount;
-
-    @NotNull(message = "계약 유형은 필수 입력값입니다")
-    private ContractType contractType;
-
-    @NotNull(message = "계약 날짜는 필수 입력값입니다")
-    private LocalDate contractDate;
-
-    private LocalDate auctionStartDate;
-
-    private LocalDate leaseRegistrationDate;
-
-    @Positive(message = "임차권 등기 금액은 0보다 커야 합니다")
-    private Long leaseRegistrationAmount;
 
     @Valid
     private List<MortgageRequestDto> mortgages;
