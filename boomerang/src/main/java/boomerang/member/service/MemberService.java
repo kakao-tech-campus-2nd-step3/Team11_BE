@@ -104,7 +104,6 @@ public class MemberService {
         return member;
     }
 
-    @Transactional
     public Member updateProfileImage(String email, MultipartFile image) {
         log.info("Starting profile image update for email: {}", email);
 
