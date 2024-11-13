@@ -8,6 +8,7 @@ import boomerang.kakao.domain.KakaoMember;
 import boomerang.kakao.domain.KakaoProfile;
 import boomerang.kakao.dto.KakaoTokenDto;
 import boomerang.kakao.dto.KakaoTokenResponseDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
+@Slf4j
 @Service
 public class KakaoService {
 
@@ -63,13 +65,12 @@ public class KakaoService {
                 toEntity(KakaoProfile.class).getBody();
         } catch (HttpClientErrorException e) {
             // 카카오 API에서 반환한 상태 코드와 응답 본문을 출력
-            System.out.println("HTTP Status Code: " + e.getStatusCode());
-            System.out.println("Error Response Body: " + e.getResponseBodyAsString());
+            log.error("HTTP Status Code: " + e.getStatusCode());
+            log.error("Error Response Body: " + e.getResponseBodyAsString());
             throw new KakaoException(e.getStatusCode(), e.getResponseBodyAsString());
         }
 
-        KakaoMember kakaoMember = new KakaoMember(kakaoProfile);
-        return kakaoMember;
+        return new KakaoMember(kakaoProfile);
 
     }
 }
