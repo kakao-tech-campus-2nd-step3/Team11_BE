@@ -46,6 +46,10 @@ public class Mentor {
 
     private String contact;
 
+    private Long score = 0L;
+
+    private Long replyCount = 0L;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
