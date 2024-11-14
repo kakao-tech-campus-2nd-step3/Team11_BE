@@ -1,8 +1,8 @@
 package boomerang.chat.controller;
 
 import boomerang.chat.domain.ChatMessage;
-import boomerang.chat.domain.ChatRoom;
-import boomerang.chat.dto.*;
+import boomerang.chat.dto.ChatMessageListRequestDto;
+import boomerang.chat.dto.ChatMessageResponseDto;
 import boomerang.chat.service.ChatRoomService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.oauth.dto.PrincipalDetails;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 // 채팅방은 상담이 Ongoing 으로 바뀔 때, 자동으로 생성된다
@@ -59,17 +58,6 @@ public class ChatRoomController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponseDto<>(chatMessageResponseDtoPage));
-    }
-
-    @GetMapping("/rooms/page")
-    public String getChatRoomsPage(Model model) {
-        return "chat_rooms";
-    }
-
-    @GetMapping("/room/{roomId}")
-    public String getChatRoomPage(@PathVariable Long roomId, Model model) {
-        model.addAttribute("roomId", roomId);
-        return "chat_room";
     }
 
     @ExceptionHandler(BusinessException.class)
