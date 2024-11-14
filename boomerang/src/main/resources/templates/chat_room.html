@@ -2,70 +2,163 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Chat Room</title>
+  <title>상담 채팅</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <style>
+    .mentor-profile-image, .mentee-profile-image {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .message-box {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .message-content {
+      padding: 10px;
+      border-radius: 15px;
+      max-width: 70%;
+    }
+    .mentor-message .message-content {
+      background-color: #e0f7fa;
+      align-self: flex-start;
+    }
+    .mentee-message .message-content {
+      background-color: #f8bbd0;
+      align-self: flex-end;
+    }
+    #codeDisplay {
+      display: none;
+      background: #f8f9fa;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-<div th:replace="layout :: header"></div>
 <div class="container mt-4">
-  <h1>Chat Room</h1>
+  <!-- Show Code and Copy Code buttons -->
+  <button class="btn btn-info mb-2" onclick="toggleCode()">Show Code</button>
+  <button class="btn btn-secondary mb-2" onclick="copyCode()">Copy Code</button>
+
+  <!-- Code Display Area -->
+  <pre id="codeDisplay"></pre>
+
+  <h1>상담 채팅</h1>
+
+  <!-- Token 입력 -->
   <div class="mb-3">
-    <input type="text" id="authToken" class="form-control" placeholder="Enter your token">
-    <button class="btn btn-secondary mt-2" onclick="initializeChat()">Enter Chat Room</button>
+    <input type="text" id="authToken" class="form-control" placeholder="토큰을 입력하세요">
+    <button class="btn btn-secondary mt-2" onclick="initializeChat()">채팅방 입장</button>
   </div>
+
+  <!-- 상담 정보 -->
+  <div id="consultationInfo" class="mb-4">
+    <!-- 상담 정보가 동적으로 로드됩니다 -->
+  </div>
+
+  <!-- 채팅 메시지 영역 -->
   <div id="messageArea" class="border p-3" style="height: 400px; overflow-y: scroll;">
     <!-- Messages will appear here -->
   </div>
+
+  <!-- 메시지 입력 -->
   <div class="input-group mt-3">
-    <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
-    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+    <input type="text" id="messageInput" class="form-control" placeholder="메시지를 입력하세요">
+    <button class="btn btn-primary" onclick="sendMessage()">전송</button>
   </div>
 </div>
 
 <script th:inline="javascript">
   let socket;
-  let isSocketInitialized = false; // WebSocket 초기화 여부 확인
+  let isSocketInitialized = false;
+  let isMentor = false; // 서버에서 받아오는 isMentor 값
+  let lastSender = null; // 마지막 메시지의 보낸 사람
+  let mentorProfileImage = "";
+  let menteeProfileImage = "";
   const roomId = /*[[${roomId}]]*/ 1;
 
   function initializeChat() {
     const token = $('#authToken').val();
     if (token) {
-      if (!isSocketInitialized) { // 이미 WebSocket이 연결된 상태인지 확인
-        loadChatMessages(token);
+      if (!isSocketInitialized) {
+        loadChatRoomInfo(token);
         connectWebSocket(token);
-        isSocketInitialized = true; // WebSocket이 초기화되었음을 표시
+        isSocketInitialized = true;
       } else {
         console.log("WebSocket is already initialized.");
       }
     } else {
-      alert("Please enter your token.");
+      alert("토큰을 입력하세요.");
     }
   }
 
-  function loadChatMessages(token) {
-    const page = 0;
-    const size = 1000;
-
+  function loadChatRoomInfo(token) {
     $.ajax({
-      url: `/api/v1/chat/${roomId}/messages?page=${page}&size=${size}`,
+      url: `/api/v1/chat/${roomId}`,
       type: "GET",
       beforeSend: function(xhr) {
         xhr.setRequestHeader("Authorization", token);
       },
-      success: function (data) {
-        $('#messageArea').empty();
-        data.content.forEach(function (message) {
-          $('#messageArea').append(
-                  `<div><strong>${message.nickname}</strong> [${new Date(message.createdAt).toLocaleString()}]: ${message.message}</div>`
-          );
-        });
-        $('#messageArea').scrollTop($('#messageArea')[0].scrollHeight);
+      success: function(data) {
+        isMentor = data.mentor;
+        mentorProfileImage = data.mentorProfileImage;
+        menteeProfileImage = data.menteeProfileImage;
+        displayConsultationInfo(data.consultationResponseDto);
+        displayChatMessages(data.chatMessageResponseDtoPage.content);
       },
       error: function() {
-        alert("Failed to load messages. Please check the token or server status.");
+        alert("Failed to load chat room information.");
       }
     });
+  }
+
+  function displayConsultationInfo(consultation) {
+    $('#consultationInfo').html(`
+      <div class="card">
+        <div class="card-body">
+          <h5>신청된 상담 정보</h5>
+          <p><strong>상담 일자:</strong> ${consultation.consultation_date_time}</p>
+          <p><strong>멘토명:</strong> ${consultation.mentor_nick_name}</p>
+          <p><strong>고객명:</strong> ${consultation.mentee_nick_name}</p>
+          <p><strong>신청 내용:</strong> ${consultation.content}</p>
+        </div>
+      </div>
+    `);
+  }
+
+  function displayChatMessages(messages) {
+    $('#messageArea').empty();
+    messages.forEach(function (message) {
+      displayMessage(message.nickname, message.message);
+    });
+  }
+
+  function displayMessage(nickname, messageContent) {
+    const isSenderMentor = nickname === "aaa"; // 예시로 멘토의 닉네임을 "aaa"로 가정
+    const messageClass = isSenderMentor ? "mentor-message" : "mentee-message";
+    const profileImage = isSenderMentor ? mentorProfileImage : menteeProfileImage;
+
+    let profileHtml = "";
+    if (lastSender !== nickname) {
+      profileHtml = `<img src="${profileImage}" class="mentor-profile-image" alt="Profile">`;
+    }
+
+    $('#messageArea').append(`
+      <div class="message-box ${messageClass}">
+        ${profileHtml}
+        <div class="message-content">${JSON.parse(messageContent).message}</div>
+      </div>
+    `);
+    $('#messageArea').scrollTop($('#messageArea')[0].scrollHeight);
+
+    lastSender = nickname; // 마지막 보낸 사람 업데이트
   }
 
   function connectWebSocket(token) {
@@ -73,15 +166,12 @@
 
     socket.onmessage = function (event) {
       const message = JSON.parse(event.data);
-      $('#messageArea').append(
-              `<div><strong>${message.senderNickname}</strong> [${new Date(message.createdAt).toLocaleString()}]: ${message.message}</div>`
-      );
-      $('#messageArea').scrollTop($('#messageArea')[0].scrollHeight);
+      displayMessage(message.senderNickname, message.message);
     };
 
     socket.onclose = function () {
-      alert("Disconnected from chat room.");
-      isSocketInitialized = false; // 연결이 끊어지면 다시 초기화 가능하도록 설정
+      alert("채팅방 연결이 끊어졌습니다.");
+      isSocketInitialized = false;
     };
   }
 
@@ -92,16 +182,32 @@
       socket.send(JSON.stringify(message));
       $('#messageInput').val('');
     } else {
-      alert("Please enter a message.");
+      alert("메시지를 입력하세요.");
     }
   }
 
-  // Enter 키로 메시지 전송 기능 추가
+  function toggleCode() {
+    const codeDisplay = document.getElementById("codeDisplay");
+    if (codeDisplay.style.display === "none") {
+      codeDisplay.style.display = "block";
+      codeDisplay.textContent = document.documentElement.outerHTML;
+    } else {
+      codeDisplay.style.display = "none";
+    }
+  }
+
+  function copyCode() {
+    const codeText = document.documentElement.outerHTML;
+    navigator.clipboard.writeText(codeText).then(() => {
+      alert("코드가 복사되었습니다.");
+    });
+  }
+
   $(document).ready(function() {
     $('#messageInput').on('keydown', function(event) {
       if (event.key === 'Enter') {
         sendMessage();
-        event.preventDefault(); // 기본 Enter 키 동작 방지
+        event.preventDefault();
       }
     });
   });

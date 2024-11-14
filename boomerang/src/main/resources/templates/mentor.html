@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentor List</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <style>
+    .mentor-profile-image {
+      width: var(--image-width, 100px);
+      height: var(--image-height, 100px);
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="layout :: header"></div>
+<div class="container mt-4">
+
+  <!-- Show Code 버튼 -->
+  <button class="btn btn-info mb-2" onclick="toggleCode()">Show Code</button>
+  <button class="btn btn-secondary mb-2" onclick="copyCode()">Copy Code</button>
+
+  <!-- 코드 표시 영역 -->
+  <pre id="codeDisplay" style="display: none; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">
+    <!-- 코드 내용이 여기에 표시됩니다 -->
+  </pre>
+
+  <h1>Mentor List</h1>
+
+  <!-- 추천 멘토 목록 -->
+  <h2>Recommended Mentors</h2>
+  <div class="row" id="recommendedMentors">
+    <!-- 추천 멘토 목록이 동적으로 로드됩니다 -->
+  </div>
+
+  <!-- 전문가 멘토 목록 -->
+  <h2>Expert Mentors</h2>
+  <div class="row" id="expertMentors">
+    <!-- 전문가 멘토 목록이 동적으로 로드됩니다 -->
+  </div>
+
+  <!-- 일반 멘토 목록 -->
+  <h2>Normal Mentors</h2>
+  <div class="row" id="normalMentors">
+    <!-- 일반 멘토 목록이 동적으로 로드됩니다 -->
+  </div>
+
+  <!-- 전체 멘토 목록 (페이지네이션 지원) -->
+  <h2>All Mentors</h2>
+  <div class="row" id="allMentors">
+    <!-- 전체 멘토 목록이 동적으로 로드됩니다 -->
+  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination" id="pagination">
+      <!-- 페이지네이션 버튼이 동적으로 생성됩니다 -->
+    </ul>
+  </nav>
+</div>
+
+<script>
+  function loadMentorInitial(
+          recommendedSize = 8,
+          recommendedExpertSize = 4,
+          recommendedNormalSize = 4,
+          pageSize = 10
+  ) {
+    $.ajax({
+      url: `/api/v1/mentor/initial`,
+      type: "GET",
+      data: {
+        recommended_size: recommendedSize,
+        recommended_expert_size: recommendedExpertSize,
+        recommended_normal_size: recommendedNormalSize,
+        size: pageSize
+      },
+      success: function (data) {
+        $('#recommendedMentors').empty();
+        data.recommendedMentors.forEach(mentor => {
+          $('#recommendedMentors').append(createMentorCard(mentor));
+        });
+
+        $('#expertMentors').empty();
+        data.expertMentors.forEach(mentor => {
+          $('#expertMentors').append(createMentorCard(mentor));
+        });
+
+        $('#normalMentors').empty();
+        data.normalMentors.forEach(mentor => {
+          $('#normalMentors').append(createMentorCard(mentor));
+        });
+
+        $('#allMentors').empty();
+        data.mentors.content.forEach(mentor => {
+          $('#allMentors').append(createMentorCard(mentor));
+        });
+        setupPagination(data.mentors);
+      },
+      error: function() {
+        alert("Failed to load mentors. Please check the server status.");
+      }
+    });
+  }
+
+  function createMentorCard(mentor) {
+    return `
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body text-center">
+            <img src="${mentor.profile_image}" alt="Profile Image" class="mentor-profile-image">
+            <h5 class="card-title">${mentor.nickname}</h5>
+            <p><strong>Mentor Type:</strong> ${mentor.mentor_type}</p>
+            <p><strong>Career:</strong> ${mentor.career}</p>
+            <p><strong>Introduction:</strong> ${mentor.introduce}</p>
+            <p><strong>Contact:</strong> ${mentor.contact}</p>
+            <p><strong>Advertisement:</strong> ${mentor.advertisement_status ? "Enabled" : "Disabled"}</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function setupPagination(pageData) {
+    $('#pagination').empty();
+
+    for (let i = 0; i < pageData.totalPages; i++) {
+      $('#pagination').append(
+              `<li class="page-item ${i === pageData.number ? 'active' : ''}">
+          <a class="page-link" href="javascript:void(0)" onclick="loadMentorInitial(8, 4, 4, 10, ${i})">${i + 1}</a>
+        </li>`
+      );
+    }
+  }
+
+  function toggleCode() {
+    const codeDisplay = document.getElementById("codeDisplay");
+    if (codeDisplay.style.display === "none") {
+      codeDisplay.style.display = "block";
+      showCode();
+    } else {
+      codeDisplay.style.display = "none";
+    }
+  }
+
+  function showCode() {
+    const codeDisplay = document.getElementById("codeDisplay");
+    fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+              codeDisplay.textContent = html;
+            });
+  }
+
+  function copyCode() {
+    const codeText = document.documentElement.outerHTML;
+    navigator.clipboard.writeText(codeText).then(() => {
+      alert("코드가 복사되었습니다.");
+    });
+  }
+
+  $(document).ready(function() {
+    loadMentorInitial();
+  });
+</script>
+</body>
+</html>

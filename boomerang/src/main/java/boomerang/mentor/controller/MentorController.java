@@ -50,8 +50,11 @@ public class MentorController {
     public ResponseEntity<MentorResponseDto> createMentor(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @Valid @RequestBody MentorCreateRequestDto mentorCreateRequestDto) {
+
+
         MentorResponseDto mentorResponseDto = mentorService.createMentor(
             principalDetails.getMemberEmail(), mentorCreateRequestDto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(mentorResponseDto);
     }
 
