@@ -32,7 +32,7 @@ public class WebSocketEventListener {
         if (userFirstConnectionMap.putIfAbsent(memberEmail, true) == null) {
             log.info("첫 WebSocket 연결 발생 - 사용자 ID: {}", memberEmail);
             // 첫 연결 시에만 처리할 작업 추가
-            notificationService.sendUnreadNotificationsOfMember(memberEmail);
+            notificationService.sendNotificationsOfMember(memberEmail);
         }
     }
 

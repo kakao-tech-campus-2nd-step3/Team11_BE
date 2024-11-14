@@ -55,7 +55,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void sendUnreadNotificationsOfMember(String memberEmail) {
+    public void sendNotificationsOfMember(String memberEmail) {
         Member member = memberService.getMemberByEmail(memberEmail);
 
         boolean isUserConnected = userRegistry.getUsers().stream()
@@ -65,13 +65,15 @@ public class NotificationService {
 
         log.info("{} 사용자의 연결 여부: {}", member.getEmail(), isUserConnected);
 
-        notificationRepository.findByMemberAndIsReadFalse(member).forEach(
-                notification ->
-                {
-                    System.out.println("notification.getId() = " + notification.getId());
-                    sendMessage(notification);
-                    notification.markAsRead();
-                });
+        notificationRepository.findTop10ByMemberOrderByIdDesc(member)
+                .reversed()  // 스트림으로 변환
+                .forEach(
+                        notification ->
+                        {
+                            System.out.println("notification.getId() = " + notification.getId());
+                            sendMessage(notification);
+                            notification.markAsRead();
+                        });
 
     }
 
