@@ -5,11 +5,9 @@ import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.utils.ResponseHelper;
 import boomerang.member.domain.Member;
-import boomerang.member.dto.MemberCreateRequestDto;
-import boomerang.member.dto.MemberLoginDto;
-import boomerang.member.dto.MemberResponseDto;
-import boomerang.member.dto.NicknameUpdateRequestDto;
-import boomerang.member.dto.RandomNicknameCreateResponseDTO;
+import boomerang.member.domain.MemberRole;
+import boomerang.member.domain.MemberType;
+import boomerang.member.dto.*;
 import boomerang.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +45,14 @@ public class MemberController {
         Member member = memberService.getMember(id);
         return ResponseEntity.status(HttpStatus.OK)
             .body(member);
+    }
+
+    @GetMapping("/type")
+    public ResponseEntity<MemberRoleDto> getMemberType(
+            @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        MemberRole memberRole = memberService.getMemberRole(principalDetails.getMemberEmail());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new MemberRoleDto(memberRole));
     }
 
     // 시큐리티 필터 테스트 컨트롤러
