@@ -20,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+// 채팅방은 상담이 Ongoing 으로 바뀔 때, 자동으로 생성된다
+// ConsultationStatusScheduler 참고
 @Slf4j
 @Controller
 @RequestMapping("/api/v1/chat")
@@ -44,18 +46,6 @@ public class ChatRoomController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponseDto<>(chatRoomResponseDtoPage));
-    }
-
-    @PostMapping("")
-    public ResponseEntity<Void> createChatRoom(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody ChatRoomRequestDto chatRoomRequestDto
-    ) {
-        Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Member mentor = memberService.getMemberByEmail(chatRoomRequestDto.getMentorEmail());
-
-        chatRoomService.createChatRoom(chatRoomRequestDto, mentor, mentee);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{roomId}")

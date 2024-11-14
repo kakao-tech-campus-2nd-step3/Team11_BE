@@ -4,7 +4,6 @@ import boomerang.chat.domain.ChatMessage;
 import boomerang.chat.domain.ChatRoom;
 import boomerang.chat.dto.ChatMessageListRequestDto;
 import boomerang.chat.dto.ChatRoomListRequestDto;
-import boomerang.chat.dto.ChatRoomRequestDto;
 import boomerang.chat.repository.ChatMessageRepository;
 import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
@@ -23,12 +22,6 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
-
-    public ChatRoom createChatRoom(ChatRoomRequestDto chatRoomRequestDto, Member mentor, Member mentee) {
-        ChatRoom chatRoom = new ChatRoom(mentor, mentee);
-
-        return chatRoomRepository.save(chatRoom);
-    }
 
     public Page<ChatRoom> getAllChatRooms(ChatRoomListRequestDto chatRoomListRequestDto, Member member) {
         PageRequest pageRequest = getChatRoomPageRequest(chatRoomListRequestDto);
