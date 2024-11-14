@@ -39,5 +39,13 @@ public class SubStepInfo {
     @Convert(converter = StringListConverter.class)
     @Column(length = 2000)
     private List<String> inputs = new ArrayList<>();
+
+    public SubStepInfo(Long id, SubStepEnum subStepEnum, String subStepName, String content, List<String> inputs) {
+        this.id = id;
+        this.subStepEnum = subStepEnum;
+        this.subStepName = subStepName;
+        this.content = content;
+        this.inputs = inputs;
+    }
 }
 

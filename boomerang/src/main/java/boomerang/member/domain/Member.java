@@ -122,6 +122,10 @@ public class Member {
         this.memberRole = MemberRole.COMPLETE_USER;
     }
 
+    public void registerMentor(Mentor mentor) {
+        this.mentor = mentor;
+    }
+
     public void verifyEmail() {
         this.emailVerified = true;
     }

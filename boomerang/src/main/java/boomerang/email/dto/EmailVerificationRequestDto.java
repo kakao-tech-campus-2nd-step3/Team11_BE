@@ -18,4 +18,9 @@ public class EmailVerificationRequestDto {
 
     @NotBlank(message = "인증 코드는 필수입니다")
     private String verificationCode;
+
+    public EmailVerificationRequestDto(String email, String verificationCode) {
+        this.email = email;
+        this.verificationCode = verificationCode;
+    }
 }
