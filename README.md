@@ -124,6 +124,19 @@ FE
 ![시스템 아키텍처](boomerang/src/main/resources/static/esset/architecture.png)
 + ERD
 
+## 문서화 자료
+- 회의 자료
+    - [CustomRepository 사용](docs/discussion_notes/CustomRepository 사용.md)
+    - [DB 운영 방식 결정](docs/discussion_notes/DB 운영 방식 결정.md)
+    - [Embedded 사용 방식](docs/discussion_notes/Embedded 사용 방식.md)
+    - [개발이 되지 않은 Entity를 사용하여 개발하여아 하는 경우 개발 방식 결정](docs/discussion_notes/개발이 되지 않은 Entity를 사용하여 개발하여아 하는 경우 개발 방식 결정.md)
+    - [게시판 URL에 슬러그 사용](docs/discussion_notes/게시판 URL에 슬러그 사용.md)
+    - [도메인 변환 메서드 통일](docs/discussion_notes/도메인 변환 메서드 통일.md)
+- 멘토링 자료
+    - [3주차_멘토링](docs/mentoring/3주차_멘토링.md)
+    - [8주차_멘토링](docs/mentoring/8주차_멘토링.md)
+    - [11주차_멘토링](docs/mentoring/11주차_멘토링.md)
+
 ## 팀원 소개
 <div align="center">
  <table>
@@ -147,11 +160,6 @@ FE
    </tr>
  </table>
 </div>
-
-## 문서화 자료
-- 회의 자료
-
-- 멘토링 자료
 
 ## 기간
 25 Aug 2024 ~ 15 Nov 2024
