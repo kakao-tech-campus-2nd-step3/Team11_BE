@@ -129,4 +129,15 @@ public class ConsultationController {
                 .body(new PageResponseDto<>(consultationResponseDtoPage));
     }
 
+    //멘티가 상담 별점 입력하기
+    @PostMapping("/consultation/{consultation_id}")
+    public ResponseEntity<ConsultationResponseDto> inputRating(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @RequestBody RatingRequestDto ratingRequestDto,
+            @PathVariable("consultation_id") Long consultationId) {
+
+        ConsultationResponseDto consultationResponseDto = consultationService.enterRating(principalDetails,
+                ratingRequestDto, consultationId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
+    }
 }

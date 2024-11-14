@@ -49,6 +49,10 @@ public class Consultation {
 
     private String content;
 
+    private int rating;
+
+    private String review;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -121,8 +125,10 @@ public class Consultation {
         return this.consultationStatus.equals(ConsultationStatus.PENDING);
     }
 
-    public boolean isFinished() {
-        return this.consultationStatus.equals(ConsultationStatus.FINISHED);
+    public void isFinished() {
+        if (!this.consultationStatus.equals(ConsultationStatus.FINISHED)) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_CHANGED);
+        }
     }
 
     public void makeSchedule(LocalDateTime localDateTime) {
@@ -134,6 +140,11 @@ public class Consultation {
         if (!this.mentee.equals(member) && !this.mentor.getMember().equals(member)) {
             throw new BusinessException(ErrorCode.CONSULTATION_MEMBER_IS_NOT_PARTICIPANT);
         }
+    }
+
+    public void inputRating(int rating, String review) {
+        this.rating = rating;
+        this.review = review;
     }
 }
 
