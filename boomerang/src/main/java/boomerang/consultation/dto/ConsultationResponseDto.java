@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 public class ConsultationResponseDto {
 
     private Long id;
-    private String mentorNickName;                      //멤토닉네임
-    private String menteeNickName;                      //멘티닉네임
+    private String mentorNickName;
+    private String menteeNickName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH")
-    private LocalDateTime consultationDateTime;                 //상담일정
-    private ConsultationStatus consultationStatus;      //상담상태
+    private LocalDateTime consultationDateTime;
+    private ConsultationStatus consultationStatus;
     private String title;
     private String content;
 

@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/ui")
 public class UiController {
 
+    @GetMapping
+    public String getHome(Model model) {
+        return "home";
+    }
+
     @GetMapping("/mentor")
     public String getMentor(Model model) {
         return "mentor";
-    }
-
-    @GetMapping("/rooms/page")
-    public String getChatRoomsPage(Model model) {
-        return "chat_rooms";
     }
 
     @GetMapping("/room/{roomId}")

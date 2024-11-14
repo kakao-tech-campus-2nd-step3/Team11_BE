@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Home - Chat Application</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<div th:replace="layout :: header"></div>
+<div class="container mt-4">
+  <h2>Welcome to the Chat Application</h2>
+  <p>Choose a page to navigate:</p>
+  <ul>
+    <li><a href="/ui/mentor">Mentor Page</a></li>
+    <li>
+      <form id="chatRoomForm" onsubmit="goToChatRoom(); return false;">
+        <label for="roomIdInput">Enter Chat Room ID:</label>
+        <input type="number" id="roomIdInput" class="form-control mb-2" placeholder="Chat Room ID" required>
+        <button type="submit" class="btn btn-primary">Go to Chat Room</button>
+      </form>
+    </li>
+  </ul>
+</div>
+<div th:replace="layout :: footer"></div>
+
+<script>
+  function goToChatRoom() {
+    const roomId = document.getElementById('roomIdInput').value;
+    if (roomId) {
+      window.location.href = `/ui/room/${roomId}`;
+    } else {
+      alert("Please enter a valid Chat Room ID.");
+    }
+  }
+</script>
+</body>
+</html>
