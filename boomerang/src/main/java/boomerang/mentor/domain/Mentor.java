@@ -95,6 +95,10 @@ public class Mentor {
         this.nickname = nickname;
     }
 
+    public void increaseReplyCount() {
+        this.replyCount += 1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
