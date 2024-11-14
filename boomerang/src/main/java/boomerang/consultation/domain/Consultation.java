@@ -1,5 +1,7 @@
 package boomerang.consultation.domain;
 
+import boomerang.global.exception.BusinessException;
+import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.mentor.domain.Mentor;
 import jakarta.persistence.Entity;
@@ -11,7 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,11 +43,11 @@ public class Consultation {
     @Enumerated(EnumType.STRING)
     private ConsultationStatus consultationStatus;
 
-    private LocalDate consultationDate;
+    private LocalDateTime consultationDateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    private String title;
+
+    private String content;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -53,11 +55,13 @@ public class Consultation {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public Consultation(Member mentee, Mentor mentor, Schedule schedule) {
+    public Consultation(Member mentee, Mentor mentor, LocalDateTime consultationDateTime, String title, String content) {
         this.mentee = mentee;
         this.mentor = mentor;
-        this.schedule = schedule;
-        this.consultationStatus = ConsultationStatus.PENDING;
+        this.consultationDateTime = consultationDateTime;
+        this.title = title;
+        this.content = content;
+        this.consultationStatus = ConsultationStatus.RECEIVED;
     }
 
     public long getMentorId() {
@@ -76,20 +80,60 @@ public class Consultation {
         return this.mentee.getId();
     }
 
-    public boolean isMentor(Mentor mentor) {
-        return this.mentor.equals(mentor);
+    public boolean isNotMentor(Mentor mentor) {
+        return !this.mentor.equals(mentor);
     }
 
-    public boolean isMentee(Member mentee) {
-        return this.mentee.equals(mentee);
+    public boolean isNotMentee(Member mentee) {
+        return !this.mentee.equals(mentee);
+    }
+
+    public void validateOnGoing() {
+        if (this.consultationStatus != ConsultationStatus.ONGOING)
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_ONGOING);
+    }
+
+    public void confirm() {
+        this.consultationStatus = ConsultationStatus.PENDING;
+    }
+
+    public void start() {
+        this.consultationStatus = ConsultationStatus.ONGOING;
     }
 
     public void complete() {
         this.consultationStatus = ConsultationStatus.FINISHED;
     }
 
+    public void validateReceived() {
+        if (this.consultationStatus != ConsultationStatus.RECEIVED) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_RECEIVED);
+        }
+    }
+
+    public void validateOngoing() {
+        if (this.consultationStatus != ConsultationStatus.ONGOING) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_ONGOING);
+        }
+    }
+
+    public boolean isConfirmed() {
+        return this.consultationStatus.equals(ConsultationStatus.PENDING);
+    }
+
     public boolean isFinished() {
         return this.consultationStatus.equals(ConsultationStatus.FINISHED);
+    }
+
+    public void makeSchedule(LocalDateTime localDateTime) {
+        this.consultationDateTime = localDateTime;
+    }
+
+    // 해당 멤버가 상담에 속한 멤버인지 검증
+    public void validateMemberIsParticipant(Member member) {
+        if (!this.mentee.equals(member) && !this.mentor.getMember().equals(member)) {
+            throw new BusinessException(ErrorCode.CONSULTATION_MEMBER_IS_NOT_PARTICIPANT);
+        }
     }
 }
 

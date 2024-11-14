@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Chat Rooms</title>
-  <link rel="stylesheet"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
@@ -12,9 +11,13 @@
 <div th:replace="layout :: header"></div>
 <div class="container mt-4">
   <h1>Chat Rooms</h1>
+  <div class="mb-3">
+    <input type="text" id="authToken" class="form-control" placeholder="Enter your token">
+  </div>
   <div class="mb-4">
-    <input type="text" id="newRoomName" class="form-control" placeholder="Enter chat room name">
+    <input type="text" id="mentorEmail" class="form-control mt-2" placeholder="Enter mentor's email">
     <button class="btn btn-primary mt-2" onclick="createChatRoom()">Create Chat Room</button>
+    <button class="btn btn-secondary mt-2" onclick="loadChatRooms()">Find Chat Rooms</button>
   </div>
   <h3>Available Chat Rooms</h3>
   <ul class="list-group" id="chatRoomList">
@@ -23,38 +26,62 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        loadChatRooms();
-    });
+  function loadChatRooms() {
+    const token = $('#authToken').val();
+    const page = 0; // 페이지 번호 (필요시 수정 가능)
+    const size = 1000; // 페이지 크기 (필요시 수정 가능)
 
-    function loadChatRooms() {
-        $.get("/api/v1/chat/rooms", function (data) {
-            $('#chatRoomList').empty();
-            data.forEach(function (room) {
-                $('#chatRoomList').append(
-                    '<li class="list-group-item"><a href="/api/v1/chat/room/' + room.id + '">'
-                    + room.name + '</a></li>');
-            });
+    $.ajax({
+      url: `/api/v1/chat?page=${page}&size=${size}`, // GET 요청으로 page와 size를 쿼리 파라미터로 전달
+      type: "GET",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("Authorization", token);
+      },
+      success: function (data) {
+        $('#chatRoomList').empty();
+        data.content.forEach(function (room) {  // PageResponseDto의 content에 접근
+          $('#chatRoomList').append(
+                  `<li class="list-group-item">
+              <a href="/api/v1/chat/room/${room.id}" class="stretched-link">
+                <div><strong>Room ID:</strong> ${room.id}</div>
+                <div><strong>Mentor:</strong> ${room.mentor ? room.mentor.name : "N/A"} (${room.mentor ? room.mentor.email : "N/A"})</div>
+                <div><strong>Mentee:</strong> ${room.mentee ? room.mentee.name : "N/A"} (${room.mentee ? room.mentee.email : "N/A"})</div>
+              </a>
+            </li>`
+          );
         });
-    }
+      },
+      error: function() {
+        alert("Failed to load chat rooms. Please check the token or server status.");
+      }
+    });
+  }
 
-    function createChatRoom() {
-        const roomName = $('#newRoomName').val();
-        if (roomName) {
-            $.ajax({
-                url: '/api/v1/chat/room',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({name: roomName}),
-                success: function () {
-                    loadChatRooms();
-                    $('#newRoomName').val('');
-                }
-            });
-        } else {
-            alert("Please enter a room name.");
+  function createChatRoom() {
+    const mentorEmail = $('#mentorEmail').val();
+    const token = $('#authToken').val();
+
+    if (mentorEmail && token) {
+      $.ajax({
+        url: '/api/v1/chat',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ mentor_email: mentorEmail }),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("Authorization", token);
+        },
+        success: function () {
+          loadChatRooms();
+          $('#mentorEmail').val('');
+        },
+        error: function() {
+          alert("Failed to create chat room. Please check the input values or server status.");
         }
+      });
+    } else {
+      alert("Please enter mentor's email and your token.");
     }
+  }
 </script>
 </body>
 </html>

@@ -8,10 +8,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
-
-    Optional<Schedule> findByDate(LocalDate date);
-
-    Optional<Schedule> findByMentorAndDate(Mentor mentor, LocalDate date);
-
+    Optional<Schedule> findByMentorAndLocalDate(Mentor mentor, LocalDate localDate);
     List<Schedule> findAllByMentor(Mentor mentor);
 }
