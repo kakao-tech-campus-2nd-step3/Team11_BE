@@ -133,7 +133,7 @@ public class ConsultationController {
     @PostMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> inputRating(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @RequestBody RatingRequestDto ratingRequestDto,
+            @Valid @RequestBody RatingRequestDto ratingRequestDto,
             @PathVariable("consultation_id") Long consultationId) {
 
         ConsultationResponseDto consultationResponseDto = consultationService.enterRating(principalDetails,
