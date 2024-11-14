@@ -1,4 +1,7 @@
-## Boomerang
+![Boomerang](boomerang/src/main/resources/static/esset/footer.png)
+# Boomerang
+
+---
 
 ## 프로젝트 소개
 **부메랑**은 전세 사기 피해자들을 위한 **전세 사기 대처 웹 플랫폼**입니다.
