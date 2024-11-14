@@ -114,8 +114,8 @@ public class MemberController {
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @RequestParam(value = "image", required = true) MultipartFile image) {
 
-        Member updatedMember = memberService.updateProfileImage(principalDetails.getMemberEmail(),
-            image);
+        Member updatedMember =
+                memberService.updateProfileImage(principalDetails.getMemberEmail(), image);
 
         return ResponseEntity.ok(new MemberResponseDto(updatedMember));
     }

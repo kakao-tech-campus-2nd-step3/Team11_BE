@@ -120,6 +120,10 @@ public class MemberService {
 
             member.updateProfileImage(imageUrl.toString());
 
+            if (member.isMentor()) {
+                member.getMentor().updateProfileImage(imageUrl.toString());
+            }
+
             return member;
         } catch (Exception e) {
             log.error("Error during image upload/update process", e);

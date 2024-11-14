@@ -38,6 +38,8 @@ public class Mentor {
     @Enumerated(EnumType.STRING)
     private MentorType mentorType;
 
+    private String profileImage;
+
     private String career;
 
     private String introduce;
@@ -73,12 +75,17 @@ public class Mentor {
     public Mentor(MentorType mentorType, String career, String introduce,
         Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
+        this.profileImage = member.getProfileImage();
         this.career = career;
         this.introduce = introduce;
         this.advertisementStatus = advertisementStatus;
         this.member = member;
         this.contact = contact;
-        this.isDeleted = false;  // 기본값으로 false 설정
+        this.isDeleted = false;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     @Override
