@@ -61,7 +61,7 @@ public class KakaoController {
         Member member = memberService.loginKakaoMember(kakaoMember);
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
         response.addHeader(Authorization, token);
-        System.out.println("member = " + member);
+        log.info("member = {}", member);
         return ResponseEntity.status(HttpStatus.OK)
             .body(new MemberLoginDto(member));
     }

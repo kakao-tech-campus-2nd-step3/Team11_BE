@@ -5,6 +5,7 @@ import boomerang.board.dto.BoardBestListRequestDto;
 import boomerang.board.dto.BoardListRequestDto;
 import boomerang.board.dto.BoardRequestDto;
 import boomerang.board.repository.BoardRepository;
+import boomerang.board.util.ContentImageProcessor;
 import boomerang.file.service.FileService;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
@@ -61,7 +62,7 @@ public class BoardService {
         // S3에 이미지 업로드 및 URL 리스트 생성
         List<URL> imageUrls = uploadImages(member, images);
 
-        insertImageUrlsIntoContent(boardRequestDto, imageUrls);
+        ContentImageProcessor.insertImageUrlsIntoContent(boardRequestDto, imageUrls);
 
         Board board = new Board(boardRequestDto, member);
 
@@ -74,7 +75,7 @@ public class BoardService {
         // S3에 이미지 업로드 및 URL 리스트 생성
         List<URL> imageUrls = uploadImages(member, images);
 
-        insertImageUrlsIntoContent(boardRequestDto, imageUrls);
+        ContentImageProcessor.insertImageUrlsIntoContent(boardRequestDto, imageUrls);
 
         Board board = new Board(id, boardRequestDto, member);
         validateBoardOwnership(board.getMember(), board.getId());
@@ -122,40 +123,6 @@ public class BoardService {
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.S3_UPLOAD_ERROR);
         }
-    }
-
-    private void insertImageUrlsIntoContent(BoardRequestDto boardRequestDto, List<URL> imageUrls) {
-        String content = boardRequestDto.getContent();
-
-        // content 내의 이미지 태그 개수 계산
-        int contentImageCount = countImagePlaceholders(content);
-        int providedImageCount = imageUrls.size();
-
-        // 이미지 태그 개수와 실제 이미지 개수가 불일치하면 에러 발생
-        if (contentImageCount != providedImageCount) {
-            throw new BusinessException(ErrorCode.IMAGE_COUNT_MISMATCH_ERROR);
-        }
-
-        // <img src=?> 부분을 imageUrls의 URL로 순서대로 대체
-        for (URL imageUrl : imageUrls) {
-            content = content.replaceFirst("<img src=\\? />",
-                "<img src='" + imageUrl.toString() + "' />");
-        }
-
-        boardRequestDto.setContent(content);
-    }
-
-    private int countImagePlaceholders(String content) {
-        int count = 0;
-        int index = 0;
-
-        // "<img src=? />" 패턴을 찾아서 카운트
-        while ((index = content.indexOf("<img src=? />", index)) != -1) {
-            count++;
-            index += "<img src=? />".length();
-        }
-
-        return count;
     }
 }
 

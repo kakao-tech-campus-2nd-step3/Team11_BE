@@ -1,7 +1,6 @@
 package boomerang.consultation.controller;
 
 import boomerang.consultation.domain.Consultation;
-import boomerang.consultation.domain.ConsultationStatus;
 import boomerang.consultation.dto.*;
 import boomerang.consultation.service.ConsultationService;
 import boomerang.global.exception.BusinessException;
@@ -12,7 +11,6 @@ import boomerang.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,10 +28,11 @@ public class ConsultationController {
     @PostMapping("/consultation")
     public ResponseEntity<ConsultationResponseDto> requestConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @Valid @RequestBody ConsultationRequestDto consultationRequestDto
-    ) {
-        consultationService.requestConsultation(principalDetails, consultationRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+            @Valid @RequestBody ConsultationRequestDto consultationRequestDto) {
+
+        ConsultationResponseDto consultationResponseDto = consultationService.requestConsultation(principalDetails, consultationRequestDto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
     }
 
     //일정등록
@@ -41,6 +40,7 @@ public class ConsultationController {
     public ResponseEntity<ScheduleResponseDto> registerSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ScheduleRequestDto scheduleRequestDto) {
+
         ScheduleResponseDto scheduleResponseDto = consultationService.registerSchedule(
                 principalDetails, scheduleRequestDto);
 
@@ -52,79 +52,75 @@ public class ConsultationController {
     public ResponseEntity<Void> deleteSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
             @RequestBody ScheduleRequestDto scheduleRequestDto) {
+
         consultationService.deleteSchedule(principalDetails, scheduleRequestDto);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //일정 조회
     @GetMapping("/consultation/schedule")
-    public ResponseEntity<ScheduleResponseListDto> getSchedule(
+    public ResponseEntity<ScheduleResponseDto> getSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentor(
+
+        ScheduleResponseDto scheduleResponseDto = consultationService.getScheduleByMentor(
                 principalDetails);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
     //멘티가 멘토별 일정 조회
     @GetMapping("/consultation/schedule/{mentor_id}")
-    public ResponseEntity<ScheduleResponseListDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
+    public ResponseEntity<ScheduleResponseDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
         if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
             throw new BusinessException(ErrorCode.MENTOR_ALREADY_EXISTS);
         }
-        ScheduleResponseListDto scheduleResponseListDto = consultationService.getScheduleByMentorId(mentorId);
-        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseListDto);
+        ScheduleResponseDto scheduleResponseDto = consultationService.getScheduleByMentorId(mentorId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
     //상담 확정하기
     @PutMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> confirmConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @PathVariable("consultation_id") Long consultationId
-    ) {
+            @PathVariable("consultation_id") Long consultationId) {
+
         ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(consultationResponseDto);
     }
 
-    //상담상태 변경
-    @PutMapping
-    public ResponseEntity<ConsultationResponseDto> changeConsultationStatus(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                                            @PathVariable("consultation_id") Long consultationId,
-                                                                            @RequestBody ConsultationStatus consultationStatus) {
-        if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() == null) {
-            throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
-        }
+    //상담 거절하기
+    @DeleteMapping("/consultation/{consultation_id}")
+    public ResponseEntity<Void> deleteConsultation(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable("consultation_id") Long consultationId) {
 
-        Consultation consultation = consultationService.validateConsultationExists(consultationId);
+        consultationService.deleteConsultation(principalDetails, consultationId);
 
-        //현재상태가 확정전이며 변경하고자 하는 상태가 진행전이면 변경
-        if ((consultation.getConsultationStatus() == ConsultationStatus.RECEIVED) && (consultationStatus == ConsultationStatus.PENDING)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.confirmConsultation(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //현재상태가 진행전이며 변경하고자 하는 상태가 진행중이면 변경
-        else if ((consultation.getConsultationStatus() == ConsultationStatus.PENDING) && (consultationStatus == ConsultationStatus.ONGOING)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.startConsultationMentor(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //현재상태가 진행중이며 변경하고자 하는 상태가 상담완료이면 변경
-        else if ((consultation.getConsultationStatus() == ConsultationStatus.ONGOING) && (consultationStatus == ConsultationStatus.FINISHED)) {
-            ConsultationResponseDto consultationResponseDto = consultationService.completeConsultation(principalDetails, consultationId);
-            return ResponseEntity.status(HttpStatus.OK).body(consultationResponseDto);
-        }
-        //단계를 건너뛰려고 하거나 확전전인데 다른 상태에서 이전단계로 돌아가려고 하면 에러
-        else
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_CHANGED);
-
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    //상담 종료하기
+    @PutMapping("/consultation/finish/{consultation_id}")
+    public ResponseEntity<Void> finishConsultation(
+            @AuthenticationPrincipal PrincipalDetails principalDetails,
+            @PathVariable("consultation_id") Long consultationId) {
+
+        consultationService.finishConsultation(principalDetails, consultationId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
 
     //개인별 상담 내역조회
     @GetMapping("/member/consultation")
     public ResponseEntity<PageResponseDto<ConsultationResponseDto>> getConsultationOfUser(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @ModelAttribute ConsultationListRequestDto consultationListRequestDto
-    ) {
+            @ModelAttribute ConsultationListRequestDto consultationListRequestDto) {
+
         Page<Consultation> consultationPage = consultationService.getConsultationPage(
                 principalDetails, consultationListRequestDto);
         Page<ConsultationResponseDto> consultationResponseDtoPage = consultationPage.map(ConsultationResponseDto::new);

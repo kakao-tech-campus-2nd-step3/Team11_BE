@@ -84,8 +84,8 @@ public class Consultation {
         return !this.mentor.equals(mentor);
     }
 
-    public boolean isMentee(Member mentee) {
-        return this.mentee.equals(mentee);
+    public boolean isNotMentee(Member mentee) {
+        return !this.mentee.equals(mentee);
     }
 
     public void validateOnGoing() {
@@ -108,6 +108,12 @@ public class Consultation {
     public void validateReceived() {
         if (this.consultationStatus != ConsultationStatus.RECEIVED) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_RECEIVED);
+        }
+    }
+
+    public void validateOngoing() {
+        if (this.consultationStatus != ConsultationStatus.ONGOING) {
+            throw new BusinessException(ErrorCode.CONSULTATION_NOT_ONGOING);
         }
     }
 
