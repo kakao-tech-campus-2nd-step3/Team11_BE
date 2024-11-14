@@ -38,7 +38,8 @@ public class ConsultationStatusScheduler {
     private void updateConsultationStatus(List<Consultation> consultations) {
 
         // 현재 시간을 가져와 조회된 consultations의 상태를 확인 후 업데이트
-        LocalDateTime now = LocalDateTime.now();
+        // 오차를 생각해서 현재 시간에 1분을 더함
+        LocalDateTime now = LocalDateTime.now().plusMinutes(1);
 
         consultations.forEach(consultation -> {
             // 상태를 FINISHED으로 변경, 상담 시간이 되어도 확정되지 않으면 확정전 -> 상담완료
