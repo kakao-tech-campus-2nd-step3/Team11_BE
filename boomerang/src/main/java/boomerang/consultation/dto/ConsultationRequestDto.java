@@ -20,4 +20,11 @@ public class ConsultationRequestDto {
     LocalDateTime consultationDateTime;
     String title;
     String content;
+
+    public ConsultationRequestDto(Long mentorId, LocalDateTime consultationDateTime, String title, String content) {
+        this.mentorId = mentorId;
+        this.consultationDateTime = consultationDateTime;
+        this.title = title;
+        this.content = content;
+    }
 }

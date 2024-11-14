@@ -137,9 +137,13 @@ public class Consultation {
         }
     }
 
+    public void setStatus(ConsultationStatus consultationStatus) {
+        this.consultationStatus = consultationStatus;
+
     public void inputRating(int rating, String review) {
         this.rating = rating;
         this.review = review;
+
     }
 }
 

@@ -20,5 +20,12 @@ public class CommentListRequestDto {
 
     public CommentListRequestDto() {
     }
+
+    public CommentListRequestDto(int page, int size, Sort.Direction sortDirection, String sortBy) {
+        this.page = page;
+        this.size = size;
+        this.sortDirection = sortDirection;
+        this.sortBy = sortBy;
+    }
 }
 
