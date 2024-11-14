@@ -14,4 +14,9 @@ public class ProgressTypeRequestDto {
 
     private Boolean isInsured;                  //보험 가입 여부
     private LeaseTypeEnum leaseType;        //계약 종류
+
+    public ProgressTypeRequestDto(Boolean isInsured, LeaseTypeEnum leaseType) {
+        this.isInsured = isInsured;
+        this.leaseType = leaseType;
+    }
 }
