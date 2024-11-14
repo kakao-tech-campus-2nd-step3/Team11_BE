@@ -150,4 +150,8 @@ public class Member {
     public int hashCode() {
         return Objects.hash(id, email);
     }
+
+    public void changeMentor() {
+        this.memberRole = MemberRole.MENTOR;
+    }
 }

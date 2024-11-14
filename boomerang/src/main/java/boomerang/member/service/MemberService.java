@@ -6,16 +6,19 @@ import boomerang.global.response.ErrorCode;
 import boomerang.global.utils.JwtUtil;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
+import boomerang.member.domain.MemberRole;
+import boomerang.member.domain.MemberType;
 import boomerang.member.domain.RandomNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
 import boomerang.member.repository.MemberRepository;
-import java.net.URL;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URL;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,7 +30,7 @@ public class MemberService {
     private final FileService fileService;
 
     public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil,
-        RandomNickname randomNicknameGenerator, FileService fileService) {
+                         RandomNickname randomNicknameGenerator, FileService fileService) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.randomNicknameGenerator = randomNicknameGenerator;
@@ -40,13 +43,13 @@ public class MemberService {
 
     public Member getMember(Long id) {
         return memberRepository.findById(id)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
 
     public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
     }
 
     public String createMember(MemberServiceDto memberCreateServiceDto) {
@@ -57,28 +60,17 @@ public class MemberService {
     public Member loginKakaoMember(KakaoMember kakaoMember) {
         String email = kakaoMember.email(); //카카오에서 받은 이메일을 emailString으로 저장
         return memberRepository.findByEmail(email)
-            .orElseGet(() -> memberRepository.save(new Member(kakaoMember)));
+                .orElseGet(() -> memberRepository.save(new Member(kakaoMember)));
     }
 
     public String loginMember(MemberServiceDto memberCreateServiceDto) {
         String email = memberCreateServiceDto.getEmail();
         String nickName = memberCreateServiceDto.getNickname();
         Member member = memberRepository.findByEmailAndNickname(email, nickName)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
         return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
-//    안쓰는 로직 : 팀원들과 상의 후 삭제 예정
-//    public Member updateMember(Long id,MemberCreateRequestDto memberCreateRequestDTO) {
-//        Member member = getMember(id);
-//        member.update(memberCreateRequestDTO);
-//        return memberRepository.save(member);
-//    }
-//
-//    public void deleteMember(Long id) {
-//        validateMemberExists(id);
-//        memberRepository.deleteById(id);
-//    }
 
     private void validateMemberExists(Long id) {
         if (!memberRepository.existsById(id)) {
@@ -90,6 +82,11 @@ public class MemberService {
     public String generateUniqueNickname() {
         // 기본 랜덤 닉네임 생성
         return randomNicknameGenerator.generateRandomNickname();
+    }
+
+    public MemberRole getMemberRole(String email) {
+        Member member = getMemberByEmail(email);
+        return member.getMemberRole();
     }
 
     @Transactional
@@ -114,11 +111,11 @@ public class MemberService {
         log.info("Starting profile image update for email: {}", email);
 
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MEMBER_NON_EXISTENT));
 
         try {
             log.info("Attempting to upload image. Original filename: {}",
-                image.getOriginalFilename());
+                    image.getOriginalFilename());
 
             // S3에 이미지 업로드
             URL imageUrl = fileService.upload(email, image);
@@ -136,4 +133,5 @@ public class MemberService {
             throw new BusinessException(ErrorCode.S3_UPLOAD_ERROR);
         }
     }
+
 }

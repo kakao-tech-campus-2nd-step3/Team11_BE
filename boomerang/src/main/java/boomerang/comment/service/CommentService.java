@@ -11,12 +11,17 @@ import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
+import boomerang.notifications.handler.NotificationUtil;
+import boomerang.notifications.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -25,8 +30,8 @@ public class CommentService {
     private final BoardService boardService;
     private final MemberService memberService;
     private final CommentFilter commentFilter;
+    private final NotificationService notificationService;
 
-    //댓글 생성
     public Comment createComment(String email, Long boardId, CommentRequestDto commentRequestDto) {
         Board board = boardService.getBoard(boardId);
         board.increaseCommentCount();
@@ -35,21 +40,27 @@ public class CommentService {
         String filteredText = validateCommentText(commentRequestDto.getText());
 
         CommentRequestDto filteredCommentRequestDto = new CommentRequestDto(filteredText);
-        return commentRepository.save(new Comment(author, board, filteredCommentRequestDto));
+
+        Comment comment = commentRepository.save(new Comment(author, board, filteredCommentRequestDto));
+
+        Member targetMember = comment.getBoard().getMember();
+        String boardTitle = comment.getBoard().getTitle();
+        String commentAuthorName = comment.getAuthorName();
+
+        log.info("댓글 정보: {} {} {}", targetMember, boardTitle, commentAuthorName);
+        notificationService.sendToSpecificUser(NotificationUtil.createNotificationFromComment(targetMember,boardTitle,commentAuthorName));
+        return comment;
     }
 
-    //댓글 조회
     public Page<Comment> getAllComment(Long boardId, CommentListRequestDto commentListRequestDto) {
 
         PageRequest pageRequest = getPageRequest(commentListRequestDto);
         Page<Comment> commentPage = commentRepository.findAllByBoardId(pageRequest, boardId);
 
-        //페이지 만들어서 제공
         return commentPage;
     }
 
 
-    //댓글 삭제 (논리)
     public void deleteComment(String email, Long commentId) {
         Comment comment = getComment(commentId);
 
@@ -57,7 +68,6 @@ public class CommentService {
             throw new BusinessException(ErrorCode.COMMENT_FORBIDDEN);
         }
 
-        //논리삭제
         comment.getBoard().decreaseCommentCount();
         comment.softDelete();
 
@@ -65,7 +75,6 @@ public class CommentService {
     }
 
 
-    //댓글 수정
     public Comment updateComment(String email, Long commentId,
         CommentRequestDto commentRequestDto) {
         Comment comment = getComment(commentId);
@@ -93,14 +102,11 @@ public class CommentService {
         );
     }
 
-    //
     private String validateCommentText(String text) {
-        //전화번호를 포함하고 있는 지를 검사
         if (commentFilter.containsPhoneNumber(text)) {
             throw new BusinessException(ErrorCode.COMMENT_CONTAINS_PHONE_NUMBER);
         }
 
-        //욕설을 포함한 경우 필터링
         return commentFilter.filterAndReplaceProfanity(text);
     }
 

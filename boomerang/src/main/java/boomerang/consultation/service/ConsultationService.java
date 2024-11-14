@@ -280,6 +280,19 @@ public class ConsultationService {
         return consultations;
     }
 
+    public ConsultationResponseDto enterRating(PrincipalDetails principalDetails, RatingRequestDto ratingRequestDto,
+                                               Long consultationId) {
+        Member mentee = memberService.getMemberByEmail(principalDetails.getMemberEmail());
+        Consultation consultation = consultationRepository.findById(consultationId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CONSULTATION_NOT_FOUND_ERROR));
+        consultation.isFinished();
+        consultation.validateMemberIsParticipant(mentee);
+        consultation.inputRating(ratingRequestDto.getRating(), ratingRequestDto.getReview());
+        consultationRepository.save(consultation);
+
+        return new ConsultationResponseDto(consultation);
+    }
+
     private PageRequest getConsultationPageRequest(ConsultationListRequestDto consultationListRequestDto) {
         return PageRequest.of(
                 consultationListRequestDto.getPage(),

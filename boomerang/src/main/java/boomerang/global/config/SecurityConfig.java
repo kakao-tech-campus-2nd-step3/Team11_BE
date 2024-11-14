@@ -49,11 +49,11 @@ public class SecurityConfig {
 
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        // 8080 추가
                         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173",
-                            "http://localhost:8080"));        //3000 허용
-                        configuration.setAllowedMethods(Collections.singletonList(
-                            "*"));                            //모든 HTTP 메서드 허용
+                            "http://localhost:8080","http://54.252.224.76:80","http://54.252.224.76"));        //3000 허용
+
+                      configuration.setAllowedMethods(Collections.singletonList(
+                            "*"));                          //모든 HTTP 메서드 허용
                         configuration.setAllowCredentials(
                             true);                                                    //쿠키 사용
                         configuration.setAllowedHeaders(Collections.singletonList(

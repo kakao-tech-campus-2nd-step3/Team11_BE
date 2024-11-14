@@ -10,7 +10,9 @@ import boomerang.mentor.domain.MentorType;
 import boomerang.mentor.dto.*;
 import boomerang.mentor.repository.MentorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,6 +84,7 @@ public class MentorService {
     @Transactional
     public MentorResponseDto createMentor(String email, MentorCreateRequestDto requestDto) {
         Member member = memberService.getMemberByEmail(email);
+        member.changeMentor();
 
         if (!member.isEmailVerified()) {
             throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
