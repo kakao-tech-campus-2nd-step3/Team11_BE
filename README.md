@@ -127,7 +127,8 @@
 ## 🏗 프로젝트 구조
 ### 시스템 아키텍쳐
 ![시스템 아키텍처](boomerang/src/main/resources/static/esset/architecture.png)
-+ ERD
+![ERD](https://github.com/user-attachments/assets/e1cac376-f090-4240-8f2a-c66d6dcd70fe)
+
 
 ## 🌐 배포된 인스턴스 주소
 - BE: http://52.79.80.3:8080
