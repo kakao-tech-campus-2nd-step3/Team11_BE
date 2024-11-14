@@ -17,19 +17,18 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final MemberService memberService;
 
-    @ResponseBody
-    @PostMapping("/message")
-    public void sendMessage(@RequestBody String massage) {
-        Member member = memberService.getMember(15L);
-        NotificationDto notificationDto = new NotificationDto(member, NotificationType.COMMENT, massage);
-        notificationService.sendOrSaveNotification(notificationDto);
-    }
-
-    @GetMapping("/massage")
-    public String sendMessage() {
-        return "notification.html";
-    }
-
-
+//    @ResponseBody
+//    @PostMapping("/message")
+//    public void sendMessage(@RequestBody String message) {
+//        Member member = memberService.getMember(15L);
+//        NotificationDto notificationDto = new NotificationDto(member, NotificationType.COMMENT, message);
+//        notificationService.sendToSpecificUser(notificationDto);
+//        notificationService.sendBroadcast(message);
+//    }
+//
+//    @GetMapping("/message")
+//    public String getNotificationPage() {
+//        return "notification.html";
+//    }
 
 }

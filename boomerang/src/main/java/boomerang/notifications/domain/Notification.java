@@ -25,7 +25,7 @@ public class Notification {
 
     private String messageContent;
 
-    private Boolean isRead = false;
+    private Boolean isRead;
 
 
     public Notification(NotificationDto notificationDto) {

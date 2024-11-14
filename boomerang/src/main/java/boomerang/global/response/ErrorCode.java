@@ -99,6 +99,7 @@ public enum ErrorCode {
 
     //NOTIFICATION
     NOTIFICATION_USER_SESSION_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT01", "해당 알림을 보낼 유저가 세션에 저장되어있지 않습니다."),
+    NOTIFICATION_JWT_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT02", "웹 소켓 통신을 위한 jwt 토큰이 비어있습니다."),
     ;
 
     private final HttpStatus status;
