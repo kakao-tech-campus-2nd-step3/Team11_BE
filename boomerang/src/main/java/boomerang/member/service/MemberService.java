@@ -6,6 +6,8 @@ import boomerang.global.response.ErrorCode;
 import boomerang.global.utils.JwtUtil;
 import boomerang.kakao.domain.KakaoMember;
 import boomerang.member.domain.Member;
+import boomerang.member.domain.MemberRole;
+import boomerang.member.domain.MemberType;
 import boomerang.member.domain.RandomNickname;
 import boomerang.member.dto.MemberServiceDto;
 import boomerang.member.exception.MemberNotFoundException;
@@ -69,6 +71,7 @@ public class MemberService {
         return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 
+
     private void validateMemberExists(Long id) {
         if (!memberRepository.existsById(id)) {
             throw new MemberNotFoundException();
@@ -79,6 +82,11 @@ public class MemberService {
     public String generateUniqueNickname() {
         // 기본 랜덤 닉네임 생성
         return randomNicknameGenerator.generateRandomNickname();
+    }
+
+    public MemberRole getMemberRole(String email) {
+        Member member = getMemberByEmail(email);
+        return member.getMemberRole();
     }
 
     @Transactional
@@ -125,4 +133,5 @@ public class MemberService {
             throw new BusinessException(ErrorCode.S3_UPLOAD_ERROR);
         }
     }
+
 }

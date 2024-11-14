@@ -25,6 +25,8 @@ public class ConsultationResponseDto {
     private ConsultationStatus consultationStatus;
     private String title;
     private String content;
+    private int rating;
+    private String review;
 
     public ConsultationResponseDto(Consultation consultation) {
         this.id = consultation.getId();
@@ -34,6 +36,8 @@ public class ConsultationResponseDto {
         this.consultationStatus = consultation.getConsultationStatus();
         this.title = consultation.getTitle();
         this.content = consultation.getContent();
+        this.rating = consultation.getRating();
+        this.review = consultation.getReview();
     }
 }
 
