@@ -88,11 +88,6 @@ public class Consultation {
         return !this.mentee.equals(mentee);
     }
 
-    public void validateOnGoing() {
-        if (this.consultationStatus != ConsultationStatus.ONGOING)
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_ONGOING);
-    }
-
     public void confirm() {
         this.consultationStatus = ConsultationStatus.PENDING;
     }
@@ -111,7 +106,7 @@ public class Consultation {
         }
     }
 
-    public void validateOngoing() {
+    public void validateOnGoing() {
         if (this.consultationStatus != ConsultationStatus.ONGOING) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_ONGOING);
         }

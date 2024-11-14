@@ -1,6 +1,8 @@
 package boomerang.global.handler;
 
 import boomerang.chat.service.ChatRoomService;
+import boomerang.consultation.domain.Consultation;
+import boomerang.consultation.service.ConsultationService;
 import boomerang.global.utils.JwtUtil;
 import boomerang.member.domain.Member;
 import boomerang.member.service.MemberService;
@@ -13,11 +15,13 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
     private final JwtUtil jwtUtil;
     private final MemberService memberService;
     private final ChatRoomService chatRoomService;
+    private final ConsultationService consultationService;
 
-    public WebSocketHandshakeInterceptor(JwtUtil jwtUtil, MemberService memberService, ChatRoomService chatRoomService) {
+    public WebSocketHandshakeInterceptor(JwtUtil jwtUtil, MemberService memberService, ChatRoomService chatRoomService, ConsultationService consultationService) {
         this.jwtUtil = jwtUtil;
         this.memberService = memberService;
         this.chatRoomService = chatRoomService;
+        this.consultationService = consultationService;
     }
 
     @Override
@@ -46,6 +50,10 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
         // URI에서 roomId를 추출
         Long roomId = getRoomIdFromRequest(request);
 
+        // 진행중인 상담인지 체크
+        Consultation consultation = consultationService.validateConsultationExists(roomId);
+        consultation.validateOnGoing();
+
         // 채팅방 소유자 검증
         chatRoomService.validateChatRoomOwnership(roomId, member);
 
@@ -68,9 +76,10 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
         return query != null && query.startsWith("token=") ? query.split("=")[1] : null;
     }
 
+    // /ws/chat/1
     private Long getRoomIdFromRequest(org.springframework.http.server.ServerHttpRequest request) {
         String path = request.getURI().getPath();
-        String roomIdStr = path.split("/")[3]; // 예: /ws/chat/1
+        String roomIdStr = path.split("/")[3];
         return Long.parseLong(roomIdStr);
     }
 }

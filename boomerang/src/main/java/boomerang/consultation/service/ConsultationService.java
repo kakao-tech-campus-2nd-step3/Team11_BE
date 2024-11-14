@@ -85,7 +85,7 @@ public class ConsultationService {
 
     public void finishConsultation(PrincipalDetails principalDetails, Long consultationId) {
         Consultation consultation = validateConsultationExists(consultationId);
-        consultation.validateOngoing();
+        consultation.validateOnGoing();
 
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         validateConsultationMember(member, consultation);
