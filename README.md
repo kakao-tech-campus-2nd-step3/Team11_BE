@@ -126,12 +126,12 @@ FE
 
 ## 문서화 자료
 - 회의 자료
-    - [CustomRepository 사용](docs/discussion_notes/CustomRepository 사용.md)
-    - [DB 운영 방식 결정](docs/discussion_notes/DB 운영 방식 결정.md)
-    - [Embedded 사용 방식](docs/discussion_notes/Embedded 사용 방식.md)
-    - [개발이 되지 않은 Entity를 사용하여 개발하여아 하는 경우 개발 방식 결정](docs/discussion_notes/개발이 되지 않은 Entity를 사용하여 개발하여아 하는 경우 개발 방식 결정.md)
-    - [게시판 URL에 슬러그 사용](docs/discussion_notes/게시판 URL에 슬러그 사용.md)
-    - [도메인 변환 메서드 통일](docs/discussion_notes/도메인 변환 메서드 통일.md)
+    - [CustomRepository 사용](docs/discussion_notes/CustomRepository%20사용.md)
+    - [DB 운영 방식 결정](docs/discussion_notes/DB%20운영%20방식%20결정.md)
+    - [Embedded 사용 방식](docs/discussion_notes/Embedded%20사용%20방식.md)
+    - [개발이 되지 않은 Entity를 사용하여 개발하여아 하는 경우 개발 방식 결정](docs/discussion_notes/개발이%20되지%20않은%20Entity를%20사용하여%20개발하여아%20하는%20경우%20개발%20방식%20결정.md)
+    - [게시판 URL에 슬러그 사용](docs/discussion_notes/게시판%20URL에%20슬러그%20사용.md)
+    - [도메인 변환 메서드 통일](docs/discussion_notes/도메인%20변환%20메서드%20통일.md)
 - 멘토링 자료
     - [3주차_멘토링](docs/mentoring/3주차_멘토링.md)
     - [8주차_멘토링](docs/mentoring/8주차_멘토링.md)
