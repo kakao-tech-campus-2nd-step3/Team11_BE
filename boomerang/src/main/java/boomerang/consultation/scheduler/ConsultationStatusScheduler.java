@@ -54,6 +54,7 @@ public class ConsultationStatusScheduler {
                     && consultation.getConsultationDateTime().isBefore(now)) {
                 consultation.start();
 
+                consultation.getMentor().increaseReplyCount();
                 chatRoomRepository.save(new ChatRoom(consultation));
             }
 

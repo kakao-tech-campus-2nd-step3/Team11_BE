@@ -51,7 +51,6 @@ public class MentorController {
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @Valid @RequestBody MentorCreateRequestDto mentorCreateRequestDto) {
 
-
         MentorResponseDto mentorResponseDto = mentorService.createMentor(
             principalDetails.getMemberEmail(), mentorCreateRequestDto);
 

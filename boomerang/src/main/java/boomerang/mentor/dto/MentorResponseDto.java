@@ -26,6 +26,8 @@ public class MentorResponseDto {
 
     private final String contact;
 
+    private final Long replyCount;
+
     public MentorResponseDto(Mentor mentor) {
         this.id = mentor.getId();
         this.nickname = mentor.getNickname();
@@ -35,5 +37,6 @@ public class MentorResponseDto {
         this.introduce = mentor.getIntroduce();
         this.advertisementStatus = mentor.getAdvertisementStatus();
         this.contact = mentor.getContact();
+        this.replyCount = mentor.getReplyCount();
     }
 }
