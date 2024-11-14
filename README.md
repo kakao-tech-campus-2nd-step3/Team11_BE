@@ -114,7 +114,7 @@
 - [Boomerang API 명세서](https://documenter.getpostman.com/view/29615301/2sAXxY4oTG)
 
 ## 배포된 인스턴스 주소
-- [Boomerang BE 인스턴스](http://52.79.80.3:8080/)
+- 52.79.80.3:8080
 
 ## 프로젝트 구조
 ### 시스템 아키텍쳐
