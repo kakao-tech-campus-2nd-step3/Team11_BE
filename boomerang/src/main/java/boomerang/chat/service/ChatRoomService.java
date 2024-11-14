@@ -3,16 +3,16 @@ package boomerang.chat.service;
 import boomerang.chat.domain.ChatMessage;
 import boomerang.chat.domain.ChatRoom;
 import boomerang.chat.dto.ChatMessageListRequestDto;
-import boomerang.chat.dto.ChatMessageRequestDto;
-import boomerang.chat.dto.ChatRoomRequestDto;
 import boomerang.chat.repository.ChatMessageRepository;
 import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
 import boomerang.global.response.ErrorCode;
 import boomerang.member.domain.Member;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,45 +22,42 @@ public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
-    // 채팅방 생성
-    public ChatRoom createChatRoom(ChatRoomRequestDto requestDto) {
-        ChatRoom chatRoom = new ChatRoom(requestDto.getName());
-        return chatRoomRepository.save(chatRoom);
+    public Page<ChatMessage> getChatMessages(Long chatRoomId, ChatMessageListRequestDto chatMessageListRequestDto, Member member) {
+        validateChatRoomOwnership(chatRoomId, member);
+        PageRequest pageRequest = getMessagePageRequest(chatMessageListRequestDto);
+
+        return chatMessageRepository.findByChatRoomId(chatRoomId, pageRequest);
     }
 
-    // 모든 채팅방 조회
-    public List<ChatRoom> getAllChatRooms() {
-        return chatRoomRepository.findAll();
+    private static PageRequest getMessagePageRequest(ChatMessageListRequestDto chatMessageListRequestDto) {
+        return PageRequest.of(
+                chatMessageListRequestDto.getPage(),
+                chatMessageListRequestDto.getSize(),
+                Sort.by(Sort.Direction.ASC, "id")
+        );
     }
 
-    // 특정 채팅방 메시지 조회
-    public Page<ChatMessage> getChatMessages(Long chatRoomId,
-        ChatMessageListRequestDto chatMessageListRequestDto) {
-        ChatRoom chatRoom = validateChatRoomExists(chatRoomId);
-        return chatMessageRepository.findByChatRoom(chatRoom,
-            chatMessageListRequestDto.toPageRequest());
+    @Async
+    public void saveChatMessage(ChatMessage chatMessage) {
+        chatMessageRepository.save(chatMessage);
     }
 
-    // 메시지 전송
-    public ChatMessage sendChatMessage(ChatMessageRequestDto requestDto, Member sender) {
-        ChatRoom chatRoom = validateChatRoomExists(requestDto.getChatRoomId());
-        ChatMessage chatMessage = new ChatMessage(chatRoom, sender, requestDto.getContent());
-        return chatMessageRepository.save(chatMessage);
-    }
+    public void deleteChatRoom(Long chatRoomId, Member member) {
+        ChatRoom chatRoom = validateChatRoomOwnership(chatRoomId, member);
 
-    // 채팅방 삭제
-    public void deleteChatRoom(String memberEmail, Long roomId) {
-        ChatRoom chatRoom = validateChatRoomExists(roomId);
-        // 테스트를 위해 주석처리
-//        if (!chatRoom.getCreator().getEmail().equals(memberEmail)) {
-//            throw new BusinessException(ErrorCode.CHATROOM_DONT_HAS_OWNERSHIP_ERROR);
-//        }
         chatRoomRepository.delete(chatRoom);
     }
 
-    // 채팅방 존재 여부 확인
     private ChatRoom validateChatRoomExists(Long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_NOT_FOUND_ERROR));
+    }
+
+    // 채팅방 소유자 검증
+    public ChatRoom validateChatRoomOwnership(Long chatRoomId, Member sender) {
+        validateChatRoomExists(chatRoomId);
+
+        return chatRoomRepository.findByIdAndMember(chatRoomId, sender)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CHATROOM_DONT_HAS_OWNERSHIP_ERROR));
     }
 }

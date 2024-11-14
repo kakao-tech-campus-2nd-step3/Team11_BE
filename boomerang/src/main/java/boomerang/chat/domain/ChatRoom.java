@@ -1,46 +1,49 @@
 package boomerang.chat.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import boomerang.IsDeleted;
+import boomerang.consultation.domain.Consultation;
+import boomerang.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Entity
 @Table(name = "chat_room")
 public class ChatRoom {
 
+    // 상담의 id 값을 받아 채팅방 아이디를 생성
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mento", nullable = false)
+    private Member mentor;
 
-    // 테스트를 위해 주석처리
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "creator_id", nullable = false)
-//    private Member creator;
-
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChatMessage> messages = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mentee", nullable = false)
+    private Member mentee;
 
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    private IsDeleted isDeleted;
+
     protected ChatRoom() {
     }
 
-    public ChatRoom(String name) {
-        this.name = name;
+    public ChatRoom(Consultation consultation) {
+        this.id = consultation.getId();
+        this.mentor = consultation.getMentor().getMember();
+        this.mentee = consultation.getMentee();
     }
 }

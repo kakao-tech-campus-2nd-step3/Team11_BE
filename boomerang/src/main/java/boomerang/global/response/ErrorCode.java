@@ -48,6 +48,7 @@ public enum ErrorCode {
     MENTOR_ALREADY_EXISTS(HttpStatus.CONFLICT, "MT_001", "이미 멘토로 등록된 사용자입니다."),
     MENTOR_NOT_FOUND(HttpStatus.NOT_FOUND, "MT_002", "해당 멘토를 찾을 수 없습니다."),
     MENTOR_UPDATE_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "MT003", "멘토 정보 수정 권한이 없습니다."),
+    MENTOR_NOT_REGISTERED(HttpStatus.CONFLICT, "MT_004", "멘토로 등록되지 않은 사용자입니다."),
 
     //Consultation
     CONSULTATION_NOT_A_MENTEE(HttpStatus.UNAUTHORIZED, "CS001", "로그인한 멤버가 상담의 멘티가 아닙니다."),
@@ -56,8 +57,15 @@ public enum ErrorCode {
     CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
     CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005",
             "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
+    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005", "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
     CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
     SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
+    CONSULTATION_NOT_RECEIVED(HttpStatus.NOT_FOUND,"CS008","해당 상담은 확정전 상담이 아닙니다."),
+    CONSULTATION_NOT_CHANGED(HttpStatus.BAD_REQUEST, "CS009", "유효하지 않는 ENUM값 입니다."),
+    CONSULTATION_NOT_FOR_MENTOR(HttpStatus.BAD_REQUEST,"CS010","멘토는 상담신청 할 수 없습니다."),
+    CONSULTATION_NOT_ONGOING(HttpStatus.BAD_REQUEST,"CS011","진행중인 상담이 아닙니다"),
+    CONSULTATION_MEMBER_IS_NOT_PARTICIPANT(HttpStatus.BAD_REQUEST,"CS012","상담에 속한 멤버가 아닙니다"),
+
     // Progress
     PROGRESS_TYPE_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "PG001", "진행도 타입검사 요청 객체가 잘못되었습니다."),
     PROGRESS_TYPE_EXISTS(HttpStatus.CONFLICT, "PG002", "이미 진행도 검사를 완료했습니다."),
@@ -96,10 +104,13 @@ public enum ErrorCode {
     DOCUMENT_TYPE_REQUIRED(HttpStatus.BAD_REQUEST, "DC003", "문서 타입이 지정되지 않았습니다"),
     DOCUMENT_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "DC004", "문서 생성 중 오류가 발생했습니다"),
 
-
     //NOTIFICATION
     NOTIFICATION_USER_SESSION_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT01", "해당 알림을 보낼 유저가 세션에 저장되어있지 않습니다."),
     NOTIFICATION_JWT_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT02", "웹 소켓 통신을 위한 jwt 토큰이 비어있습니다."),
+
+    // Prevention
+    PREVENTION_NOT_FOUND(HttpStatus.NOT_FOUND, "PV001", "예방 설문 결과를 찾을 수 없습니다."),
+
     ;
 
     private final HttpStatus status;

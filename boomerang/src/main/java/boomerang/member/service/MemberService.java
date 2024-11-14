@@ -92,6 +92,7 @@ public class    MemberService {
         return randomNicknameGenerator.generateRandomNickname();
     }
 
+    @Transactional
     public Member updateNickname(String email, String newNickname) {
         Member member = getMemberByEmail(email);
         if (memberRepository.existsByNickname(newNickname)) {
@@ -99,12 +100,16 @@ public class    MemberService {
         }
 
         member.updateNickname(newNickname);
+
         memberRepository.save(member);
+
+        if (member.isMentor()) {
+            member.getMentor().updateNickname(newNickname);
+        }
 
         return member;
     }
 
-    @Transactional
     public Member updateProfileImage(String email, MultipartFile image) {
         log.info("Starting profile image update for email: {}", email);
 
@@ -120,6 +125,10 @@ public class    MemberService {
             log.info("Successfully uploaded image to S3. URL: {}", imageUrl);
 
             member.updateProfileImage(imageUrl.toString());
+
+            if (member.isMentor()) {
+                member.getMentor().updateProfileImage(imageUrl.toString());
+            }
 
             return member;
         } catch (Exception e) {

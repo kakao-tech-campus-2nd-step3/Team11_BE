@@ -59,11 +59,9 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createMember(
-        @RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
-        String token = memberService.createMember(
-            memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addHeader("Authorization", "Bearer " + token);
+    public ResponseEntity<Void> createMember(@RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
+        String token = memberService.createMember(memberCreateRequestDTO.toMemberCreateServiceDto());
+        response.addHeader("Authorization", token);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
@@ -73,7 +71,7 @@ public class MemberController {
     public ResponseEntity<Void> loginMember(
         @RequestBody MemberCreateRequestDto memberCreateRequestDTO, HttpServletResponse response) {
         String token = memberService.loginMember(memberCreateRequestDTO.toMemberCreateServiceDto());
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Authorization", token);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
@@ -105,7 +103,6 @@ public class MemberController {
     @PutMapping("/nickname")
     public ResponseEntity<MemberLoginDto> updateNickname(
         @AuthenticationPrincipal PrincipalDetails principalDetails,
-        HttpServletResponse response,
         @RequestBody NicknameUpdateRequestDto requestDto) {
         Member member = memberService.updateNickname(principalDetails.getMemberEmail(),
             requestDto.getNewNickname());
@@ -117,8 +114,8 @@ public class MemberController {
         @AuthenticationPrincipal PrincipalDetails principalDetails,
         @RequestParam(value = "image", required = true) MultipartFile image) {
 
-        Member updatedMember = memberService.updateProfileImage(principalDetails.getMemberEmail(),
-            image);
+        Member updatedMember =
+                memberService.updateProfileImage(principalDetails.getMemberEmail(), image);
 
         return ResponseEntity.ok(new MemberResponseDto(updatedMember));
     }

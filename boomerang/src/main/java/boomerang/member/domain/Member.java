@@ -113,6 +113,23 @@ public class Member {
         return this.progress != null;
     }
 
+    public boolean isMentor() {
+        return this.mentor != null;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+        this.memberRole = MemberRole.COMPLETE_USER;
+    }
+
+    public void verifyEmail() {
+        this.emailVerified = true;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -128,18 +145,5 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(id, email);
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-        this.memberRole = MemberRole.COMPLETE_USER;
-    }
-
-    public void verifyEmail() {
-        this.emailVerified = true;
-    }
-
-    public void updateProfileImage(String profileImage) {
-        this.profileImage = profileImage;
     }
 }

@@ -1,22 +1,25 @@
 package boomerang.chat.dto;
 
-import boomerang.chat.domain.ChatRoom;
-import java.time.LocalDateTime;
+import boomerang.consultation.dto.ConsultationResponseDto;
+import boomerang.global.response.PageResponseDto;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 @Getter
 public class ChatRoomResponseDto {
+    private String mentorProfileImage;
+    private String menteeProfileImage;
+    private boolean isMentor;
+    private ConsultationResponseDto consultationResponseDto;
+    private PageResponseDto<ChatMessageResponseDto> chatMessageResponseDtoPage;
 
-    private Long id;
-    private String name;
-    private String creatorName;
-    private LocalDateTime createdAt;
 
-    public ChatRoomResponseDto(ChatRoom chatRoom) {
-        this.id = chatRoom.getId();
-        this.name = chatRoom.getName();
-        // 테스트를 위해 주석처리
-//        this.creatorName = chatRoom.getCreator().getNickname();
-        this.createdAt = chatRoom.getCreatedAt();
+    public ChatRoomResponseDto(String mentorProfileImage, String menteeProfileImage, boolean isMentor,
+                               ConsultationResponseDto consultationResponseDto, Page<ChatMessageResponseDto> chatMessageResponseDtoPage) {
+        this.mentorProfileImage = mentorProfileImage;
+        this.menteeProfileImage = menteeProfileImage;
+        this.isMentor = isMentor;
+        this.consultationResponseDto = consultationResponseDto;
+        this.chatMessageResponseDtoPage = new PageResponseDto<>(chatMessageResponseDtoPage);
     }
 }

@@ -61,9 +61,11 @@ dependencies {
     // Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-    // Thymeleaf (이메일 템플릿용)
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// Thymeleaf (이메일 템플릿용)
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	// Spring Batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
     // Document
     implementation 'org.apache.pdfbox:pdfbox:3.0.0'

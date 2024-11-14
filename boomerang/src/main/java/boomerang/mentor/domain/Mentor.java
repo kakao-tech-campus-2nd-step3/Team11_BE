@@ -38,6 +38,10 @@ public class Mentor {
     @Enumerated(EnumType.STRING)
     private MentorType mentorType;
 
+    private String nickname;
+
+    private String profileImage;
+
     private String career;
 
     private String introduce;
@@ -45,6 +49,10 @@ public class Mentor {
     private Boolean advertisementStatus;
 
     private String contact;
+
+    private Long score = 0L;
+
+    private Long replyCount = 0L;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -69,12 +77,22 @@ public class Mentor {
     public Mentor(MentorType mentorType, String career, String introduce,
         Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
+        this.nickname = member.getNickname();
+        this.profileImage = member.getProfileImage();
         this.career = career;
         this.introduce = introduce;
         this.advertisementStatus = advertisementStatus;
         this.member = member;
         this.contact = contact;
-        this.isDeleted = false;  // 기본값으로 false 설정
+        this.isDeleted = false;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override
