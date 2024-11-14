@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentor List</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<div th:replace="layout :: header"></div>
+<div class="container mt-4">
+  <h1>Mentor List</h1>
+
+  <!-- Token 입력 -->
+  <div class="mb-3">
+    <input type="text" id="authToken" class="form-control" placeholder="Enter your token">
+    <button class="btn btn-secondary mt-2" onclick="loadMentorInitial()">Load Mentors</button>
+  </div>
+
+  <!-- 추천 멘토 목록 -->
+  <h2>Recommended Mentors</h2>
+  <ul class="list-group mb-4" id="recommendedMentors">
+    <!-- 추천 멘토 목록이 동적으로 로드됩니다 -->
+  </ul>
+
+  <!-- 전문가 멘토 목록 -->
+  <h2>Expert Mentors</h2>
+  <ul class="list-group mb-4" id="expertMentors">
+    <!-- 전문가 멘토 목록이 동적으로 로드됩니다 -->
+  </ul>
+
+  <!-- 일반 멘토 목록 -->
+  <h2>Normal Mentors</h2>
+  <ul class="list-group mb-4" id="normalMentors">
+    <!-- 일반 멘토 목록이 동적으로 로드됩니다 -->
+  </ul>
+
+  <!-- 전체 멘토 목록 (페이지네이션 지원) -->
+  <h2>All Mentors</h2>
+  <ul class="list-group mb-4" id="allMentors">
+    <!-- 전체 멘토 목록이 동적으로 로드됩니다 -->
+  </ul>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination" id="pagination">
+      <!-- 페이지네이션 버튼이 동적으로 생성됩니다 -->
+    </ul>
+  </nav>
+</div>
+
+<script>
+  function loadMentorInitial(page = 0, size = 10) {
+    const token = $('#authToken').val();
+    if (!token) {
+      alert("Please enter your token.");
+      return;
+    }
+
+    $.ajax({
+      url: `/api/v1/mentor/initial`,
+      type: "GET",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader("Authorization", token);
+      },
+      success: function (data) {
+        // 추천 멘토 목록 생성
+        $('#recommendedMentors').empty();
+        data.recommendedMentors.forEach(mentor => {
+          $('#recommendedMentors').append(createMentorListItem(mentor));
+        });
+
+        // 전문가 멘토 목록 생성
+        $('#expertMentors').empty();
+        data.expertMentors.forEach(mentor => {
+          $('#expertMentors').append(createMentorListItem(mentor));
+        });
+
+        // 일반 멘토 목록 생성
+        $('#normalMentors').empty();
+        data.normalMentors.forEach(mentor => {
+          $('#normalMentors').append(createMentorListItem(mentor));
+        });
+
+        // 전체 멘토 목록 생성 (페이지네이션)
+        $('#allMentors').empty();
+        data.mentors.content.forEach(mentor => {
+          $('#allMentors').append(createMentorListItem(mentor));
+        });
+        setupPagination(data.mentors);
+      },
+      error: function() {
+        alert("Failed to load mentors. Please check the token or server status.");
+      }
+    });
+  }
+
+  function createMentorListItem(mentor) {
+    return `
+            <li class="list-group-item">
+                <h5>Mentor Type: ${mentor.mentor_type}</h5>
+                <p><strong>Career:</strong> ${mentor.career}</p>
+                <p><strong>Introduction:</strong> ${mentor.introduce}</p>
+                <p><strong>Contact:</strong> ${mentor.contact}</p>
+                <p><strong>Advertisement:</strong> ${mentor.advertisement_status ? "Enabled" : "Disabled"}</p>
+            </li>`;
+  }
+
+  function setupPagination(pageData) {
+    $('#pagination').empty();
+
+    for (let i = 0; i < pageData.totalPages; i++) {
+      $('#pagination').append(
+              `<li class="page-item ${i === pageData.number ? 'active' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadMentorInitial(${i}, ${pageData.size})">${i + 1}</a>
+                 </li>`
+      );
+    }
+  }
+</script>
+</body>
+</html>

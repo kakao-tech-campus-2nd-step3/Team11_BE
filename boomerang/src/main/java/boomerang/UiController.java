@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/ui")
 public class UiController {
 
+    @GetMapping("/mentor")
+    public String getMentor(Model model) {
+        return "mentor";
+    }
+
     @GetMapping("/rooms/page")
     public String getChatRoomsPage(Model model) {
         return "chat_rooms";
