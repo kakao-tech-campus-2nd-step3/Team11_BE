@@ -4,6 +4,18 @@
   <img src="boomerang/src/main/resources/static/esset/logo.png" alt="Logo" width="30%">
 </div>
 
+## 목차
+- [프로젝트 소개](#프로젝트-소개)
+- [기술 스택](#기술-스택)
+- [주요 기능별 설명](#주요-기능별-설명)
+- [API 명세서](#api-명세서)
+- [프로젝트 구조](#프로젝트-구조)
+- [배포된 인스턴스 주소](#배포된-인스턴스-주소)
+- [기간](#기간)
+- [팀원 소개](#팀원-소개)
+- [라이센스](#라이센스)
+- [문서화 자료](#문서화-자료)
+
 ## 프로젝트 소개
 **부메랑**은 전세사기 피해자들을 위한 **전세사기 대처 웹 플랫폼**입니다.
 
@@ -108,9 +120,24 @@
 - 게시글 작성, 댓글 및 좋아요 기능을 제공합니다
 - 카테고리별 게시글 분류 및 검색이 가능합니다
 
+## 기술 스택
+| 분류 | 기술 |
+|------|------|
+| **Backend** | Java 21, Spring Boot 3.3.1, Spring Security, Spring Data JPA, Spring Batch, Spring WebSocket, Spring Mail |
+| **Database & Cache** | MySQL, Redis |
+| **Cloud & Infrastructure** | AWS S3, Azure Database for MySQL, Azure Cache for Redis |
+| **Document Processing** | Apache PDFBox 3.0.0, Jsoup 1.18.1 |
+| **Security** | JWT, Spring Security |
+| **Tools & Libraries** | Lombok, Log4j2, Guava, Thymeleaf |
+
 ## API 명세서
 - API의 상세한 사용법과 엔드포인트에 대한 정보는 아래 링크에서 확인할 수 있습니다
 - [Boomerang API 명세서](https://documenter.getpostman.com/view/29615301/2sAXxY4oTG)
+
+## 프로젝트 구조
+### 시스템 아키텍쳐
+![시스템 아키텍처](boomerang/src/main/resources/static/esset/architecture.png)
++ ERD
 
 ## 배포된 인스턴스 주소
 BE
@@ -118,11 +145,6 @@ BE
  
 FE
 - 54.252.224.76
-
-## 프로젝트 구조
-### 시스템 아키텍쳐
-![시스템 아키텍처](boomerang/src/main/resources/static/esset/architecture.png)
-+ ERD
 
 ## 문서화 자료
 - 회의 자료
@@ -136,6 +158,12 @@ FE
     - [3주차_멘토링](docs/mentoring/3주차_멘토링.md)
     - [8주차_멘토링](docs/mentoring/8주차_멘토링.md)
     - [11주차_멘토링](docs/mentoring/11주차_멘토링.md)
+
+## 기간
+25 Aug 2024 ~ 15 Nov 2024
+
+## 라이센스
+MIT License - Copyright (c) 2024 kakao-tech-campus-2nd-step3
 
 ## 팀원 소개
 <div align="center">
@@ -160,9 +188,3 @@ FE
    </tr>
  </table>
 </div>
-
-## 기간
-25 Aug 2024 ~ 15 Nov 2024
-
-## 라이센스
-MIT License - Copyright (c) 2024 kakao-tech-campus-2nd-step3
