@@ -161,9 +161,7 @@ public class ConsultationService {
         Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
         Mentor mentor = member.getMentor();
 
-        if (mentor == null) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
-        }
+        validateMentor(mentor);
         List<Schedule> scheduleList = scheduleRepository.findAllByMentor(mentor);
         if (scheduleList.isEmpty()) {
             throw new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR);
@@ -198,9 +196,7 @@ public class ConsultationService {
     public ScheduleResponseDto getScheduleByMentorId(Long mentorId) {
         Mentor mentor = mentorService.getMentor(mentorId);
 
-        if (mentor == null) {
-            throw new BusinessException(ErrorCode.CONSULTATION_NOT_A_MENTOR);
-        }
+        validateMentor(mentor);
         List<Schedule> scheduleList = scheduleRepository.findAllByMentor(mentor);
         if (scheduleList.isEmpty()) {
             throw new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND_ERROR);
@@ -262,6 +258,12 @@ public class ConsultationService {
     private void validateMentee(Member member) {
         if (member.getMentor() != null) {
             throw new BusinessException(ErrorCode.CONSULTATION_NOT_FOR_MENTOR);
+        }
+    }
+
+    private void validateMentor(Mentor mentor) {
+        if (mentor == null) {
+            throw new BusinessException(ErrorCode.MENTOR_NOT_REGISTERED);
         }
     }
 
