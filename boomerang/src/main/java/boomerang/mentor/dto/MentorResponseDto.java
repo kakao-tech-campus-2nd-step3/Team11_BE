@@ -12,6 +12,10 @@ public class MentorResponseDto {
 
     private final Long id;
 
+    private final String nickname;
+
+    private final String profileImage;
+
     private final MentorType mentorType;
 
     private final String career;
@@ -24,6 +28,8 @@ public class MentorResponseDto {
 
     public MentorResponseDto(Mentor mentor) {
         this.id = mentor.getId();
+        this.nickname = mentor.getNickname();
+        this.profileImage = mentor.getProfileImage();
         this.mentorType = mentor.getMentorType();
         this.career = mentor.getCareer();
         this.introduce = mentor.getIntroduce();

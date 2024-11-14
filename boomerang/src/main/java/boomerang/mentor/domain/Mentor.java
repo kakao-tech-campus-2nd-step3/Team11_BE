@@ -38,6 +38,8 @@ public class Mentor {
     @Enumerated(EnumType.STRING)
     private MentorType mentorType;
 
+    private String nickname;
+
     private String profileImage;
 
     private String career;
@@ -75,6 +77,7 @@ public class Mentor {
     public Mentor(MentorType mentorType, String career, String introduce,
         Boolean advertisementStatus, Member member, String contact) {
         this.mentorType = mentorType;
+        this.nickname = member.getNickname();
         this.profileImage = member.getProfileImage();
         this.career = career;
         this.introduce = introduce;
@@ -86,6 +89,10 @@ public class Mentor {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override

@@ -92,6 +92,7 @@ public class MemberService {
         return randomNicknameGenerator.generateRandomNickname();
     }
 
+    @Transactional
     public Member updateNickname(String email, String newNickname) {
         Member member = getMemberByEmail(email);
         if (memberRepository.existsByNickname(newNickname)) {
@@ -99,7 +100,12 @@ public class MemberService {
         }
 
         member.updateNickname(newNickname);
+
         memberRepository.save(member);
+
+        if (member.isMentor()) {
+            member.getMentor().updateNickname(newNickname);
+        }
 
         return member;
     }
