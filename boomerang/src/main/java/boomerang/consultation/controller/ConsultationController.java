@@ -24,7 +24,7 @@ public class ConsultationController {
     private final ConsultationService consultationService;
     private final MemberService memberService;
 
-    //상담신청
+    // 상담신청
     @PostMapping("/consultation")
     public ResponseEntity<ConsultationResponseDto> requestConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -35,7 +35,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(consultationResponseDto);
     }
 
-    //일정등록
+    // 일정등록
     @PostMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseDto> registerSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -47,7 +47,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleResponseDto);
     }
 
-    //일정 삭제
+    // 일정 삭제
     @DeleteMapping("/consultation/schedule")
     public ResponseEntity<Void> deleteSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -58,7 +58,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    //일정 조회
+    // 일정 조회
     @GetMapping("/consultation/schedule")
     public ResponseEntity<ScheduleResponseDto> getSchedule(
             @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -69,7 +69,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
-    //멘티가 멘토별 일정 조회
+    // 멘티가 멘토별 일정 조회
     @GetMapping("/consultation/schedule/{mentor_id}")
     public ResponseEntity<ScheduleResponseDto> getMentorSchedule(@AuthenticationPrincipal PrincipalDetails principalDetails, @PathVariable("mentor_id") Long mentorId) {
         if (memberService.getMemberByEmail(principalDetails.getMemberEmail()).getMentor() != null) {
@@ -80,7 +80,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
-    //상담 확정하기
+    // 상담 확정하기
     @PutMapping("/consultation/{consultation_id}")
     public ResponseEntity<ConsultationResponseDto> confirmConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -92,7 +92,7 @@ public class ConsultationController {
                 .body(consultationResponseDto);
     }
 
-    //상담 거절하기
+    // 상담 거절하기
     @DeleteMapping("/consultation/{consultation_id}")
     public ResponseEntity<Void> deleteConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -103,7 +103,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    //상담 종료하기
+    // 상담 종료하기
     @PutMapping("/consultation/finish/{consultation_id}")
     public ResponseEntity<Void> finishConsultation(
             @AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -113,9 +113,7 @@ public class ConsultationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-
-
-    //개인별 상담 내역조회
+    // 개인별 상담 내역조회
     @GetMapping("/member/consultation")
     public ResponseEntity<PageResponseDto<ConsultationResponseDto>> getConsultationOfUser(
             @AuthenticationPrincipal PrincipalDetails principalDetails,

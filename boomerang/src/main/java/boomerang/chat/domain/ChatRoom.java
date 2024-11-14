@@ -1,6 +1,7 @@
 package boomerang.chat.domain;
 
 import boomerang.IsDeleted;
+import boomerang.consultation.domain.Consultation;
 import boomerang.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,8 +17,8 @@ import java.util.List;
 @Table(name = "chat_room")
 public class ChatRoom {
 
+    // 상담의 id 값을 받아 채팅방 아이디를 생성
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,8 +41,9 @@ public class ChatRoom {
     protected ChatRoom() {
     }
 
-    public ChatRoom(Member mentor, Member mentee) {
-        this.mentor = mentor;
-        this.mentee = mentee;
+    public ChatRoom(Consultation consultation) {
+        this.id = consultation.getId();
+        this.mentor = consultation.getMentor().getMember();
+        this.mentee = consultation.getMentee();
     }
 }
