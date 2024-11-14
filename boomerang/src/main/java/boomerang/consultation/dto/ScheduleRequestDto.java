@@ -13,5 +13,9 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ScheduleRequestDto {
     private Map<String, List<Integer>> list; // LocalDate 문자열을 키로 사용
+
+    public ScheduleRequestDto(Map<String, List<Integer>> list) {
+        this.list = list;
+    }
 }
 

@@ -130,5 +130,9 @@ public class Consultation {
             throw new BusinessException(ErrorCode.CONSULTATION_MEMBER_IS_NOT_PARTICIPANT);
         }
     }
+
+    public void setStatus(ConsultationStatus consultationStatus) {
+        this.consultationStatus = consultationStatus;
+    }
 }
 
