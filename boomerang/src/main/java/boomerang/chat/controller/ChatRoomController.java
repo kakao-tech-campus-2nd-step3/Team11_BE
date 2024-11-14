@@ -35,19 +35,6 @@ public class ChatRoomController {
         this.memberService = memberService;
     }
 
-    @GetMapping("")
-    public ResponseEntity<PageResponseDto<ChatRoomResponseDto>> getAllChatRooms(
-            @AuthenticationPrincipal PrincipalDetails principalDetails,
-            @ModelAttribute ChatRoomListRequestDto chatRoomListRequestDto
-    ) {
-        Member member = memberService.getMemberByEmail(principalDetails.getMemberEmail());
-        Page<ChatRoom> chatRoomPage = chatRoomService.getAllChatRooms(chatRoomListRequestDto, member);
-        Page<ChatRoomResponseDto> chatRoomResponseDtoPage = chatRoomPage.map(ChatRoomResponseDto::new);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new PageResponseDto<>(chatRoomResponseDtoPage));
-    }
-
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Void> deleteChatRoom(
             @AuthenticationPrincipal PrincipalDetails principalDetails,

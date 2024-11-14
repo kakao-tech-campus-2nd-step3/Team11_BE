@@ -3,7 +3,6 @@ package boomerang.chat.service;
 import boomerang.chat.domain.ChatMessage;
 import boomerang.chat.domain.ChatRoom;
 import boomerang.chat.dto.ChatMessageListRequestDto;
-import boomerang.chat.dto.ChatRoomListRequestDto;
 import boomerang.chat.repository.ChatMessageRepository;
 import boomerang.chat.repository.ChatRoomRepository;
 import boomerang.global.exception.BusinessException;
@@ -22,20 +21,6 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
-
-    public Page<ChatRoom> getAllChatRooms(ChatRoomListRequestDto chatRoomListRequestDto, Member member) {
-        PageRequest pageRequest = getChatRoomPageRequest(chatRoomListRequestDto);
-
-        return chatRoomRepository.findByMember(member, pageRequest);
-    }
-
-    private PageRequest getChatRoomPageRequest(ChatRoomListRequestDto chatRoomListRequestDto) {
-        return PageRequest.of(
-                chatRoomListRequestDto.getPage(),
-                chatRoomListRequestDto.getSize(),
-                Sort.by(Sort.Direction.ASC, "id")
-        );
-    }
 
     public Page<ChatMessage> getChatMessages(Long chatRoomId, ChatMessageListRequestDto chatMessageListRequestDto, Member member) {
         validateChatRoomOwnership(chatRoomId, member);
