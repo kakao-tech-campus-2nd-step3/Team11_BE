@@ -57,7 +57,6 @@ public enum ErrorCode {
     CONSULTATION_ALREADY_FINISHED(HttpStatus.NOT_FOUND, "CS004", "해당 상담은 이미 완료되었습니다."),
     CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005",
             "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
-    CONSULTATION_TIME_REQUEST_ERROR(HttpStatus.BAD_REQUEST, "CS005", "등록 가능 시간은 0시에서 23시 사이여야 합니다."),
     CONSULTATION_NOT_A_MENTOR(HttpStatus.UNAUTHORIZED, "CS006", "로그인한 멤버가 상담의 멘토가 아닙니다."),
     SCHEDULE_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, "CS007", "해당 일정은 존재하지 않습니다."),
     CONSULTATION_NOT_RECEIVED(HttpStatus.NOT_FOUND,"CS008","해당 상담은 확정전 상담이 아닙니다."),
@@ -107,6 +106,7 @@ public enum ErrorCode {
     //NOTIFICATION
     NOTIFICATION_USER_SESSION_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT01", "해당 알림을 보낼 유저가 세션에 저장되어있지 않습니다."),
     NOTIFICATION_JWT_NOT_CONNECTION(HttpStatus.BAD_REQUEST, "NT02", "웹 소켓 통신을 위한 jwt 토큰이 비어있습니다."),
+    NOTIFICATION_TRANSMISSION(HttpStatus.BAD_REQUEST, "NT03", "메시지 전송 중 에러가 발생했습니다."),
 
     // Prevention
     PREVENTION_NOT_FOUND(HttpStatus.NOT_FOUND, "PV001", "예방 설문 결과를 찾을 수 없습니다."),

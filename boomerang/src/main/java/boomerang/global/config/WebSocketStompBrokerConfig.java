@@ -32,8 +32,8 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/api/v1/ws/notifications")
                 .setAllowedOrigins("http://localhost:8080", "http://localhost:5173", "http://54.252.224.76:80")
-                .setHandshakeHandler(new WebSocketHandShakeHandler())
                 .addInterceptors(new JwtHandshakeInterceptor(jwtUtil))
+                .setHandshakeHandler(new WebSocketHandShakeHandler())
                 .withSockJS();
     }
 

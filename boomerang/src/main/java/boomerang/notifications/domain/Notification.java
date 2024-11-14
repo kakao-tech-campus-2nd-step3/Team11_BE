@@ -2,6 +2,7 @@ package boomerang.notifications.domain;
 
 import boomerang.member.domain.Member;
 import boomerang.notifications.dto.NotificationDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,4 +39,6 @@ public class Notification {
     public void markAsRead() {
         this.isRead = true;
     }
+
+
 }

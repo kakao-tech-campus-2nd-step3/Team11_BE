@@ -10,6 +10,7 @@ import boomerang.global.oauth.dto.PrincipalDetails;
 import boomerang.global.response.ErrorResponseDto;
 import boomerang.global.response.PageResponseDto;
 import boomerang.global.utils.ResponseHelper;
+import boomerang.notifications.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
     private final CommentService commentService;
+    private final NotificationService notificationService;
 
     //댓글 조회
     @GetMapping("/board/{board_id}/comments")
