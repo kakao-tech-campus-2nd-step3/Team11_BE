@@ -35,12 +35,6 @@ public class WebSocketStompBrokerConfig implements WebSocketMessageBrokerConfigu
                 .addInterceptors(new JwtHandshakeInterceptor(jwtUtil))
                 .setHandshakeHandler(new WebSocketHandShakeHandler())
                 .withSockJS();
-
-        registry.addEndpoint("/ws/chat/{roomId}")
-                .setAllowedOrigins("http://localhost:8080", "http://localhost:5173", "http://54.252.224.76:80")
-                .addInterceptors(new JwtHandshakeInterceptor(jwtUtil))
-                .setHandshakeHandler(new WebSocketHandShakeHandler())
-                .withSockJS();
     }
 
 }

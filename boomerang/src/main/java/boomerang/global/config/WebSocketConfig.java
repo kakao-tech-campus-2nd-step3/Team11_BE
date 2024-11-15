@@ -30,6 +30,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new ChatWebSocketHandler(chatRoomService), "/ws/chat/*")
-                .addInterceptors(new WebSocketHandshakeInterceptor(jwtUtil, memberService, chatRoomService, consultationService));
+                .addInterceptors(new WebSocketHandshakeInterceptor(jwtUtil, memberService, chatRoomService, consultationService))
+                .setAllowedOrigins("http://localhost:8080", "http://localhost:5173", "http://54.252.224.76:80")
+                .withSockJS();
     }
 }
