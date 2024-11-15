@@ -322,3 +322,21 @@ MIT License - Copyright (c) 2024 kakao-tech-campus-2nd-step3
    </tr>
  </table>
 </div>
+<div align="center">
+ <table>
+   <tr>
+     <td align="center" width="25%">
+       <img src="https://avatars.githubusercontent.com/u/65104605?s=64&v=4" width="100" height="100" alt="진서현 프로필"><br>
+       <a href="https://github.com/JaeanHan" target="_blank">한재안</a><br>
+     </td>
+     <td align="center" width="25%">
+       <img src="https://avatars.githubusercontent.com/u/114674380?s=64&v=4" width="100" height="100" alt="문성민 프로필"><br>
+       <a href="https://github.com/yunseong0404" target="_blank">최윤성</a><br>
+     </td>
+     <td align="center" width="25%">
+       <img src="https://avatars.githubusercontent.com/u/108441979?s=64&v=4" width="100" height="100" alt="정재빈 프로필"><br>
+       <a href="https://github.com/seongikx" target="_blank">한성익</a><br>
+     </td>
+   </tr>
+ </table>
+</div>
