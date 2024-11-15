@@ -39,6 +39,7 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import org.springframework.core.io.Resource;
 
 @Slf4j
 @Service
@@ -47,6 +48,9 @@ public class DocumentService {
 
     private final S3Client s3Client;
     private static final float DPI = 300; // 이미지 해상도
+
+    @Value("classpath:/fonts/NotoSansKR-Regular.ttf")
+    private Resource fontResource;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
@@ -75,7 +79,7 @@ public class DocumentService {
             }
 
             // 폰트 설정
-            PDFont koreanFont = PDType0Font.load(document, new File("C:/Windows/Fonts/malgun.ttf"));
+            PDFont koreanFont = PDType0Font.load(document, fontResource.getInputStream());
             PDResources resources = Optional.ofNullable(acroForm.getDefaultResources())
                 .orElseGet(PDResources::new);
             resources.getCOSObject().setItem(COSName.FONT, new COSDictionary());
