@@ -5,14 +5,14 @@ files:
     destination: /home/ubuntu/my-spring-app/libs/
   - source: scripts/
     destination: /home/ubuntu/my-spring-app/scripts/
-
+  - source: fonts/    # 폰트 디렉토리 추가
+    destination: /home/ubuntu/my-spring-app/fonts/
 permissions:
   - object: /home/ubuntu/my-spring-app
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-    mode: 755  # 실행 권한 부여
-
+    mode: 755
 hooks:
   ApplicationStart:
     - location: scripts/start_server.sh
