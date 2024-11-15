@@ -58,8 +58,7 @@
 | **Tools & Libraries** | Lombok, Log4j2, Guava, Thymeleaf |
 
 ## 📚 문서화 자료
-- 회의 자료 :  [CustomRepository 사용](docs/discussion_notes/CustomRepository%20사용.md)    
-<br><br>
+- 회의 자료 :  [CustomRepository 사용](docs/discussion_notes/CustomRepository%20사용.md)   
      **💡 회의 배경**  
     > 프로젝트의 데이터 접근 계층 설계에 있어 명시적이고 경량화된 Repository 구조를 도입할지 결정 필요
     
@@ -67,8 +66,8 @@
     >JpaRepository vs CustomRepository 도입 검토
     
     **📝 주요 내용**    
-    >- CustomRepository의 장점: 명시적 메서드 선언, 코드 경량화, 데이터 접근 패턴 통일성    
-    >- CustomRepository의 단점: 반복적인 메서드 선언, 개발 생산성 저하, 동적 프록시 제한
+    >CustomRepository의 장점: 명시적 메서드 선언, 코드 경량화, 데이터 접근 패턴 통일성    
+    >CustomRepository의 단점: 반복적인 메서드 선언, 개발 생산성 저하, 동적 프록시 제한
     
     **✅ 결론**  
     >개발 생산성과 유지보수성을 고려하여 JpaRepository 사용 결정
