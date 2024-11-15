@@ -52,11 +52,6 @@ jobs:
           cp appspec.yml ./boomerang/
           cp -r ./boomerang/build/libs ./boomerang/  # Copy libs folder
           cp -r ./scripts ./boomerang/  # Copy scripts folder
-          
-          # Create fonts directory in the deployment package
-          mkdir -p ./boomerang/fonts
-          cp -r ./boomerang/src/main/resources/fonts/* ./boomerang/fonts/
-          
           chmod +x ./boomerang/scripts/*.sh  # Grant execute permissions to all .sh files
           cd ./boomerang
           zip -r ../application.zip .
