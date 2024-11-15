@@ -60,6 +60,7 @@
 ## 📚 문서화 자료
 - 회의 자료 
   - [CustomRepository 사용](docs/discussion_notes/CustomRepository%20사용.md)   
+    <br>
     **💡 회의 배경**  
     >프로젝트의 데이터 접근 계층 설계에 있어 명시적이고 경량화된 Repository 구조를 도입할지 결정 필요
     
