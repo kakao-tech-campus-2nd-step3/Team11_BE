@@ -56,105 +56,134 @@ public class DocumentService {
     private String bucketName;
 
     public DocumentResponseDto generateDocument(DocumentRequestDto requestDto) {
+        log.info("Starting document generation for substep: {}", requestDto.getSubStep());
         try {
+            log.info("Validating request data");
             requestDto.validate();
+            log.info("Request validation successful");
+
+            log.info("Downloading template from S3 for substep: {}", requestDto.getSubStep());
             byte[] templatePdf = downloadTemplate(requestDto.getSubStep());
+            log.info("Template downloaded successfully, size: {} bytes", templatePdf.length);
+
+            log.info("Starting to fill PDF form with data");
             byte[] generatedPdf = fillPdfForm(templatePdf, requestDto.getFormData());
+            log.info("PDF form filled successfully, size: {} bytes", generatedPdf.length);
 
             return new DocumentResponseDto(generatedPdf, requestDto.getSubStep());
         } catch (IOException e) {
-            log.error("Failed to process PDF document", e);
+            log.error("Failed to process PDF document: {}", e.getMessage(), e);
+            throw new BusinessException(ErrorCode.DOCUMENT_GENERATION_FAILED);
+        } catch (Exception e) {
+            log.error("Unexpected error during document generation: {}", e.getMessage(), e);
             throw new BusinessException(ErrorCode.DOCUMENT_GENERATION_FAILED);
         }
     }
 
-    private byte[] fillPdfForm(byte[] templatePdf, Map<String, String> formData)
-        throws IOException {
+
+    private byte[] fillPdfForm(byte[] templatePdf, Map<String, String> formData) throws IOException {
+        log.info("Starting fillPdfForm process");
         byte[] filledPdf;
+
         try (PDDocument document = Loader.loadPDF(templatePdf)) {
+            log.info("PDF document loaded successfully");
+
             PDAcroForm acroForm = document.getDocumentCatalog().getAcroForm();
             if (acroForm == null) {
                 log.error("No AcroForm found in the document");
                 throw new BusinessException(ErrorCode.DOCUMENT_GENERATION_FAILED);
             }
+            log.info("AcroForm found in document");
 
             // 폰트 설정
+            log.info("Attempting to load Korean font from resource");
             PDFont koreanFont = PDType0Font.load(document, fontResource.getInputStream());
+            log.info("Korean font loaded successfully");
+
             PDResources resources = Optional.ofNullable(acroForm.getDefaultResources())
-                .orElseGet(PDResources::new);
+                    .orElseGet(PDResources::new);
             resources.getCOSObject().setItem(COSName.FONT, new COSDictionary());
             resources.put(COSName.getPDFName("KoreanFont"), koreanFont);
             acroForm.setDefaultResources(resources);
+            log.info("Font resources set up completed");
 
             // 폼 데이터 채우기
+            log.info("Starting to fill form fields. Total fields to process: {}", formData.size());
             formData.forEach((fieldName, fieldValue) -> {
                 if (fieldValue == null || fieldValue.trim().isEmpty()) {
+                    log.debug("Skipping empty field: {}", fieldName);
                     return; // 값이 없는 필드는 건너뛰기
                 }
                 try {
                     if (fieldName.endsWith("*")) {
-                        // 체크박스 필드 처리
+                        log.debug("Processing checkbox field: {}", fieldName);
                         handleCheckboxField(acroForm, fieldName, fieldValue);
                     } else {
-                        // 일반 텍스트 필드 처리
+                        log.debug("Processing text field: {}", fieldName);
                         PDField field = acroForm.getField(fieldName);
                         if (field instanceof PDTextField textField) {
-                            // 기존 default appearance string에서 폰트 크기 추출
                             String defaultAppearance = textField.getDefaultAppearance();
                             String fontSize = "12";
 
                             if (defaultAppearance != null && !defaultAppearance.isEmpty()) {
                                 java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(
-                                    "\\s+(\\d+(\\.\\d+)?)\\s+Tf\\s+");
-                                java.util.regex.Matcher matcher = pattern.matcher(
-                                    defaultAppearance);
+                                        "\\s+(\\d+(\\.\\d+)?)\\s+Tf\\s+");
+                                java.util.regex.Matcher matcher = pattern.matcher(defaultAppearance);
                                 if (matcher.find()) {
                                     fontSize = matcher.group(1);
                                 }
                             }
-
+                            log.debug("Setting font appearance for field: {} with size: {}", fieldName, fontSize);
                             textField.setDefaultAppearance("/KoreanFont " + fontSize + " Tf 0 g");
                             textField.setValue(fieldValue);
                         } else if (field != null) {
                             field.setValue(fieldValue);
+                        } else {
+                            log.warn("Field not found: {}", fieldName);
                         }
                     }
                 } catch (IOException e) {
-                    log.error("Error setting value for field: {} (value: {})", fieldName,
-                        fieldValue, e);
+                    log.error("Error setting value for field: {} (value: {})", fieldName, fieldValue, e);
                 }
             });
 
+            log.info("Form fields filled, flattening form");
             acroForm.flatten();
 
             ByteArrayOutputStream tempBaos = new ByteArrayOutputStream();
             document.save(tempBaos);
             filledPdf = tempBaos.toByteArray();
+            log.info("Initial PDF generation completed, size: {} bytes", filledPdf.length);
         }
 
         // PDF를 이미지로 변환
+        log.info("Starting PDF to image conversion");
         List<BufferedImage> images = new ArrayList<>();
         try (PDDocument document = Loader.loadPDF(filledPdf)) {
             PDFRenderer pdfRenderer = new PDFRenderer(document);
             for (int page = 0; page < document.getNumberOfPages(); page++) {
+                log.debug("Rendering page {} of {}", page + 1, document.getNumberOfPages());
                 BufferedImage image = pdfRenderer.renderImageWithDPI(page, DPI);
                 images.add(image);
             }
         }
+        log.info("PDF to image conversion completed, total pages: {}", images.size());
 
         // 이미지를 새 PDF로 변환
+        log.info("Starting image to PDF conversion");
         try (PDDocument newDocument = new PDDocument()) {
-            for (BufferedImage image : images) {
+            for (int i = 0; i < images.size(); i++) {
+                BufferedImage image = images.get(i);
                 PDPage page = new PDPage(PDRectangle.A4);
                 newDocument.addPage(page);
 
                 PDImageXObject pdImage = LosslessFactory.createFromImage(newDocument, image);
+                log.debug("Processing page {} of {}", i + 1, images.size());
 
-                try (PDPageContentStream contentStream = new PDPageContentStream(newDocument,
-                    page)) {
+                try (PDPageContentStream contentStream = new PDPageContentStream(newDocument, page)) {
                     float scale = Math.min(
-                        page.getMediaBox().getWidth() / image.getWidth(),
-                        page.getMediaBox().getHeight() / image.getHeight()
+                            page.getMediaBox().getWidth() / image.getWidth(),
+                            page.getMediaBox().getHeight() / image.getHeight()
                     );
 
                     float width = image.getWidth() * scale;
@@ -169,7 +198,9 @@ public class DocumentService {
 
             ByteArrayOutputStream finalBaos = new ByteArrayOutputStream();
             newDocument.save(finalBaos);
-            return finalBaos.toByteArray();
+            byte[] result = finalBaos.toByteArray();
+            log.info("Final PDF generation completed, size: {} bytes", result.length);
+            return result;
         }
     }
 
