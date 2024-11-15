@@ -1,9 +1,9 @@
 package boomerang;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class TestController {
 
     @GetMapping("/home")
@@ -16,4 +16,9 @@ public class TestController {
         return "welcome";
     }
 
+
+    @GetMapping("/file-page")
+    public String getFilePage() {
+        return "file.html";
+    }
 }

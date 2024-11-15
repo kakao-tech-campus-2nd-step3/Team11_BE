@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Form Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">PDF 폼 테스트</h1>
+
+    <div class="flex justify-center mb-4">
+        <button id="testButton" class="px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">
+            테스트 PDF 생성
+        </button>
+    </div>
+
+    <div id="loading" class="hidden mt-4 text-center">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+        <p class="mt-2 text-gray-600">PDF 생성 중...</p>
+    </div>
+
+    <div id="result" class="mt-4">
+        <pre id="resultText" class="bg-gray-100 p-4 rounded text-sm overflow-auto max-h-96 hidden"></pre>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const testButton = document.getElementById('testButton');
+        const loading = document.getElementById('loading');
+        const resultText = document.getElementById('resultText');
+
+        const testData = {
+            "subStep": "결정-신청서",
+            "formData": {
+                "성명": "김갑동",
+                "생년월일": "781111-1234567",
+                "주민등록지": "서울특별시 강남구 역삼동 123-45",
+                "전화번호": "010-1234-5678",
+                "전자 우편주소": "kim@example.com",
+                "대리인 성명": "박변호",
+                "대리인 생년월일": "850101-1234567",
+                "대리인 주소": "서울특별시 서초구 서초동 456-78",
+                "대리인 전화번호": "010-9876-5432",
+                "대리인 전자우편주소": "park@law.com",
+                "전세사기 피해 주택 지번주소": "서울특별시 강남구 역삼동 123-45",
+                "전임대인 성명": "이전주",
+                "전임대인 생년월일": "690315-1234567",
+                "현임대인 성명": "김을동",
+                "현임대인 생년월일": "710520-1234567",
+                "공인중개사 상호(등록번호)": "한강공인중개사(12345)",
+                "공인중개사 대표자명": "최중개",
+                "공인중개사 연락처": "02-555-1234",
+                "계약일자": "2023. 01. 01",
+                "전월세구분(전세/보증부 월세)*": "전세",
+                "계약기간": "2023. 01. 01 ~ 2025. 01. 01",
+                "선순위 담보권(여/부)*": "부",
+                "선순위 담보권자(금융기관/개인)*": "개인",
+                "압류(여/부)*": "부",
+                "압류권자(국가 또는 지방자치단체/이외의 자)*": "이외의 자",
+                "주택 유형(아파트/오피스텔/다세대/연립/단독/다중/다가구/기타)*": "아파트",
+                "대항력 발생일": "2023. 01. 05",
+                "전입일자": "2023. 01. 05",
+                "점유일자": "2023. 01. 10",
+                "확정일자": "2023. 01. 02",
+                "임차권 등기명령 사건번호": "2023가단12345",
+                "(거주/퇴거)*": "거주",
+                "임차보증금": "200,000,000",
+                "월세": "0",
+                "파산·회생 사건번호": "2023하단67890",
+                "경매 사건번호": "2023타경98765",
+                "공매 물건관리번호": "2023공매1234",
+                "압류 사건번호": "2023가압류4321",
+                "집행 권원 확보 여부(여/부)*": "부",
+                "임대인등의 기망 이유 혹은 수사개시 등": "임대인이 선순위 채권을 고지하지 않고 계약을 체결함. 현재 사기죄로 고소하여 수사 진행중(서울강남경찰서 2023-12345호)",
+                "경매 배당요구 여부(여/부)*": "부",
+                "공매 배분요구 여부(여/부)*": "부",
+                "경매·매각·유예·정지 긴급 여부(여/부)*": "부",
+                "신청일": "2024. 01. 05",
+                "제출지역(광역자치단체)": "서울"
+            }
+        };
+
+        testButton.addEventListener('click', async () => {
+            loading.classList.remove('hidden');
+            resultText.classList.add('hidden');
+
+            try {
+                const response = await fetch('http://localhost:8080/api/v1/documents', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // PDF 다운로드
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `결정-신청서_${new Date().toISOString().slice(0,10)}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+                // 성공 메시지 표시
+                resultText.textContent = 'PDF 생성 성공! 다운로드를 시작합니다.';
+                resultText.classList.remove('hidden');
+            } catch (error) {
+                // 에러 메시지 표시
+                resultText.textContent = `에러 발생: ${error.message}`;
+                resultText.classList.remove('hidden');
+                console.error('Error:', error);
+            } finally {
+                loading.classList.add('hidden');
+            }
+        });
+    });
+</script>
+</body>
+</html>
