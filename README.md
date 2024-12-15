@@ -1,7 +1,5 @@
 <div align="center">
   <img src="boomerang/src/main/resources/static/esset/footer.png" alt="Footer" width="80%">
-  <br><br>
-  <img src="boomerang/src/main/resources/static/esset/logo.png" alt="Logo" width="30%">
 </div>
 
 ## 🎯 목차
@@ -17,7 +15,11 @@
 - [팀원 소개](#팀원-소개)
 
 ## 🎬서비스 시연 영상
-[![서비스 시연 영상](/esset/thumbnail.png)](https://www.youtube.com/watch?v=dYZ9Rk8k8tc)
+<p align="center">
+  <a href="https://youtu.be/dYZ9Rk8k8tc">
+    <img src="boomerang/src/main/resources/static/esset/logo.png" width="20%" alt="서비스 시연 영상">
+  </a>
+</p>
 
 ## 📢 프로젝트 소개
 **부메랑**은 전세사기 피해자들을 위한 **전세사기 대처 웹 플랫폼**입니다.
