@@ -52,7 +52,7 @@ public class DocumentService {
     @Value("classpath:/fonts/NotoSansKR-Regular.ttf")
     private Resource fontResource;
 
-    @Value("${document.font.path}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
     public DocumentResponseDto generateDocument(DocumentRequestDto requestDto) {
