@@ -317,7 +317,7 @@
 
 ## 🏗 프로젝트 구조
 ### 시스템 아키텍쳐
-![시스템 아키텍처](boomerang/src/main/resources/static/esset/architecture.png)
+![아키텍처](https://github.com/user-attachments/assets/a5297669-d633-44c0-b38a-f0b180d99479)
 ![ERD](https://github.com/user-attachments/assets/e1cac376-f090-4240-8f2a-c66d6dcd70fe)
 
 
