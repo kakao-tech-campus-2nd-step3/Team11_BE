@@ -317,8 +317,7 @@
 
 ## 🏗 프로젝트 구조
 ### 시스템 아키텍쳐
-![아키텍처](https://github.com/user-attachments/assets/a5297669-d633-44c0-b38a-f0b180d99479](https://github.com/user-attachments/assets/cd85b1cf-add4-4b90-a1c2-cf65568e29d2)
-
+![아키텍처](https://github.com/user-attachments/assets/cd85b1cf-add4-4b90-a1c2-cf65568e29d2)
 ![ERD](https://github.com/user-attachments/assets/e1cac376-f090-4240-8f2a-c66d6dcd70fe)
 
 
