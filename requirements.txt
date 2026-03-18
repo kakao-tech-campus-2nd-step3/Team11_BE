@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-dotenv
+langchain
+langchain-chroma
+langchain-huggingface
+langchain-openai
+langchain-core
