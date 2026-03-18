@@ -61,7 +61,10 @@
 | **Cloud & Infrastructure** | AWS S3, Azure Database for MySQL, Azure Cache for Redis |
 | **Document Processing** | Apache PDFBox 3.0.0, Jsoup 1.18.1 |
 | **Security** | JWT, Spring Security |
+| **LLM** | Python 3, FastAPI, LangChain, gpt-3.5-turbo, KURE-v1, ChromaDB |
 | **Tools & Libraries** | Lombok, Log4j2, Guava, Thymeleaf |
+
+
 
 ## 📚 문서화 자료
 - 회의 자료 
